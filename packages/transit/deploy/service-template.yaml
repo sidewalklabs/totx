@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+_aliases:
+  - &service_name transit
+metadata:
+  name: *service_name
+spec:
+  selector:
+    app: *service_name
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 1337
+  type: NodePort

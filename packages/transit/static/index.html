@@ -1,0 +1,39 @@
+<!doctype html>
+<head>
+  <meta charset='utf-8' />
+  <title>NYC Transit Explorer</title>
+  <meta name='viewport' content='initial-scale=1.0,user-scalable=no' />
+  <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBBwaBm-FsTFPDseUHhmctmeQvSManggIk'></script>
+
+  <!-- Do not use absolute paths (those starting with /) in this file, as they will prevent demos
+       from properly running. Note that the paths in view.html all start with '..' since the URL for
+       views starts with 'view/' .-->
+  <link rel='stylesheet' href='font.css' />
+  <link rel='stylesheet' href='transit.css' />
+
+  <link rel='icon' type='image/png' href='walk.png' />
+</head>
+<body>
+
+<div id='root'></div>
+
+<script type='text/javascript'>
+// Force https
+if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+  location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+}
+</script>
+
+<script src='view.bundle.js'></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-79490400-2', 'auto');
+  ga('send', 'pageview');
+</script>
+
+</body>

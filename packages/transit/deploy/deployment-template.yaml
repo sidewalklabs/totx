@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+_aliases:
+  - &prod_image us.gcr.io/${PROJECT:-nyc-tlc-1225}/monoimage:${SWL_DEPLOY_TAG}
+  - &staging_image us.gcr.io/${PROJECT:-nyc-tlc-1225}/monoimage:${SWL_DEPLOY_COMMIT_SHA}
+  - &local_image us.gcr.io/${PROJECT:-nyc-tlc-1225}/monoimage:${SWL_DEPLOY_COMMIT_SHA}
+  - &app_name transit
+metadata:
+  name: *app_name
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Make sure there's always one instance of the transit server running.
+      maxUnavailable: 0
+  replicas: 1
+  template:
+    metadata:
+      name: *app_name
+      labels:
+        app: *app_name
+        # Note that version must stay stable so that the replace command knows
+        # to actually tie the new replicaset with the older one, and eventually
+        # scale down the old replicaset.
+        version: "1"
+    spec:
+      # Any changes in this section will cause a new replicaset to perform a
+      # rolling update of the transit server.
+      containers:
+      - name: *app_name
+        image: *${SWL_DEPLOY_ENV}_image
+        _dockerfile: ../../../Dockerfile
+        args: ["transit"]
+        ports:
+        - containerPort: 1337
+        livenessProbe:
+          httpGet:
+            path: "/healthy"
+            port: 1337
+          initialDelaySeconds: 20
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            path: "/healthy"
+            port: 1337
+          initialDelaySeconds: 20
+          timeoutSeconds: 2
+        resources:
+          requests:
+            cpu: 100m  # 10% of a CPU
