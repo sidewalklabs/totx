@@ -1,7 +1,7 @@
 kind: Service
 apiVersion: v1
 _aliases:
-  - &service_name transit
+  - &service_name transit-ttx
 metadata:
   name: *service_name
 spec:

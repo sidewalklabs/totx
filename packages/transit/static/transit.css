@@ -92,34 +92,19 @@ video {
   vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block;
 }
 body {
   line-height: 1;
 }
-ol,
-ul {
+ol, ul {
   list-style: none;
 }
-blockquote,
-q {
+blockquote, q {
   quotes: none;
 }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
+blockquote:before, blockquote:after, q:before, q:after {
   content: '';
   content: none;
 }
@@ -130,17 +115,14 @@ table {
 
 /* end of reset */
 
-*,
-*:before,
-*:after {
+*, *:before, *:after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 
 /* disable scroll bounce on Mac OS X & iOS */
-body,
-html {
+body, html {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -154,13 +136,11 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
-body,
-select {
+body, select {
   margin: 0;
 }
 
-a,
-a:visited {
+a, a:visited {
   color: #00a;
 }
 
@@ -200,8 +180,7 @@ h4 {
   width: 100%;
 }
 
-.loading,
-.error {
+.loading, .error {
   position: absolute;
   top: 10px;
   left: 50%;
@@ -291,7 +270,7 @@ table.tooltip tr:nth-child(even) {
 }
 
 .gradient .label {
-  color: #a2a2a2;
+  color: #A2A2A2;
   flex: 1;
   font-weight: 500;
   text-align: center;
@@ -310,7 +289,7 @@ table.tooltip tr:nth-child(even) {
 }
 
 .routing-settings .label {
-  color: #546e7a;
+  color: #546E7A;
 }
 
 .routing-settings .value {
@@ -318,16 +297,16 @@ table.tooltip tr:nth-child(even) {
 }
 
 .routing-settings .value.secondary {
-  color: #cfd8dc;
+  color: #CFD8DC;
 }
 
 .routing-settings .value.mismatch {
-  color: #93345d;
+  color: #93345D;
 }
 
 .routing-settings .header {
   color: #005378;
-  background-color: #d3dbe2;
+  background-color: #D3DBE2;
 }
 
 .routing-settings form {
@@ -364,8 +343,8 @@ table.tooltip tr:nth-child(even) {
 }
 
 .routing-settings .row.target-address {
-  color: #fff;
-  background-color: #607d8b;
+  color: #FFF;
+  background-color: #607D8B;
 }
 
 .routing-settings select {
@@ -381,8 +360,7 @@ table.tooltip tr:nth-child(even) {
   display: inline-block;
 }
 
-.routing-settings.compare-settings,
-.routing-settings.compare-origin {
+.routing-settings.compare-settings, .routing-settings.compare-origin {
   width: 440px;
 }
 
@@ -399,26 +377,25 @@ table.tooltip tr:nth-child(even) {
 }
 
 .routing-settings.compare-settings .header .secondary {
-  background-color: #ffc6c4;
-  color: #93345d;
+  background-color: #FFC6C4;
+  color: #93345D;
 }
 
 .routing-settings.compare-origin .header .secondary {
-  background-color: #f5dfce;
+  background-color: #F5DFCE;
   color: #e76400;
   flex: 1;
 }
 
 .routing-settings.compare-origin .row .route.secondary {
-  background-color: #fbf1ea;
+  background-color: #FBF1EA;
 }
 
 .routing-settings.compare-settings .row .route.secondary {
-  background-color: #fff7f7;
+  background-color: #FFF7F7;
 }
 
-.transit-connector,
-.walk {
+.transit-connector, .walk {
   display: inline-block;
   width: 15px;
   height: 15px;
@@ -430,11 +407,10 @@ table.tooltip tr:nth-child(even) {
 
 .walk {
   background-image: url('walk.png');
-  opacity: 0.5;
+  opacity: .5;
 }
 
-.route-symbol,
-.route-name {
+.route-symbol, .route-name {
   display: inline-block;
   min-width: 20px;
   height: 20px;
@@ -472,8 +448,8 @@ table.tooltip tr:nth-child(even) {
 }
 
 .mode-switch.compare-settings {
-  background-color: #ffc6c4;
-  color: #93345d;
+  background-color: #FFC6C4;
+  color: #93345D;
 }
 
 .mode-switchers-container {
@@ -485,7 +461,7 @@ span.close-button {
   color: white;
   font-weight: normal;
   cursor: pointer;
-  opacity: 0.7;
+  opacity: .7;
 }
 span.close-button:hover {
   opacity: 1;
@@ -517,27 +493,20 @@ span.close-button:hover {
   height: 16px;
   flex: 1 0 20px;
 }
-.legend,
-.routing-settings {
+.legend, .routing-settings {
   background-color: rgb(255, 255, 255);
 }
-.legend,
-.routing-settings,
-.mode-switch.compare-origin,
-.mode-switch.compare-settings {
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+.legend, .routing-settings, .mode-switch.compare-origin, .mode-switch.compare-settings {
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, .2);
 }
-.label-top,
-.swatches,
-.label-bottom {
+.label-top, .swatches, .label-bottom {
   display: flex;
   justify-content: space-between;
 }
 .swatches {
-  border: 1px solid #cfd8dc;
+  border: 1px solid #CFD8DC;
 }
-.swatches,
-.label-bottom {
+.swatches, .label-bottom {
   margin-top: 4px;
 }
 
@@ -582,8 +551,8 @@ span.close-button:hover {
 
 .route-details {
   position: absolute;
-  background: #546e7a;
-  color: #fff;
+  background: #546E7A;
+  color: #FFF;
   padding: 16px;
   line-height: 1.8em;
   width: 400px;
@@ -598,11 +567,11 @@ span.close-button:hover {
 }
 
 .compare-settings .route.secondary span.commute-time {
-  color: #93345d;
+  color: #93345D;
 }
 
 .compare-origin .route.secondary span.commute-time {
-  color: #e76400;
+  color: #E76400;
 }
 
 span.commute-time {
@@ -612,8 +581,7 @@ span.commute-time {
   font-size: 14px;
 }
 
-.header.row span,
-.address {
+.header.row span, .address {
   white-space: pre-line; /* addresses include a line break between the street address and city */
 }
 .origin-address {
@@ -651,15 +619,13 @@ span.commute-time {
   font-size: 16px;
 }
 
-.scenarios .header,
-.scenarios .subheader {
+.scenarios .header, .scenarios .subheader {
   padding: 4px;
   margin-right: 12px; /* shift the "close" button over a bit. */
   max-width: 600px;
 }
 
-.prev-scenario,
-.next-scenario {
+.prev-scenario, .next-scenario {
   cursor: pointer;
   font-size: 32px;
 }
@@ -724,9 +690,7 @@ span.commute-time {
 }
 
 @media only screen and (max-device-width: 700px) {
-  .routing-settings,
-  .compare-settings,
-  .compare-origin {
+  .routing-settings, .compare-settings, .compare-origin {
     display: none;
   }
 
@@ -744,12 +708,12 @@ span.commute-time {
     display: block;
     position: absolute;
     bottom: 160px;
-    background: #ffcdd2;
+    background: #FFCDD2;
     margin: 4px;
     padding: 4px;
     left: 0;
     right: 0;
     text-align: center;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, .2);
   }
 }

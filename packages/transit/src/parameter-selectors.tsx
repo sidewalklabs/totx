@@ -13,16 +13,15 @@ export interface SelectProps {
 }
 
 // Wrapper for a <select> dropdown box.
-export const WrappedSelect: React.StatelessComponent<SelectProps> = props => (
+export const WrappedSelect: React.StatelessComponent<SelectProps> = props =>
   <select
     className={classNames('value', {mismatch: props.isMismatch, secondary: props.isSecondary})}
     value={props.value}
     onChange={(e: any) => props.onChange(e.target.value)}>
     {props.children}
-  </select>
-);
+  </select>;
 
-export const MaxWalkingDistance: React.StatelessComponent<SelectProps> = props => (
+export const MaxWalkingDistance: React.StatelessComponent<SelectProps> = props =>
   <WrappedSelect {...props}>
     <option value="0.4">0.25 miles</option>
     <option value="0.8">0.5 miles</option>
@@ -31,18 +30,25 @@ export const MaxWalkingDistance: React.StatelessComponent<SelectProps> = props =
     <option value="2.4">1.5 miles</option>
     <option value="3.2">2.0 miles</option>
     <option value="4">2.5 miles</option>
-  </WrappedSelect>
-);
+  </WrappedSelect>;
 
-export const MaxTransfers: React.StatelessComponent<SelectProps> = props => (
+export const MaxTransfers: React.StatelessComponent<SelectProps> = props =>
   <WrappedSelect {...props}>
     <option value="0">Exclude</option>
     <option value="1">Include</option>
     <option value="2">Allow two</option>
-  </WrappedSelect>
-);
+  </WrappedSelect>;
 
-export const ModePreference: React.StatelessComponent<SelectProps> = props => (
+export const TravelMode: React.StatelessComponent<SelectProps> = props =>
+  <WrappedSelect {...props}>
+    <option value="TRANSIT">Transit</option>
+    <option value="CAR">Car</option>
+    <option value="BICYCLE">Bicycle</option>
+    <option value="BICYCLE_RENT">Bike Share</option>
+    <option value="WALK">Walk</option>
+  </WrappedSelect>;
+
+export const ModePreference: React.StatelessComponent<SelectProps> = props =>
   <WrappedSelect {...props}>
     {/* The values are (rail_multiplier, bus_multiplier); -1 = don't use. */}
     <option value="1,-1">Only use subway</option>
@@ -50,16 +56,12 @@ export const ModePreference: React.StatelessComponent<SelectProps> = props => (
     <option value="1,1">No preference</option>
     <option value="1.5,1">Prefer bus</option>
     <option value="-1,1">Only use bus</option>
-  </WrappedSelect>
-);
+  </WrappedSelect>;
 
-export const RoutesChooser: React.StatelessComponent<SelectProps> = props => (
+export const RoutesChooser: React.StatelessComponent<SelectProps> = props =>
   <WrappedSelect {...props}>
     <option value="all">All included</option>
-    <option value="no-l">Exclude L</option>
-    <option value="no-2nd">Exclude 2nd Ave</option>
-  </WrappedSelect>
-);
+  </WrappedSelect>;
 
 const zeropad = (x: number) => (x < 10 ? '0' : '') + x;
 const NOON = 12 * 60;
@@ -69,25 +71,21 @@ const NOON = 12 * 60;
 const TIME_OPTIONS = _.range(0, 1440, 30).map(minutes => {
   const isPM = minutes >= NOON;
   const hours24 = Math.floor(minutes / 60);
-  let hours12 = Math.floor((minutes % NOON) / 60);
+  let hours12 = Math.floor(minutes % NOON / 60);
   if (hours12 === 0) hours12 = 12;
   const hourMins = minutes % 60;
   const value = `${hours24}:${zeropad(hourMins)}:00`;
   const display = `${hours12}:${zeropad(hourMins)} ${isPM ? 'PM' : 'AM'}`;
-  return (
-    <option key={minutes} value={value}>
-      {display}
-    </option>
-  );
+  return <option key={minutes} value={value}>{display}</option>;
 });
 
-export const TimeChooser: React.StatelessComponent<SelectProps> = props => (
-  <WrappedSelect {...props}>{TIME_OPTIONS}</WrappedSelect>
-);
+export const TimeChooser: React.StatelessComponent<SelectProps> = props =>
+  <WrappedSelect {...props}>
+    {TIME_OPTIONS}
+  </WrappedSelect>;
 
-export const WheelchairChooser: React.StatelessComponent<SelectProps> = props => (
+export const WheelchairChooser: React.StatelessComponent<SelectProps> = props =>
   <WrappedSelect {...props}>
     <option value="false">Not required</option>
     <option value="true">Required</option>
-  </WrappedSelect>
-);
+  </WrappedSelect>;

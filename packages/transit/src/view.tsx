@@ -15,18 +15,16 @@ const ABOUT_URL = 'https://docs.google.com/document/d/1YzZ6xbSuqVFyPolkVk1390vIz
 const rootEl = document.getElementById('root');
 const store = createStore();
 
-const CompareToAnotherOrigin = (props: {onClick: () => any}) => (
+const CompareToAnotherOrigin = (props: {onClick: () => any}) =>
   <div className="mode-switch compare-origin" {...props}>
     <span>+</span>
     Compare to another origin
-  </div>
-);
-const CompareToOtherSettings = (props: {onClick: () => any}) => (
+  </div>;
+const CompareToOtherSettings = (props: {onClick: () => any}) =>
   <div className="mode-switch compare-settings" {...props}>
     <span>+</span>
     Compare to other settings
-  </div>
-);
+  </div>;
 
 /** Root component for the transit accessibility visualization. */
 class Root extends React.Component<{}, State> {
@@ -60,23 +58,23 @@ class Root extends React.Component<{}, State> {
             handleAction={handleAction}
             onChange={this.setOptions}
           />
-          {this.state.mode === 'single' ? (
-            <div className="mode-switchers-container">
-              <CompareToAnotherOrigin onClick={setMode('compare-origin')} />
-              <CompareToOtherSettings onClick={setMode('compare-settings')} />
-            </div>
-          ) : null}
+          {this.state.mode === 'single'
+            ? <div className="mode-switchers-container">
+                <CompareToAnotherOrigin onClick={setMode('compare-origin')} />
+                <CompareToOtherSettings onClick={setMode('compare-settings')} />
+              </div>
+            : null}
         </div>
         <Legend mode={this.state.mode} currentStory={this.state.currentStory} />
         <Scenarios
           currentStory={this.state.currentStory}
           onSetStory={story => handleAction({type: 'set-story', story})}
         />
-        {this.state.currentStory !== null ? (
-          <div className="mobile-warning">
-            For a better experience, use a tablet or desktop device.
-          </div>
-        ) : null}
+        {this.state.currentStory !== null
+          ? <div className="mobile-warning">
+              For a better experience, use a tablet or desktop device.
+            </div>
+          : null}
       </div>
     );
   }

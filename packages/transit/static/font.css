@@ -28,21 +28,21 @@
 /* Complete */
 
 @font-face {
-  font-family: 'Circular-Mediumitalic';
-  src: url('fonts/lineto-circular-mediumitalic.eot');
-  src: url('fonts/lineto-circular-mediumitalic.eot?#iefix') format('embedded-opentype'),
-    url('fonts/lineto-circular-mediumitalic.woff2') format('woff2'),
-    url('fonts/lineto-circular-mediumitalic.woff') format('woff');
+  font-family: "Circular-Mediumitalic";
+  src: url("fonts/lineto-circular-mediumitalic.eot");
+  src: url("fonts/lineto-circular-mediumitalic.eot?#iefix") format("embedded-opentype"),
+    url("fonts/lineto-circular-mediumitalic.woff2") format("woff2"),
+    url("fonts/lineto-circular-mediumitalic.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Circular-Medium';
-  src: url('fonts/lineto-circular-medium.eot');
-  src: url('fonts/lineto-circular-medium.eot?#iefix') format('embedded-opentype'),
-    url('fonts/lineto-circular-medium.woff2') format('woff2'),
-    url('fonts/lineto-circular-medium.woff') format('woff');
+  font-family: "Circular-Medium";
+  src: url("fonts/lineto-circular-medium.eot");
+  src: url("fonts/lineto-circular-medium.eot?#iefix") format("embedded-opentype"),
+    url("fonts/lineto-circular-medium.woff2") format("woff2"),
+    url("fonts/lineto-circular-medium.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }

@@ -32,27 +32,15 @@ export default function Legend(props: LegendProps) {
               <img src="pin-blue-A-18x26.png" width={18} height={26} />
             </span>
           }
-          labelTopMiddle={
-            <span>
-              Equally accessible from both places<br />|
-            </span>
-          }
+          labelTopMiddle={<span>Equally accessible from both places<br />|</span>}
           labelTopRight={
             <span>
               More accessible from<br />
               <img src="pin-orange-B-18x26.png" width={18} height={26} />
             </span>
           }
-          labelBottomLeft={
-            <span>
-              by 25+<br />min
-            </span>
-          }
-          labelBottomRight={
-            <span>
-              by 25+<br />min
-            </span>
-          }
+          labelBottomLeft={<span>by 25+<br />min</span>}
+          labelBottomRight={<span>by 25+<br />min</span>}
         />
       );
     case 'compare-settings':
@@ -62,16 +50,8 @@ export default function Legend(props: LegendProps) {
           swatches={SETTINGS_COMPARISON_COLORS}
           labelTopLeft="More accessible with original settings"
           labelTopRight="More accessible with alternate settings"
-          labelBottomLeft={
-            <span>
-              by 25+<br />min
-            </span>
-          }
-          labelBottomRight={
-            <span>
-              by 25+<br />min
-            </span>
-          }
+          labelBottomLeft={<span>by 25+<br />min</span>}
+          labelBottomRight={<span>by 25+<br />min</span>}
         />
       );
   }
@@ -89,9 +69,9 @@ interface GeneralLegendProps {
 }
 
 function GeneralLegend(props: GeneralLegendProps) {
-  const swatches = props.swatches.map((backgroundColor, i) => (
-    <div key={`swatch${i}`} className="swatch" style={{backgroundColor}} />
-  ));
+  const swatches = props.swatches.map((backgroundColor, i) =>
+    <div key={`swatch${i}`} className="swatch" style={{backgroundColor}} />,
+  );
   const className = classNames('legend', 'legend-' + props.mode, {
     'scenarios-visible': props.currentStory !== null,
   });
@@ -102,7 +82,9 @@ function GeneralLegend(props: GeneralLegendProps) {
         {props.labelTopMiddle ? <div className="middle">{props.labelTopMiddle}</div> : null}
         {props.labelTopRight ? <div className="right">{props.labelTopRight}</div> : null}
       </div>
-      <div className="swatches">{swatches}</div>
+      <div className="swatches">
+        {swatches}
+      </div>
       <div className="label-bottom">
         <div className="left">{props.labelBottomLeft}</div>
         <div className="right">{props.labelBottomRight}</div>

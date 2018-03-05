@@ -16,9 +16,7 @@ export default class NotificationBar extends React.Component<NotificationBarProp
     } else if (this.props.error) {
       return (
         <div className="error">
-          <span className="error-close" onClick={this.props.clearError}>
-            x
-          </span>
+          <span className="error-close" onClick={this.props.clearError}>x</span>
           {this.props.error}
         </div>
       );
