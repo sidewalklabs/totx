@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import * as _ from 'underscore';
 
 import Action from './action';
 import {DEFAULT_OPTIONS, QueryOptions, State} from './datastore';
@@ -16,32 +15,10 @@ interface Props extends State {
 const modePrefValue = (options: QueryOptions) =>
   options.rail_multiplier + ',' + options.bus_multiplier;
 
-const MANHATTAN_L_STOPS = [
-  'L06', // first ave
-  'L05', // third ave
-  'L03', // union square
-  'L02', // sixth ave
-  'L01', // eighth ave
-];
-
-const SECOND_AVE_STOPS = [
-  'Q03', // 72nd St
-  'Q04', // 86th St
-  'Q05', // 96th St
-];
-
-const routesChoiceValue = (options: QueryOptions) =>
-  _.isEmpty(options.exclude_stops)
-    ? 'all'
-    : _.isEqual(options.exclude_stops, MANHATTAN_L_STOPS)
-      ? 'no-l'
-      : _.isEqual(options.exclude_stops, SECOND_AVE_STOPS) ? 'no-2nd' : 'other';
-
 export default class RoutingParameters extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
     this.setModePref = this.setModePref.bind(this);
-    this.setRoutes = this.setRoutes.bind(this);
   }
 
   render() {
@@ -149,10 +126,10 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
         <SettingsRow
           {...obj}
-          toValue={routesChoiceValue}
-          component={controls.RoutesChooser}
-          label="Routes"
-          onSetValue={this.setRoutes}
+          field="travel_mode"
+          component={controls.TravelMode}
+          label="Travel mode"
+          onSetValue={set('travel_mode', String)}
         />
 
         <SettingsRow
@@ -172,16 +149,6 @@ export default class RoutingParameters extends React.Component<Props, {}> {
       bus_multiplier: bus,
       rail_multiplier: rail,
     });
-  }
-
-  setRoutes(which: number, value: string) {
-    if (value === 'all') {
-      this.props.onChange(which, {exclude_stops: []});
-    } else if (value === 'no-l') {
-      this.props.onChange(which, {exclude_stops: MANHATTAN_L_STOPS});
-    } else if (value === 'no-2nd') {
-      this.props.onChange(which, {exclude_stops: SECOND_AVE_STOPS});
-    }
   }
 }
 

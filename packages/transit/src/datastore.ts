@@ -83,6 +83,7 @@ export interface QueryOptions {
   max_waiting_time_secs: number;
   transfer_penalty_secs: number;
   max_number_of_transfers: number;
+  travel_mode: string;
   bus_multiplier: number;
   rail_multiplier: number;
   exclude_routes: string[];
@@ -118,6 +119,7 @@ export const DEFAULT_OPTIONS: QueryOptions = {
   max_waiting_time_secs: 1800, // 30 minutes
   transfer_penalty_secs: 300, // 5 minues
   max_number_of_transfers: 1,
+  travel_mode: 'TRANSIT',
   bus_multiplier: -1, // no buses by default (performance optimization)
   rail_multiplier: 1,
   exclude_routes: [],
@@ -147,7 +149,7 @@ interface CommuteTimesKey {
 function fetchCommuteTimes(key: CommuteTimesKey) {
   const {origin, options} = key;
   const {lat, lng} = origin;
-  return getPromise<CommuteTimes>('one-to-nyc', {
+  return getPromise<CommuteTimes>('one-to-city', {
     origin: {lat, lng},
     departureTime: options.departure_time,
     options,
@@ -227,12 +229,15 @@ function createStore() {
   let style: StyleFn = () => ({});
   let origin: LatLng = new LatLng(INTRO_STORY.origin.lat, INTRO_STORY.origin.lng);
   let options = {...DEFAULT_OPTIONS, ...INTRO_STORY.options};
-  let origin2: LatLng = new LatLng(40.687772, -73.978498); // point in Ft. Greene
+  let origin2: LatLng = new LatLng(
+    Stories['noTransfers'].dest.lat,
+    Stories['noTransfers'].dest.lng,
+  );
   let options2 = {...DEFAULT_OPTIONS, ...INTRO_STORY.options2};
   let mode: actions.Mode = INTRO_STORY.mode;
   const geocoder = new google.maps.Geocoder();
   // Default to the "intro" scenario unless the user has previously closed the scenarios bar.
-  let currentStory: string = Cookies.get(COOKIE_NAME) ? null : 'intro';
+  let currentStory: string = null; // Cookies.get(COOKIE_NAME) ? null : 'intro';
 
   let gaEnabled = true; // track events with Google Analytics?
   let initPromise: Promise<void> = null; // Promise to track when geometries and caches are loaded.
@@ -541,7 +546,7 @@ function createStore() {
       Cookies.remove(COOKIE_NAME);
     } else {
       stateChanged();
-      Cookies.set(COOKIE_NAME, true);
+      Cookies.set(COOKIE_NAME, 'true');
     }
   }
 
@@ -619,16 +624,16 @@ function createStore() {
   function initialize() {
     isLoadingGeoJSON = true;
     initPromise = Promise.all([
-      ajaxPromise<any>('nyc-blockgroups.land.topojson'),
+      ajaxPromise<any>('toronto.topojson'),
       ajaxPromise<any>('caches.json'),
-    ]).then(([nycTopojson, cacheJson]) => {
+    ]).then(([torontoTopojson, cacheJson]) => {
       isLoadingGeoJSON = false;
-      const nycGeojson = topojson.feature(nycTopojson, nycTopojson.objects['nyc-blockgroups.land']);
-      nycGeojson.features.forEach((feature: any) => {
+      const torontoGeojson = topojson.feature(torontoTopojson, torontoTopojson.objects['-']);
+      torontoGeojson.features.forEach((feature: any) => {
         feature.geometry = transformGeometryLatLngToGoogle(feature.geometry);
-        feature.id = '' + feature.id; // numeric IDs get confusing.
+        feature.id = feature.properties.geo_id;
       });
-      geojson = nycGeojson;
+      geojson = torontoGeojson;
       restoreCaches(cacheJson);
       stateChanged();
 

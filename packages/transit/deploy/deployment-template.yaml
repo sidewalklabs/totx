@@ -1,10 +1,10 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 _aliases:
-  - &prod_image us.gcr.io/${PROJECT:-nyc-tlc-1225}/monoimage:${SWL_DEPLOY_TAG}
-  - &staging_image us.gcr.io/${PROJECT:-nyc-tlc-1225}/monoimage:${SWL_DEPLOY_COMMIT_SHA}
-  - &local_image us.gcr.io/${PROJECT:-nyc-tlc-1225}/monoimage:${SWL_DEPLOY_COMMIT_SHA}
-  - &app_name transit
+  - &prod_image us.gcr.io/nyc-tlc-1225/monoimage:${SWL_DEPLOY_TAG}
+  - &staging_image us.gcr.io/nyc-tlc-1225/monoimage:${SWL_DEPLOY_COMMIT_SHA}
+  - &local_image us.gcr.io/nyc-tlc-1225/monoimage:${SWL_DEPLOY_COMMIT_SHA}
+  - &app_name transit-ttx
 metadata:
   name: *app_name
 spec:

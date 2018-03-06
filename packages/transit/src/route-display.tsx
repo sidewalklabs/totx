@@ -3,7 +3,7 @@ import * as _ from 'underscore';
 
 import {Route, Step, TransportMode} from './datastore';
 import glyphs from './glyphs';
-import routes, {RouteInfo} from './nyc-routes';
+import routes from './toronto-routes';
 
 interface RouteDisplayProps {
   route: Route;
@@ -74,13 +74,13 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
   }
 }
 
-const NYC_ROUTES: {[routeId: string]: RouteInfo} = _.indexBy(routes, 'route_id');
+const TORONTO_ROUTES = _.indexBy(routes, 'route_id');
 
 // Component for the name of a subway/bus route, e.g. "L", "4" or "B52".
 // If we know enough about the route to render a nice symbol for it, we do.
 // Otherwise we fall back to plain text.
 function RouteSymbol(props: {id: string}) {
-  const route = NYC_ROUTES[props.id];
+  const route = TORONTO_ROUTES[props.id];
   if (!route) {
     // Might be a bus route.
     return <span className="route-name">{props.id}</span>;
@@ -93,7 +93,7 @@ function RouteSymbol(props: {id: string}) {
 
   return (
     <span className="route-symbol" title={alt} style={style}>
-      {props.id}
+      {route.route_short_name}
     </span>
   );
 }
@@ -117,7 +117,9 @@ function describeStep(step: Step): string {
   const to = step.to.stopName;
 
   if (step.mode === TransportMode.Transit) {
-    return `Take ${step.routeId} ${step.numStops} stops from ${from} to ${to}.`;
+    return `Take ${TORONTO_ROUTES[step.routeId].route_long_name} ${
+      step.numStops
+    } stops from ${from} to ${to}.`;
   } else if (step.mode === TransportMode.Walk) {
     let distance: string;
     if (step.distanceKm >= 0.16) {

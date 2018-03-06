@@ -42,6 +42,16 @@ export const MaxTransfers: React.StatelessComponent<SelectProps> = props => (
   </WrappedSelect>
 );
 
+export const TravelMode: React.StatelessComponent<SelectProps> = props => (
+  <WrappedSelect {...props}>
+    <option value="TRANSIT">Transit</option>
+    <option value="CAR">Car</option>
+    <option value="BICYCLE">Bicycle</option>
+    <option value="BICYCLE_RENT">Bike Share</option>
+    <option value="WALK">Walk</option>
+  </WrappedSelect>
+);
+
 export const ModePreference: React.StatelessComponent<SelectProps> = props => (
   <WrappedSelect {...props}>
     {/* The values are (rail_multiplier, bus_multiplier); -1 = don't use. */}
@@ -50,14 +60,6 @@ export const ModePreference: React.StatelessComponent<SelectProps> = props => (
     <option value="1,1">No preference</option>
     <option value="1.5,1">Prefer bus</option>
     <option value="-1,1">Only use bus</option>
-  </WrappedSelect>
-);
-
-export const RoutesChooser: React.StatelessComponent<SelectProps> = props => (
-  <WrappedSelect {...props}>
-    <option value="all">All included</option>
-    <option value="no-l">Exclude L</option>
-    <option value="no-2nd">Exclude 2nd Ave</option>
   </WrappedSelect>
 );
 

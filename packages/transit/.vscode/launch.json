@@ -9,6 +9,7 @@
             "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceFolder}/server/server.ts",
+            "args": ["transit --city toronto --router-url http://localhost:8080"],            
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]

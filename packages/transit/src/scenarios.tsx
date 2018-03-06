@@ -1,25 +1,28 @@
 import * as React from 'react';
 
 import glyphs from './glyphs';
-import stories from './stories';
+import TorontoStories from './stories';
 
 interface ScenariosProps {
   currentStory: string;
   onSetStory: (story: string) => any;
 }
 
-const STORY_NAMES = Object.keys(stories);
+const STORY_NAMES = Object.keys(TorontoStories);
 
 export default function Scenarios(props: ScenariosProps): JSX.Element {
   if (!props.currentStory) {
-    return (
-      <div className="minimized-scenarios" onClick={() => props.onSetStory('intro')}>
-        Scenarios
-      </div>
-    );
+    return null;
+    /*
+     return (
+     <div className="minimized-scenarios" onClick={() => props.onSetStory('intro')}>
+     Scenarios
+     </div>
+     );
+     */
   }
 
-  const story = stories[props.currentStory];
+  const story = TorontoStories[props.currentStory];
   const index = STORY_NAMES.indexOf(props.currentStory);
 
   const isFirst = index === 0;
