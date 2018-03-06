@@ -82,7 +82,7 @@ export default class Cache<K, V> {
    * Retrieve a value from local cache or return null if it's not available.
    * This will never hit the network.
    */
-  public getFromCache(key: K): (V | null) {
+  public getFromCache(key: K): V | null {
     return this.getFromCacheString(this.stringify(key));
   }
 

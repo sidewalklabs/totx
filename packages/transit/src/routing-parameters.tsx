@@ -150,7 +150,6 @@ export default class RoutingParameters extends React.Component<Props, {}> {
       rail_multiplier: rail,
     });
   }
-
 }
 
 interface SettingRowProps {
