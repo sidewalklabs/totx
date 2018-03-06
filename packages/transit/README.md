@@ -1,7 +1,6 @@
 # Toronto Transit Explorer
 
-This is a fork of the NYC Transit Explorer. The key difference is that it uses [R5][] for
-transit routing instead of the Sidewalk Labs router.
+This tool shows a visualization of travel times from one location to every other location in Toronto.
 
 To run it, you'll need to set up R5.
 -> Insert instructions for R5

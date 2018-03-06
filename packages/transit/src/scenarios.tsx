@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import glyphs from './glyphs';
-import TorontoStories from './stories-toronto';
+import TorontoStories from './stories';
 
 interface ScenariosProps {
   currentStory: string;
@@ -41,7 +41,9 @@ export default function Scenarios(props: ScenariosProps): JSX.Element {
       <div className="scenario-text">
         <div className="header">
           {story.header}
-          <span className="close-button" onClick={clearStory}>{glyphs.close}</span>
+          <span className="close-button" onClick={clearStory}>
+            {glyphs.close}
+          </span>
         </div>
         <div className="subheader">{story.subHeader}</div>
       </div>

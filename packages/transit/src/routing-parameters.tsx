@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import * as _ from 'underscore';
 
 import Action from './action';
 import {DEFAULT_OPTIONS, QueryOptions, State} from './datastore';
@@ -16,32 +15,10 @@ interface Props extends State {
 const modePrefValue = (options: QueryOptions) =>
   options.rail_multiplier + ',' + options.bus_multiplier;
 
-const MANHATTAN_L_STOPS = [
-  'L06', // first ave
-  'L05', // third ave
-  'L03', // union square
-  'L02', // sixth ave
-  'L01', // eighth ave
-];
-
-const SECOND_AVE_STOPS = [
-  'Q03', // 72nd St
-  'Q04', // 86th St
-  'Q05', // 96th St
-];
-
-const routesChoiceValue = (options: QueryOptions) =>
-  _.isEmpty(options.exclude_stops)
-    ? 'all'
-    : _.isEqual(options.exclude_stops, MANHATTAN_L_STOPS)
-      ? 'no-l'
-      : _.isEqual(options.exclude_stops, SECOND_AVE_STOPS) ? 'no-2nd' : 'other';
-
 export default class RoutingParameters extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
     this.setModePref = this.setModePref.bind(this);
-    this.setRoutes = this.setRoutes.bind(this);
   }
 
   render() {
@@ -61,50 +38,56 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
     const obj = {mode: props.mode, options, options2};
 
-    const routeBit = props.routes.length === 0
-      ? []
-      : [
-          <div key="route-header" className="row">
-            <RouteDisplay className="route" route={props.routes[0]} />
-            {props.routes.length > 1
-              ? <RouteDisplay className="route secondary" route={props.routes[1]} />
-              : null}
-          </div>,
-          <div key="route-destination" className="row target-address">
-            <span className="address">
-              <img src="pin-gray-blank-24x34.png" width="18" height="26" />
-              <span className="close-button" onClick={clearDestination}>{glyphs.close}</span>
-              {props.destinationAddress}
-            </span>
-          </div>,
-        ];
+    const routeBit =
+      props.routes.length === 0
+        ? []
+        : [
+            <div key="route-header" className="row">
+              <RouteDisplay className="route" route={props.routes[0]} />
+              {props.routes.length > 1 ? (
+                <RouteDisplay className="route secondary" route={props.routes[1]} />
+              ) : null}
+            </div>,
+            <div key="route-destination" className="row target-address">
+              <span className="address">
+                <img src="pin-gray-blank-24x34.png" width="18" height="26" />
+                <span className="close-button" onClick={clearDestination}>
+                  {glyphs.close}
+                </span>
+                {props.destinationAddress}
+              </span>
+            </div>,
+          ];
 
-    const firstMarker = props.mode === 'compare-origin'
-      ? <img src="pin-blue-A-18x26.png" width={18} height={26} />
-      : <img src="pin-blue-blank-18x26.png" width={18} height={26} />;
+    const firstMarker =
+      props.mode === 'compare-origin' ? (
+        <img src="pin-blue-A-18x26.png" width={18} height={26} />
+      ) : (
+        <img src="pin-blue-blank-18x26.png" width={18} height={26} />
+      );
 
     return (
       <div className={classNames('routing-settings', props.mode)}>
         <div className="header row">
           <span className="primary">
             {firstMarker}
-            <div className="origin-address">
-              {props.originAddress}
-            </div>
+            <div className="origin-address">{props.originAddress}</div>
           </span>
-          {isComparison
-            ? <span className="secondary">
-                <span className="close-button" onClick={backToSingle}>{glyphs.close}</span>
-                {props.mode === 'compare-origin'
-                  ? [
-                      <img key="pin" src="pin-orange-B-18x26.png" width={18} height={26} />,
-                      <div key="address" className="origin-address">
-                        {props.origin2Address}
-                      </div>,
-                    ]
-                  : 'Alternate settings'}
+          {isComparison ? (
+            <span className="secondary">
+              <span className="close-button" onClick={backToSingle}>
+                {glyphs.close}
               </span>
-            : null}
+              {props.mode === 'compare-origin'
+                ? [
+                    <img key="pin" src="pin-orange-B-18x26.png" width={18} height={26} />,
+                    <div key="address" className="origin-address">
+                      {props.origin2Address}
+                    </div>,
+                  ]
+                : 'Alternate settings'}
+            </span>
+          ) : null}
         </div>
 
         {routeBit}
@@ -151,14 +134,6 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
         <SettingsRow
           {...obj}
-          toValue={routesChoiceValue}
-          component={controls.RoutesChooser}
-          label="Routes"
-          onSetValue={this.setRoutes}
-        />
-
-        <SettingsRow
-          {...obj}
           field="require_wheelchair"
           component={controls.WheelchairChooser}
           label="Wheelchair accessible"
@@ -176,15 +151,6 @@ export default class RoutingParameters extends React.Component<Props, {}> {
     });
   }
 
-  setRoutes(which: number, value: string) {
-    if (value === 'all') {
-      this.props.onChange(which, {exclude_stops: []});
-    } else if (value === 'no-l') {
-      this.props.onChange(which, {exclude_stops: MANHATTAN_L_STOPS});
-    } else if (value === 'no-2nd') {
-      this.props.onChange(which, {exclude_stops: SECOND_AVE_STOPS});
-    }
-  }
 }
 
 interface SettingRowProps {

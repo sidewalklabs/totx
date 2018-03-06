@@ -10,7 +10,7 @@ import Cache from '../../utils/cache';
 
 import Action, * as actions from './action';
 import * as ramps from './ramps';
-import Stories from './stories-toronto';
+import Stories from './stories';
 import {withoutDefaults} from './utils';
 
 /** This is the state exported by this store via store.getState(). */
@@ -137,7 +137,9 @@ interface SavedCache {
   commuteTimesCache: {[key: string]: number[]};
 }
 
-interface CommuteTimes {[bgId: string]: number}
+interface CommuteTimes {
+  [bgId: string]: number;
+}
 
 interface CommuteTimesKey {
   origin: LatLng;
@@ -227,7 +229,10 @@ function createStore() {
   let style: StyleFn = () => ({});
   let origin: LatLng = new LatLng(INTRO_STORY.origin.lat, INTRO_STORY.origin.lng);
   let options = {...DEFAULT_OPTIONS, ...INTRO_STORY.options};
-  let origin2: LatLng = new LatLng(Stories['noTransfers'].dest.lat, Stories['noTransfers'].dest.lng);
+  let origin2: LatLng = new LatLng(
+    Stories['noTransfers'].dest.lat,
+    Stories['noTransfers'].dest.lng,
+  );
   let options2 = {...DEFAULT_OPTIONS, ...INTRO_STORY.options2};
   let mode: actions.Mode = INTRO_STORY.mode;
   const geocoder = new google.maps.Geocoder();
@@ -443,9 +448,10 @@ function createStore() {
       const secs1 = times[id];
       const secs2 = times2[id];
       return {
-        fillColor: secs1 !== null || secs2 !== null
-          ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
-          : 'rgba(0,0,0,0)',
+        fillColor:
+          secs1 !== null || secs2 !== null
+            ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
+            : 'rgba(0,0,0,0)',
         lineWidth: 0,
       };
     };
@@ -540,7 +546,7 @@ function createStore() {
       Cookies.remove(COOKIE_NAME);
     } else {
       stateChanged();
-      Cookies.set(COOKIE_NAME, true);
+      Cookies.set(COOKIE_NAME, 'true');
     }
   }
 

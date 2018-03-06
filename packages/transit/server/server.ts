@@ -24,9 +24,6 @@ console.log('Starting up...');
 console.log(isProd ? 'Production mode' : 'Dev mode');
 console.log('Using routing server at', program.routerUrl);
 
-
-
-
 const app = express();
 
 // Log all requests.
@@ -36,7 +33,7 @@ app.get('/healthy', (expressRequest, response) => {
   response.send('OK');
 });
 
-// Get step-by-step directions for a route betwee two points.
+// Get step-by-step directions for a route between two points.
 // Parameters are { origin: {lat, lng}, departureTime, destination: {lat, lng} }
 app.get('/route', (expressRequest, response) => {
   let params: any;
@@ -61,9 +58,8 @@ app.get('/route', (expressRequest, response) => {
     .pipe(response);
 });
 
-// Get travel times from an origin to every block group in the city.
+// Get travel times from an origin to every dissemination area in the city.
 // Parameters are { origin: {lat, lng}, departureTime }
-// This one works with the R5 router.
 app.get('/one-to-city', (expressRequest, response) => {
   let params: any;
   try {
@@ -73,7 +69,7 @@ app.get('/one-to-city', (expressRequest, response) => {
     return;
   }
 
-  params.destination = 'torontobgs';
+  params.destination = 'torontodas';
   request({
     method: 'POST',
     url: program.routerUrl + '/travelTimeMap',
@@ -89,13 +85,14 @@ app.get('/one-to-city', (expressRequest, response) => {
 });
 
 /**
- * Extract query params from request URL.
  * @param requestURL expressRequest url string
  */
 function parseRequestURL(requestURL: string) {
   let parsedQuery = url.parse(requestURL).query;
-  if (parsedQuery.substring(parsedQuery.length - 1, parsedQuery.length) === '=') {
-    parsedQuery = parsedQuery.substring(0, parsedQuery.length - 1);
+  // The proxy server used at Sidewalk appends a '=' to the end of URLs, which causes JSON.parse
+  // to fail.
+  if (parsedQuery.slice(-1) === '=') {
+    parsedQuery = parsedQuery.slice(0, -1);
   }
   return JSON.parse(decodeURIComponent(parsedQuery));
 }

@@ -1,0 +1,18 @@
+# Logs
+*.log
+
+# Dependency directories
+node_modules
+
+# node state
+package-lock.json
+
+# Generated static files
+*.bundle.js
+*.bundle.js.map
+index.licenses.txt
+*.js
+
+.DS_Store
+
+

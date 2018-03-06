@@ -33,9 +33,11 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
       .filter(step => step.mode === 1 || step.distanceKm > 0.1)
       .map(
         (step, i) =>
-          step.mode === 1
-            ? <RouteSymbol key={'r' + i} id={step.routeId} />
-            : <span key={'r' + i} className={'walk'} />,
+          step.mode === 1 ? (
+            <RouteSymbol key={'r' + i} id={step.routeId} />
+          ) : (
+            <span key={'r' + i} className={'walk'} />
+          ),
       );
     const arrowSteps = [] as Array<JSX.Element | string>;
     steps.forEach((step, i) => {
@@ -49,14 +51,14 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
       <span className={className} onClick={this.toggleVerboseDisplay}>
         <span className="commute-time">{minutes}min</span>
         {arrowSteps}
-        {this.state.showExpanded
-          ? <div className="route-details">
-              <span className="close-button" onClick={this.toggleVerboseDisplay}>
-                {glyphs.close}
-              </span>
-              <RouteDetails route={route} />
-            </div>
-          : null}
+        {this.state.showExpanded ? (
+          <div className="route-details">
+            <span className="close-button" onClick={this.toggleVerboseDisplay}>
+              {glyphs.close}
+            </span>
+            <RouteDetails route={route} />
+          </div>
+        ) : null}
       </span>
     );
   }
@@ -89,7 +91,11 @@ function RouteSymbol(props: {id: string}) {
   };
   const alt = route.route_long_name + '\n' + route.route_desc;
 
-  return <span className="route-symbol" title={alt} style={style}>{route.route_short_name}</span>;
+  return (
+    <span className="route-symbol" title={alt} style={style}>
+      {route.route_short_name}
+    </span>
+  );
 }
 
 function zeropad(num: number) {
@@ -111,8 +117,9 @@ function describeStep(step: Step): string {
   const to = step.to.stopName;
 
   if (step.mode === TransportMode.Transit) {
-    return `Take ${TORONTO_ROUTES[step.routeId]
-      .route_long_name} ${step.numStops} stops from ${from} to ${to}.`;
+    return `Take ${TORONTO_ROUTES[step.routeId].route_long_name} ${
+      step.numStops
+    } stops from ${from} to ${to}.`;
   } else if (step.mode === TransportMode.Walk) {
     let distance: string;
     if (step.distanceKm >= 0.16) {
@@ -127,9 +134,11 @@ function describeStep(step: Step): string {
 
 function RouteDetails(props: {route: Route}): JSX.Element {
   const steps = props.route.steps;
-  const lis = steps.map((step, i) =>
-    <li key={i}>{formatTime(step.departTimeSecs)} {describeStep(step)}</li>,
-  );
+  const lis = steps.map((step, i) => (
+    <li key={i}>
+      {formatTime(step.departTimeSecs)} {describeStep(step)}
+    </li>
+  ));
   return (
     <ol>
       {lis}
