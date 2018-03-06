@@ -44,18 +44,8 @@ app.get('/route', (expressRequest, response) => {
     return;
   }
 
-  request({
-    method: 'POST',
-    url: program.routerUrl + '/route',
-    json: true,
-    body: params,
-  })
-    .on('response', res => {
-      if (isProd) {
-        res.headers['Cache-Control'] = 'public, max-age=86400';
-      }
-    })
-    .pipe(response);
+  return handleR5OneToOne(params, response);
+
 });
 
 // Get travel times from an origin to every dissemination area in the city.
@@ -69,19 +59,8 @@ app.get('/one-to-city', (expressRequest, response) => {
     return;
   }
 
-  params.destination = 'torontodas';
-  request({
-    method: 'POST',
-    url: program.routerUrl + '/travelTimeMap',
-    json: true,
-    body: params,
-  })
-    .on('response', res => {
-      if (isProd) {
-        res.headers['Cache-Control'] = 'public, max-age=86400';
-      }
-    })
-    .pipe(response);
+  return handleR5OneToMany(params, response);
+
 });
 
 /**
@@ -100,11 +79,45 @@ function parseRequestURL(requestURL: string) {
 // In prod, cache all assets for 1 day. For development, don't do any caching.
 const maxAge = process.env.NODE_ENV === 'production' ? '1d' : null;
 
-app.use(
-  gzipStatic(__dirname + '/../static', {
-    maxAge,
-  }),
-);
+function handleR5OneToOne(params: any, response: express.Response) {
+  // Parse params into ProfileRequest
+  
+  request({
+    method: 'POST',
+    url: program.routerUrl + '/route',
+    json: true,
+    body: params,
+  })
+    .on('response', res => {
+      if (isProd) {
+        res.headers['Cache-Control'] = 'public, max-age=86400';
+      }
+    })
+    .pipe(response);
+  }
+
+function handleR5OneToMany(params: any, response: express.Response) {
+  // Parse params into ProfileRequest
+
+  request({
+    method: 'POST',
+    url: program.routerUrl + '/travelTimeMap',
+    json: true,
+    body: params,
+  })
+    .on('response', res => {
+      if (isProd) {
+        res.headers['Cache-Control'] = 'public, max-age=86400';
+      }
+    })
+    .pipe(response);
+}
+
+  app.use(
+    gzipStatic(__dirname + '/../static', {
+      maxAge,
+    }),
+  );
 
 const server = app.listen(program.port);
 server.timeout = program.timeout * 1000;
