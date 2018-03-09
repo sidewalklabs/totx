@@ -1,6 +1,6 @@
 import * as express from 'express';
-import * as request from 'request';
 import * as url from 'url';
+import R5Router from './r5/r5';
 
 const gzipStatic = require('connect-gzip-static');
 const program = require('commander');
@@ -23,6 +23,8 @@ const isProd = process.env.NODE_ENV === 'production';
 console.log('Starting up...');
 console.log(isProd ? 'Production mode' : 'Dev mode');
 console.log('Using routing server at', program.routerUrl);
+
+const r5Router = new R5Router(program.routerUrl);
 
 const app = express();
 
@@ -80,37 +82,27 @@ function parseRequestURL(requestURL: string) {
 const maxAge = process.env.NODE_ENV === 'production' ? '1d' : null;
 
 function handleR5OneToOne(params: any, response: express.Response) {
-  // Parse params into ProfileRequest
-  
-  request({
-    method: 'POST',
-    url: program.routerUrl + '/route',
-    json: true,
-    body: params,
-  })
-    .on('response', res => {
-      if (isProd) {
-        res.headers['Cache-Control'] = 'public, max-age=86400';
-      }
-    })
-    .pipe(response);
-  }
+  (async () => {
+    const route = await r5Router.getRoute(params.origin, params.destination, {
+      ...params.options,
+    });
+    response.send(route);
+  })().catch(e => {
+    console.error(e);
+    response.send(500);
+  });
+}
 
 function handleR5OneToMany(params: any, response: express.Response) {
-  // Parse params into ProfileRequest
-
-  request({
-    method: 'POST',
-    url: program.routerUrl + '/travelTimeMap',
-    json: true,
-    body: params,
-  })
-    .on('response', res => {
-      if (isProd) {
-        res.headers['Cache-Control'] = 'public, max-age=86400';
-      }
-    })
-    .pipe(response);
+  (async () => {
+    const travelTimes = await r5Router.getTravelTimes(params.origin, {
+      ...params.options,
+    });
+    response.send(travelTimes);
+  })().catch(e => {
+    console.error(e);
+    response.sendStatus(500);
+  });
 }
 
   app.use(

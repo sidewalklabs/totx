@@ -1,0 +1,126 @@
+/**
+ * Types for the R5 API.
+ */
+
+export interface ProfileRequest {
+    fromLat: number;
+    fromLon: number;
+    toLat?: number;
+    toLon?: number;
+    fromTime?: number; // secs since midnight
+    toTime?: number; // secs since midnight
+    date?: string; // LocalDate, e.g. 2017-10-16
+    wheelchair?: boolean;
+    accessModes?: string;
+    egressModes?: string;
+    directModes?: string;
+    transitModes?: string;
+    verbose?: boolean;
+}
+
+export interface AnalysisTask extends ProfileRequest {
+    type?: string;
+}
+
+export interface ProfileResponse {
+    options: ProfileOption[];
+}
+
+export enum LegMode {
+    WALK = "WALK",
+    BICYCLE = "BICYCLE",
+    CAR = "CAR",
+    BICYCLE_RENT = "BICYCLE_RENT", // Bikeshare
+    CAR_PARK = "CAR_PARK"
+}
+
+export enum TransitModes {
+    // Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area.
+    TRAM = "TRAM",
+    // Subway, Metro. Any underground rail system within a metropolitan area.
+    SUBWAY = "SUBWAY",
+    // Rail. Used for intercity or long-distance travel.
+    RAIL = "RAIL",
+    // Bus. Used for short- and long-distance bus routes.
+    BUS = "BUS",
+    // Ferry. Used for short- and long-distance boat service.
+    FERRY = "FERRY",
+    //Cable car. Used for street-level cable cars where the cable runs beneath the car.
+    CABLE_CAR = "CABLE_CAR",
+    // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is suspended from the cable.
+    GONDOLA = "GONDOLA",
+    // Funicular. Any rail system designed for steep inclines.
+    FUNICULAR = "FUNICULAR",
+    // All modes
+    TRANSIT = "TRANSIT"
+}
+
+export interface ProfileOption {
+    transit: Array<TransitSegment>; // Make these more specific
+    access: Array<StreetSegment>; // Make these more specific
+    egress: Array<StreetSegment>; // Make these more specific
+    itinerary: Array<{
+        waitingTime: number; // secs
+        walkTime: number; // secs
+        distance: number; // mm
+        transfers: number; // number of transfers
+        duration: number; // secs
+        transitTime: number; // secs
+        connection: any;
+        startTime: {
+            year: number,
+            month: string,
+            dayOfMonth: number,
+            dayOfWeek: string,
+            hour: number,
+            minute: number,
+            second: number,       
+        }; // ZonedDateTime
+        endTime: {
+            year: number,
+            month: string,
+            dayOfMonth: number,
+            dayOfWeek: string,
+            hour: number,
+            minute: number,
+            second: number,       
+        }; // ZonedDateTime
+    }>;
+    summary: string;
+}
+
+interface TransitSegment {
+    mode: TransitModes;
+    transitEdges: Array<TransitEdgeInfo>;
+}
+
+interface StreetSegment {
+    streetEdges: Array<StreetEdgeInfo>,
+}
+
+export interface TransitEdgeInfo {
+    id: string;
+    fromStopID: number;
+    fromDepartureTime: any; // make more specific
+    toArrivalTime: any; // make more specific
+    toStopID: number;
+    routeID: string;
+    routeColor: string;
+    geometry: GeoJSON.LineString; 
+}
+
+export interface StreetEdgeInfo {
+    edgeId: string;
+    distance: number;
+    startTime: string; // ZonedDateTime
+    endTime: string; // ZonedDateTime
+    geometry: GeoJSON.LineString;
+    mode: LegMode;
+    absoluteDirection: String;
+    streetName: string;
+}
+
+export interface LatLng {
+    lat: number;
+    lng: number;
+}

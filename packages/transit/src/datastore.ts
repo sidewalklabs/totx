@@ -34,16 +34,10 @@ export interface State {
   currentStory: string;
 }
 
-// Copied from sidewalklabs/router/online-router.ts
-export enum TransportMode {
-  Transit = 1,
-  Walk,
-}
-
 export interface Step {
   from: any; // either a stop or one of the user-specified locations
   to: any; // either a stop or one of the user-specified locations
-  mode: TransportMode;
+  mode: LegMode | TransitModes;
   departTimeSecs: number;
   arriveTimeSecs: number;
   travelTimeSecs: number;
@@ -105,6 +99,37 @@ export interface UrlParams {
   scenario?: string;
 }
 
+// From r5_types
+export enum LegMode {
+  WALK = "WALK",
+  BICYCLE = "BICYCLE",
+  CAR = "CAR",
+  BICYCLE_RENT = "BICYCLE_RENT", // Bikeshare
+  CAR_PARK = "CAR_PARK"
+}
+
+// From r5_types
+export enum TransitModes {
+  // Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area.
+  TRAM = "TRAM",
+  // Subway, Metro. Any underground rail system within a metropolitan area.
+  SUBWAY = "SUBWAY",
+  // Rail. Used for intercity or long-distance travel.
+  RAIL = "RAIL",
+  // Bus. Used for short- and long-distance bus routes.
+  BUS = "BUS",
+  // Ferry. Used for short- and long-distance boat service.
+  FERRY = "FERRY",
+  //Cable car. Used for street-level cable cars where the cable runs beneath the car.
+  CABLE_CAR = "CABLE_CAR",
+  // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is suspended from the cable.
+  GONDOLA = "GONDOLA",
+  // Funicular. Any rail system designed for steep inclines.
+  FUNICULAR = "FUNICULAR",
+  // All modes
+  TRANSIT = "TRANSIT"
+}
+
 const INTRO_STORY = Stories['intro'];
 
 const INITIAL_VIEW: CenterZoomLevel = {
@@ -113,7 +138,7 @@ const INITIAL_VIEW: CenterZoomLevel = {
 };
 
 export const DEFAULT_OPTIONS: QueryOptions = {
-  departure_time: '8:00:00',
+  departure_time: '08:00:00',
   max_walking_distance_km: 0.8, // 0.5 miles
   walking_speed_kph: 4.8, // 3 mph
   max_waiting_time_secs: 1800, // 30 minutes

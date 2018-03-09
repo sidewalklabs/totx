@@ -1,25 +1,16 @@
-/** Types for Routes; from router/src/online-router.ts */
+/** Types for Routes */
 
 import {FeatureCollection} from '../../utils';
+import {TransportMode} from '../server/r5/r5_types';
 
-export enum TransportMode {
-  Origin = 0,
-  Transit,
-  Walk,
-}
-
-export interface Stop {
-  // TODO: rename fields to id, latitude, longitude so that this extends Location.
-  stopId: string;
-  stopName: string;
-  stopDesc: string;
-  stopLat: number;
-  stopLng: number;
+export interface Stop extends Location {
+  stopName?: string;
+  stopDesc?: string;
   parentStation?: string;
   feed?: string; // for merged feeds, this tracks the original source.
 }
 
-interface Location {
+export interface Location {
   id: string;
   latitude: number;
   longitude: number;
