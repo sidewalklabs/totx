@@ -47,7 +47,6 @@ app.get('/route', (expressRequest, response) => {
   }
 
   return handleR5OneToOne(params, response);
-
 });
 
 // Get travel times from an origin to every dissemination area in the city.
@@ -62,7 +61,6 @@ app.get('/one-to-city', (expressRequest, response) => {
   }
 
   return handleR5OneToMany(params, response);
-
 });
 
 /**
@@ -105,11 +103,11 @@ function handleR5OneToMany(params: any, response: express.Response) {
   });
 }
 
-  app.use(
-    gzipStatic(__dirname + '/../static', {
-      maxAge,
-    }),
-  );
+app.use(
+  gzipStatic(__dirname + '/../static', {
+    maxAge,
+  }),
+);
 
 const server = app.listen(program.port);
 server.timeout = program.timeout * 1000;

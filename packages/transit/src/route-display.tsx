@@ -33,7 +33,7 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
       .filter(step => step.mode in TransitModes || step.distanceKm > 0.1)
       .map(
         (step, i) =>
-          (step.mode in TransitModes) ? (
+          step.mode in TransitModes ? (
             <RouteSymbol key={'r' + i} id={step.routeId} />
           ) : (
             <span key={'r' + i} className={'walk'} />

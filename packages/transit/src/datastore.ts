@@ -101,33 +101,33 @@ export interface UrlParams {
 
 // From r5_types
 export enum LegMode {
-  WALK = "WALK",
-  BICYCLE = "BICYCLE",
-  CAR = "CAR",
-  BICYCLE_RENT = "BICYCLE_RENT", // Bikeshare
-  CAR_PARK = "CAR_PARK"
+  WALK = 'WALK',
+  BICYCLE = 'BICYCLE',
+  CAR = 'CAR',
+  BICYCLE_RENT = 'BICYCLE_RENT', // Bikeshare
+  CAR_PARK = 'CAR_PARK',
 }
 
 // From r5_types
 export enum TransitModes {
   // Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area.
-  TRAM = "TRAM",
+  TRAM = 'TRAM',
   // Subway, Metro. Any underground rail system within a metropolitan area.
-  SUBWAY = "SUBWAY",
+  SUBWAY = 'SUBWAY',
   // Rail. Used for intercity or long-distance travel.
-  RAIL = "RAIL",
+  RAIL = 'RAIL',
   // Bus. Used for short- and long-distance bus routes.
-  BUS = "BUS",
+  BUS = 'BUS',
   // Ferry. Used for short- and long-distance boat service.
-  FERRY = "FERRY",
+  FERRY = 'FERRY',
   //Cable car. Used for street-level cable cars where the cable runs beneath the car.
-  CABLE_CAR = "CABLE_CAR",
+  CABLE_CAR = 'CABLE_CAR',
   // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is suspended from the cable.
-  GONDOLA = "GONDOLA",
+  GONDOLA = 'GONDOLA',
   // Funicular. Any rail system designed for steep inclines.
-  FUNICULAR = "FUNICULAR",
+  FUNICULAR = 'FUNICULAR',
   // All modes
-  TRANSIT = "TRANSIT"
+  TRANSIT = 'TRANSIT',
 }
 
 const INTRO_STORY = Stories['intro'];
