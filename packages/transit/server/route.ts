@@ -1,7 +1,7 @@
 /** Types for Routes */
 
 import {FeatureCollection} from '../../utils';
-import {TransportMode} from '../server/r5/r5_types';
+import {LegMode, TransitModes} from '../server/r5/r5-types';
 
 export interface Stop extends Location {
   stopName?: string;
@@ -20,7 +20,7 @@ export interface Location {
 export interface Step {
   from: Stop; // either a stop or one of the user-specified locations
   to: Stop; // either a stop or one of the user-specified locations
-  mode: TransportMode;
+  mode: LegMode | TransitModes;
   departTimeSecs: number;
   arriveTimeSecs: number;
   travelTimeSecs: number;
@@ -39,7 +39,6 @@ export interface Route {
   arriveTimeSecs: number;
   travelTimeSecs: number;
   walkingDistanceKm: number;
-
   steps: Step[];
   geojson: FeatureCollection;
 }
