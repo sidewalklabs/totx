@@ -25,6 +25,7 @@ async function requestPromise<T>(options: request.CoreOptions & request.UrlOptio
     });
   });
 }
+
 class R5Router {
   private routerUrl: string;
 
@@ -69,8 +70,18 @@ function paramsToProfileRequest(
   destination?: LatLng,
   options?: QueryOptions,
 ): ProfileRequest {
-  // Defaults to transit mode
-  let transitModes: TransitModes[] = [TransitModes.TRANSIT];
+  // Defaults to all transit modes
+  let transitModes: TransitModes[] = [
+      TransitModes.BUS,
+      TransitModes.CABLE_CAR,
+      TransitModes.FERRY,
+      TransitModes.FUNICULAR,
+      TransitModes.GONDOLA,
+      TransitModes.RAIL,
+      TransitModes.SUBWAY,
+      TransitModes.TRAM,
+      TransitModes.TRANSIT,
+    ];
   let directModes: LegMode[] = [LegMode.WALK];
 
   let req: ProfileRequest = {
@@ -89,12 +100,18 @@ function paramsToProfileRequest(
     req.toLon = destination.lng;
   }
   if (options) {
-    if (!(options.travel_mode === TransitModes.TRANSIT.toString())) {
-      transitModes = [];
-      directModes = [(<any>LegMode)[options.travel_mode]];
-      req.directModes = directModes.join();
-      req.transitModes = transitModes.join();
+    if (options.travel_mode in TransitModes) {
+      if (options.travel_mode === TransitModes.TRANSIT.toString()) {
+          transitModes = transitModes; // Convert TRANSIT to all modes
+      } else {
+        transitModes = [(<any>TransitModes)[options.travel_mode]];
+      }
+    } else { // Select only direct modes.
+        transitModes = [];
+        directModes = [(<any>LegMode)[options.travel_mode]];
     }
+    req.directModes = directModes.join();
+    req.transitModes = transitModes.join();
 
     if (options.departure_time) {
       const date = `${req.date}T${options.departure_time}`;
