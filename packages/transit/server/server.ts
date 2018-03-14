@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as url from 'url';
+import {wrapPromise} from '../../utils/express-promise';
 import R5Router from './r5/r5';
 
 const gzipStatic = require('connect-gzip-static');
@@ -37,31 +38,25 @@ app.get('/healthy', (expressRequest, response) => {
 
 // Get step-by-step directions for a route between two points.
 // Parameters are { origin: {lat, lng}, departureTime, destination: {lat, lng} }
-app.get('/route', (expressRequest, response) => {
-  let params: any;
-  try {
-    params = parseRequestURL(expressRequest.url);
-  } catch (e) {
-    response.sendStatus(400);
-    return;
-  }
-
-  return handleR5OneToOne(params, response);
-});
+app.get(
+  '/route',
+  wrapPromise(async (expressRequest, response) => {
+    const params = parseRequestURL(expressRequest.url);
+    const route = await r5Router.getRoute(params.origin, params.destination, params.options);
+    response.send(route);
+  }),
+);
 
 // Get travel times from an origin to every dissemination area in the city.
 // Parameters are { origin: {lat, lng}, departureTime }
-app.get('/one-to-city', (expressRequest, response) => {
-  let params: any;
-  try {
-    params = parseRequestURL(expressRequest.url);
-  } catch (e) {
-    response.sendStatus(400);
-    return;
-  }
-
-  return handleR5OneToMany(params, response);
-});
+app.get(
+  '/one-to-city',
+  wrapPromise(async (expressRequest, response) => {
+    const params = parseRequestURL(expressRequest.url);
+    const travelTimes = await r5Router.getTravelTimes(params.origin, params.options);
+    response.send(travelTimes);
+  }),
+);
 
 /**
  * @param requestURL expressRequest url string
@@ -78,30 +73,6 @@ function parseRequestURL(requestURL: string) {
 
 // In prod, cache all assets for 1 day. For development, don't do any caching.
 const maxAge = process.env.NODE_ENV === 'production' ? '1d' : null;
-
-function handleR5OneToOne(params: any, response: express.Response) {
-  (async () => {
-    const route = await r5Router.getRoute(params.origin, params.destination, {
-      ...params.options,
-    });
-    response.send(route);
-  })().catch(e => {
-    console.error(e);
-    response.send(500);
-  });
-}
-
-function handleR5OneToMany(params: any, response: express.Response) {
-  (async () => {
-    const travelTimes = await r5Router.getTravelTimes(params.origin, {
-      ...params.options,
-    });
-    response.send(travelTimes);
-  })().catch(e => {
-    console.error(e);
-    response.sendStatus(500);
-  });
-}
 
 app.use(
   gzipStatic(__dirname + '/../static', {

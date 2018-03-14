@@ -1,13 +1,16 @@
+import * as _ from 'lodash';
+
+import {Route, Step} from '../route';
 import {
   LatLng,
+  ProfileOption,
   ProfileResponse,
+  StreetEdgeInfo,
   TransitEdgeInfo,
   TransitModes,
-  StreetEdgeInfo,
-  ProfileOption,
-} from './r5-types';
+} from '../../common/r5-types';
+
 import {Feature} from '../../../utils';
-import {Route, Step} from '../route';
 
 export const SECONDS_PER_HOUR = 3600;
 
@@ -16,28 +19,19 @@ export function profileResponseToRoute(
   destination: LatLng,
   pr: ProfileResponse,
 ): Route {
-  if (!pr.options || pr.options.length == 0) {
+  if (!pr.options || pr.options.length === 0) {
     return null;
   }
 
-  let option: ProfileOption;
-  let fastest = Number.MAX_SAFE_INTEGER;
-  let fastestOption = null;
-  for (const op of pr.options) {
-    const dur = op.itinerary[0].duration;
-    if (dur < fastest) {
-      fastestOption = op;
-      fastest = dur;
-    }
-  }
-  option = fastestOption;
+  // Pick the fastest option.
+  const option = _.minBy(pr.options, op => op.itinerary[0].duration);
 
-  let {features, steps} = optionToFeaturesAndSteps(option);
+  const {features, steps} = optionToFeaturesAndSteps(option);
 
   const itinerary = option.itinerary[0];
-  const departure_secs_since_midnight = itinerary.startTime.hour * SECONDS_PER_HOUR;
-  const arrival_secs_since_midnight = itinerary.endTime.hour * SECONDS_PER_HOUR;
-  const duration_secs = itinerary.duration;
+  const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR;
+  const arriveTimeSecs = itinerary.endTime.hour * SECONDS_PER_HOUR;
+  const travelTimeSecs = itinerary.duration;
 
   return {
     origin: {
@@ -50,11 +44,11 @@ export function profileResponseToRoute(
       latitude: destination.lat,
       longitude: destination.lng,
     },
-    departureSecs: departure_secs_since_midnight,
-    arriveTimeSecs: arrival_secs_since_midnight,
-    travelTimeSecs: duration_secs,
+    departureSecs,
+    arriveTimeSecs,
+    travelTimeSecs,
     walkingDistanceKm: 0, // fill this in
-    steps: steps,
+    steps,
     geojson: {
       type: 'FeatureCollection',
       features,
@@ -63,13 +57,11 @@ export function profileResponseToRoute(
 }
 
 function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; steps: Step[]} {
-  let features: Array<Feature> = [];
-  let steps: Array<Step> = [];
-  for (const e of option.access[0].streetEdges) {
-    features.push(featureFromStreetEdgeInfo(e));
-    steps.push(stepFromStreetEdgeInfo(e));
-  }
-  if (option.transit != null) {
+  const {streetEdges} = option.access[0];
+  const features = streetEdges.map(featureFromStreetEdgeInfo);
+  const steps = streetEdges.map(stepFromStreetEdgeInfo);
+
+  if (option.transit) {
     for (const s of option.transit) {
       for (const e of s.transitEdges) {
         features.push(featureFromTransitEdgeInfo(e, s.mode));
@@ -85,7 +77,7 @@ function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; 
 }
 
 function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
-  const feature: Feature = {
+  return {
     geometry: e.geometry,
     type: 'Feature',
     properties: {
@@ -95,7 +87,6 @@ function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
       edgeId: e.edgeId,
     },
   };
-  return feature;
 }
 
 function featureFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Feature {
@@ -103,7 +94,7 @@ function featureFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Fea
     geometry: e.geometry,
     type: 'Feature',
     properties: {
-      mode: mode,
+      mode,
       fromStopID: e.fromStopID,
       toStopID: e.toStopID,
       edgeId: e.id,
@@ -152,9 +143,9 @@ function stepFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Step {
       latitude: endPoint[1], // geojson is in longitude, latitude order
       longitude: endPoint[0],
     },
-    mode: mode,
-    departTimeSecs: 0, // TODO convert from Array<LocalDateTime> to seconds
-    arriveTimeSecs: 0, // TODO convert from Array<LocalDateTime> to seconds
+    mode,
+    departTimeSecs: 0, // TODO convert from LocalDateTime[] to seconds
+    arriveTimeSecs: 0, // TODO convert from LocalDateTime[] to seconds
     travelTimeSecs: 0, // TODO convert diff between departTimeSecs and arriveTimeSecs
     distanceKm: 0, // TODO add this info
     description: '',

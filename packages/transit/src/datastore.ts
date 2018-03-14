@@ -1,15 +1,16 @@
 import * as Cookies from 'js-cookie';
 import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
-import {getPromise} from '../../utils';
+import * as ramps from './ramps';
 
 import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
-import {StyleFn} from '../../overlaymap';
 import {ajaxPromise, FeatureCollection} from '../../utils';
-import Cache from '../../utils/cache';
-
 import Action, * as actions from './action';
-import * as ramps from './ramps';
+import {LegMode, TransitModes} from '../common/r5-types';
+
+import {StyleFn} from '../../overlaymap';
+import {getPromise} from '../../utils';
+import Cache from '../../utils/cache';
 import Stories from './stories';
 import {withoutDefaults} from './utils';
 
@@ -97,37 +98,6 @@ export interface UrlParams {
   center?: LatLngObject;
   zoomLevel?: number;
   scenario?: string;
-}
-
-// From r5_types
-export enum LegMode {
-  WALK = 'WALK',
-  BICYCLE = 'BICYCLE',
-  CAR = 'CAR',
-  BICYCLE_RENT = 'BICYCLE_RENT', // Bikeshare
-  CAR_PARK = 'CAR_PARK',
-}
-
-// From r5_types
-export enum TransitModes {
-  // Tram, Streetcar, Light rail. Any light rail or street level system within a metropolitan area.
-  TRAM = 'TRAM',
-  // Subway, Metro. Any underground rail system within a metropolitan area.
-  SUBWAY = 'SUBWAY',
-  // Rail. Used for intercity or long-distance travel.
-  RAIL = 'RAIL',
-  // Bus. Used for short- and long-distance bus routes.
-  BUS = 'BUS',
-  // Ferry. Used for short- and long-distance boat service.
-  FERRY = 'FERRY',
-  //Cable car. Used for street-level cable cars where the cable runs beneath the car.
-  CABLE_CAR = 'CABLE_CAR',
-  // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is suspended from the cable.
-  GONDOLA = 'GONDOLA',
-  // Funicular. Any rail system designed for steep inclines.
-  FUNICULAR = 'FUNICULAR',
-  // All modes
-  TRANSIT = 'TRANSIT',
 }
 
 const INTRO_STORY = Stories['intro'];

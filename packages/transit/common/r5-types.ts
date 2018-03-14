@@ -1,5 +1,7 @@
 /**
  * Types for the R5 API.
+ * These were copied over from the R5 Router's internal representations and may not include all
+ * possible fields.
  */
 
 export interface ProfileRequest {
@@ -11,15 +13,15 @@ export interface ProfileRequest {
   toTime?: number; // secs since midnight
   date?: string; // LocalDate, e.g. 2017-10-16
   wheelchair?: boolean;
-  accessModes?: string;
-  egressModes?: string;
-  directModes?: string;
-  transitModes?: string;
+  accessModes?: string; // comma-separated list of LegModes
+  egressModes?: string; // comma-separated list of LegModes
+  directModes?: string; // comma-separated list of LegModes
+  transitModes?: string; // comma-separated list of TransitModes
   verbose?: boolean;
 }
 
 export interface AnalysisTask extends ProfileRequest {
-  type?: string;
+  type: string;
 }
 
 export interface ProfileResponse {
@@ -45,7 +47,7 @@ export enum TransitModes {
   BUS = 'BUS',
   // Ferry. Used for short- and long-distance boat service.
   FERRY = 'FERRY',
-  //Cable car. Used for street-level cable cars where the cable runs beneath the car.
+  // Cable car. Used for street-level cable cars where the cable runs beneath the car.
   CABLE_CAR = 'CABLE_CAR',
   // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is suspended from the cable.
   GONDOLA = 'GONDOLA',
@@ -56,9 +58,9 @@ export enum TransitModes {
 }
 
 export interface ProfileOption {
-  transit: Array<TransitSegment>; // Make these more specific
-  access: Array<StreetSegment>; // Make these more specific
-  egress: Array<StreetSegment>; // Make these more specific
+  transit: TransitSegment[]; // Make these more specific
+  access: StreetSegment[]; // Make these more specific
+  egress: StreetSegment[]; // Make these more specific
   itinerary: Array<{
     waitingTime: number; // secs
     walkTime: number; // secs
@@ -67,42 +69,36 @@ export interface ProfileOption {
     duration: number; // secs
     transitTime: number; // secs
     connection: any;
-    startTime: {
-      year: number;
-      month: string;
-      dayOfMonth: number;
-      dayOfWeek: string;
-      hour: number;
-      minute: number;
-      second: number;
-    }; // ZonedDateTime
-    endTime: {
-      year: number;
-      month: string;
-      dayOfMonth: number;
-      dayOfWeek: string;
-      hour: number;
-      minute: number;
-      second: number;
-    }; // ZonedDateTime
+    startTime: ZonedDateTime;
+    endTime: ZonedDateTime;
   }>;
   summary: string;
 }
 
+interface ZonedDateTime {
+  year: number;
+  month: string;
+  dayOfMonth: number;
+  dayOfWeek: string;
+  hour: number;
+  minute: number;
+  second: number;
+}
+
 interface TransitSegment {
   mode: TransitModes;
-  transitEdges: Array<TransitEdgeInfo>;
+  transitEdges: TransitEdgeInfo[];
 }
 
 interface StreetSegment {
-  streetEdges: Array<StreetEdgeInfo>;
+  streetEdges: StreetEdgeInfo[];
 }
 
 export interface TransitEdgeInfo {
   id: string;
   fromStopID: number;
-  fromDepartureTime: any; // make more specific
-  toArrivalTime: any; // make more specific
+  fromDepartureTime: ZonedDateTime[];
+  toArrivalTime: ZonedDateTime[];
   toStopID: number;
   routeID: string;
   routeColor: string;
@@ -112,8 +108,8 @@ export interface TransitEdgeInfo {
 export interface StreetEdgeInfo {
   edgeId: string;
   distance: number;
-  startTime: string; // ZonedDateTime
-  endTime: string; // ZonedDateTime
+  startTime: ZonedDateTime; // ISO 8601
+  endTime: ZonedDateTime; // ISO 8601
   geometry: GeoJSON.LineString;
   mode: LegMode;
   absoluteDirection: String;

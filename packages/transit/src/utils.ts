@@ -1,6 +1,8 @@
 import {sprintf} from 'sprintf-js';
 import * as _ from 'underscore';
 
+const HHMMSS_REGEX = /([ 0-9]?\d):(\d\d):(\d\d)/;
+
 /** Inverse of parseTime() */
 export function formatTime(secs: number): string {
   const hours = Math.floor(secs / 3600);
