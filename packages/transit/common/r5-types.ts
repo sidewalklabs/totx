@@ -49,7 +49,8 @@ export enum TransitModes {
   FERRY = 'FERRY',
   // Cable car. Used for street-level cable cars where the cable runs beneath the car.
   CABLE_CAR = 'CABLE_CAR',
-  // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is suspended from the cable.
+  // Gondola, Suspended cable car. Typically used for aerial cable cars where the car is
+  // suspended from the cable.
   GONDOLA = 'GONDOLA',
   // Funicular. Any rail system designed for steep inclines.
   FUNICULAR = 'FUNICULAR',
@@ -108,8 +109,8 @@ export interface TransitEdgeInfo {
 export interface StreetEdgeInfo {
   edgeId: string;
   distance: number;
-  startTime: ZonedDateTime; // ISO 8601
-  endTime: ZonedDateTime; // ISO 8601
+  startTime: ZonedDateTime;
+  endTime: ZonedDateTime;
   geometry: GeoJSON.LineString;
   mode: LegMode;
   absoluteDirection: String;
