@@ -1,15 +1,16 @@
 import * as Cookies from 'js-cookie';
 import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
-import {getPromise} from '../../utils';
+import * as ramps from './ramps';
 
 import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
-import {StyleFn} from '../../overlaymap';
 import {ajaxPromise, FeatureCollection} from '../../utils';
-import Cache from '../../utils/cache';
-
 import Action, * as actions from './action';
-import * as ramps from './ramps';
+import {LegMode, TransitModes} from '../common/r5-types';
+
+import {StyleFn} from '../../overlaymap';
+import {getPromise} from '../../utils';
+import Cache from '../../utils/cache';
 import Stories from './stories';
 import {withoutDefaults} from './utils';
 
@@ -34,16 +35,10 @@ export interface State {
   currentStory: string;
 }
 
-// Copied from sidewalklabs/router/online-router.ts
-export enum TransportMode {
-  Transit = 1,
-  Walk,
-}
-
 export interface Step {
   from: any; // either a stop or one of the user-specified locations
   to: any; // either a stop or one of the user-specified locations
-  mode: TransportMode;
+  mode: LegMode | TransitModes;
   departTimeSecs: number;
   arriveTimeSecs: number;
   travelTimeSecs: number;
@@ -113,7 +108,7 @@ const INITIAL_VIEW: CenterZoomLevel = {
 };
 
 export const DEFAULT_OPTIONS: QueryOptions = {
-  departure_time: '8:00:00',
+  departure_time: '08:00:00',
   max_walking_distance_km: 0.8, // 0.5 miles
   walking_speed_kph: 4.8, // 3 mph
   max_waiting_time_secs: 1800, // 30 minutes

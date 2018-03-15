@@ -1,7 +1,8 @@
 import * as React from 'react';
 import * as _ from 'underscore';
 
-import {Route, Step, TransportMode} from './datastore';
+import {Route, Step} from './datastore';
+import {LegMode, TransitModes} from '../common/r5-types';
 import glyphs from './glyphs';
 import routes from './toronto-routes';
 
@@ -30,10 +31,10 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
       return <span className={className}>Not accessible with current settings</span>;
     }
     const steps = route.steps
-      .filter(step => step.mode === 1 || step.distanceKm > 0.1)
+      .filter(step => step.mode in TransitModes || step.distanceKm > 0.1)
       .map(
         (step, i) =>
-          step.mode === 1 ? (
+          step.mode in TransitModes ? (
             <RouteSymbol key={'r' + i} id={step.routeId} />
           ) : (
             <span key={'r' + i} className={'walk'} />
@@ -116,11 +117,11 @@ function describeStep(step: Step): string {
   const from = step.from.stopName;
   const to = step.to.stopName;
 
-  if (step.mode === TransportMode.Transit) {
+  if (step.mode in TransitModes) {
     return `Take ${TORONTO_ROUTES[step.routeId].route_long_name} ${
       step.numStops
     } stops from ${from} to ${to}.`;
-  } else if (step.mode === TransportMode.Walk) {
+  } else if (step.mode in LegMode) {
     let distance: string;
     if (step.distanceKm >= 0.16) {
       // 0.1 mile

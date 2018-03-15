@@ -74,7 +74,7 @@ const TIME_OPTIONS = _.range(0, 1440, 30).map(minutes => {
   let hours12 = Math.floor((minutes % NOON) / 60);
   if (hours12 === 0) hours12 = 12;
   const hourMins = minutes % 60;
-  const value = `${hours24}:${zeropad(hourMins)}:00`;
+  const value = `${zeropad(hours24)}:${zeropad(hourMins)}:00`;
   const display = `${hours12}:${zeropad(hourMins)} ${isPM ? 'PM' : 'AM'}`;
   return (
     <option key={minutes} value={value}>

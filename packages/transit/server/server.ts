@@ -1,6 +1,7 @@
 import * as express from 'express';
-import * as request from 'request';
 import * as url from 'url';
+import {wrapPromise} from '../../utils/express-promise';
+import R5Router from './r5/r5';
 
 const gzipStatic = require('connect-gzip-static');
 const program = require('commander');
@@ -24,6 +25,8 @@ console.log('Starting up...');
 console.log(isProd ? 'Production mode' : 'Dev mode');
 console.log('Using routing server at', program.routerUrl);
 
+const r5Router = new R5Router(program.routerUrl);
+
 const app = express();
 
 // Log all requests.
@@ -35,54 +38,25 @@ app.get('/healthy', (expressRequest, response) => {
 
 // Get step-by-step directions for a route between two points.
 // Parameters are { origin: {lat, lng}, departureTime, destination: {lat, lng} }
-app.get('/route', (expressRequest, response) => {
-  let params: any;
-  try {
-    params = parseRequestURL(expressRequest.url);
-  } catch (e) {
-    response.sendStatus(400);
-    return;
-  }
-
-  request({
-    method: 'POST',
-    url: program.routerUrl + '/route',
-    json: true,
-    body: params,
-  })
-    .on('response', res => {
-      if (isProd) {
-        res.headers['Cache-Control'] = 'public, max-age=86400';
-      }
-    })
-    .pipe(response);
-});
+app.get(
+  '/route',
+  wrapPromise(async (expressRequest, response) => {
+    const params = parseRequestURL(expressRequest.url);
+    const route = await r5Router.getRoute(params.origin, params.destination, params.options);
+    response.send(route);
+  }),
+);
 
 // Get travel times from an origin to every dissemination area in the city.
 // Parameters are { origin: {lat, lng}, departureTime }
-app.get('/one-to-city', (expressRequest, response) => {
-  let params: any;
-  try {
-    params = parseRequestURL(expressRequest.url);
-  } catch (e) {
-    response.sendStatus(400);
-    return;
-  }
-
-  params.destination = 'torontodas';
-  request({
-    method: 'POST',
-    url: program.routerUrl + '/travelTimeMap',
-    json: true,
-    body: params,
-  })
-    .on('response', res => {
-      if (isProd) {
-        res.headers['Cache-Control'] = 'public, max-age=86400';
-      }
-    })
-    .pipe(response);
-});
+app.get(
+  '/one-to-city',
+  wrapPromise(async (expressRequest, response) => {
+    const params = parseRequestURL(expressRequest.url);
+    const travelTimes = await r5Router.getTravelTimes(params.origin, params.options);
+    response.send(travelTimes);
+  }),
+);
 
 /**
  * @param requestURL expressRequest url string

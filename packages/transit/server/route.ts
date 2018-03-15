@@ -1,25 +1,16 @@
-/** Types for Routes; from router/src/online-router.ts */
+/** Types for Routes */
 
 import {FeatureCollection} from '../../utils';
+import {LegMode, TransitModes} from '../common/r5-types';
 
-export enum TransportMode {
-  Origin = 0,
-  Transit,
-  Walk,
-}
-
-export interface Stop {
-  // TODO: rename fields to id, latitude, longitude so that this extends Location.
-  stopId: string;
-  stopName: string;
-  stopDesc: string;
-  stopLat: number;
-  stopLng: number;
+export interface Stop extends Location {
+  stopName?: string;
+  stopDesc?: string;
   parentStation?: string;
   feed?: string; // for merged feeds, this tracks the original source.
 }
 
-interface Location {
+export interface Location {
   id: string;
   latitude: number;
   longitude: number;
@@ -29,7 +20,7 @@ interface Location {
 export interface Step {
   from: Stop; // either a stop or one of the user-specified locations
   to: Stop; // either a stop or one of the user-specified locations
-  mode: TransportMode;
+  mode: LegMode | TransitModes;
   departTimeSecs: number;
   arriveTimeSecs: number;
   travelTimeSecs: number;
@@ -48,7 +39,6 @@ export interface Route {
   arriveTimeSecs: number;
   travelTimeSecs: number;
   walkingDistanceKm: number;
-
   steps: Step[];
   geojson: FeatureCollection;
 }
