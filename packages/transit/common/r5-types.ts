@@ -24,10 +24,6 @@ export interface AnalysisTask extends ProfileRequest {
   type: string;
 }
 
-export interface ProfileResponse {
-  options: ProfileOption[];
-}
-
 export enum LegMode {
   WALK = 'WALK',
   BICYCLE = 'BICYCLE',

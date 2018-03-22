@@ -11,13 +11,11 @@ import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
 
-export function profileResponseToRoute(
+export function profileOptionToRoute(
   origin: LatLng,
   destination: LatLng,
   option: ProfileOption,
 ): Route {
-  // Expect that only the fastest option will be sent.
-
   const {features, steps} = optionToFeaturesAndSteps(option);
 
   const itinerary = option.itinerary[0];

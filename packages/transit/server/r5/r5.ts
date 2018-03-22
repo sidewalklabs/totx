@@ -34,7 +34,7 @@ class R5Router {
       json: true,
       body: req,
     });
-    return profileResponseToRoute(origin, destination, body);
+    return profileOptionToRoute(origin, destination, body);
   }
 
   public async getTravelTimes(origin: LatLng, options?: QueryOptions) {
