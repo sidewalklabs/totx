@@ -9,7 +9,7 @@ import {
   LatLng,
   LegMode,
   ProfileRequest,
-  ProfileResponse,
+  ProfileOption,
   TransitModes,
 } from '../../common/r5-types';
 import {profileResponseToRoute, SECONDS_PER_HOUR} from './route-converter';
@@ -28,13 +28,13 @@ class R5Router {
   ): Promise<Route> {
     const req = paramsToProfileRequest(origin, options, destination);
     const url = this.routerUrl + '/route';
-    const body = await requestPromise<ProfileResponse>({
+    const body = await requestPromise<ProfileOption>({
       url,
       method: 'POST',
       json: true,
       body: req,
     });
-    return profileResponseToRoute(origin, destination, body);
+    return profileOptionToRoute(origin, destination, body);
   }
 
   public async getTravelTimes(origin: LatLng, options?: QueryOptions) {

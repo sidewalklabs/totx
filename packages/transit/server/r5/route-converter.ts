@@ -1,10 +1,7 @@
-import * as _ from 'lodash';
-
 import {Route, Step} from '../route';
 import {
   LatLng,
   ProfileOption,
-  ProfileResponse,
   StreetEdgeInfo,
   TransitEdgeInfo,
   TransitModes,
@@ -14,18 +11,11 @@ import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
 
-export function profileResponseToRoute(
+export function profileOptionToRoute(
   origin: LatLng,
   destination: LatLng,
-  pr: ProfileResponse,
+  option: ProfileOption,
 ): Route {
-  if (!pr.options || pr.options.length === 0) {
-    return null;
-  }
-
-  // Pick the fastest option.
-  const option = _.minBy(pr.options, op => op.itinerary[0].duration);
-
   const {features, steps} = optionToFeaturesAndSteps(option);
 
   const itinerary = option.itinerary[0];
