@@ -3,16 +3,16 @@ import * as _ from 'lodash';
 /**
  * Wrapper around the R5 one-to-many and one-to-one routing API.
  */
-import {parseTime, requestPromise} from '../utils';
 import {
   AnalysisTask,
   LatLng,
   LegMode,
-  ProfileRequest,
   ProfileOption,
+  ProfileRequest,
   TransitModes,
 } from '../../common/r5-types';
-import {profileResponseToRoute, SECONDS_PER_HOUR} from './route-converter';
+import {parseTime, requestPromise} from '../utils';
+import {profileOptionToRoute, SECONDS_PER_HOUR} from './route-converter';
 
 import {QueryOptions} from '../../src/datastore';
 import {Route} from '../route';
