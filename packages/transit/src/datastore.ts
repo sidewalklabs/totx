@@ -5,8 +5,8 @@ import * as ramps from './ramps';
 
 import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
 import {ajaxPromise, FeatureCollection} from '../../utils';
-import Action, * as actions from './action';
 import {LegMode, TransitModes} from '../common/r5-types';
+import Action, * as actions from './action';
 
 import {StyleFn} from '../../overlaymap';
 import {getPromise} from '../../utils';

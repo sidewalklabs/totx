@@ -1,4 +1,3 @@
-import {Route, Step} from '../route';
 import {
   LatLng,
   ProfileOption,
@@ -6,6 +5,7 @@ import {
   TransitEdgeInfo,
   TransitModes,
 } from '../../common/r5-types';
+import {Route, Step} from '../route';
 
 import {Feature} from '../../../utils';
 

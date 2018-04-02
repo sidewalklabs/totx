@@ -94,6 +94,7 @@
     "tls": "^0.0.1",
     "tmp": "^0.0.31",
     "topojson-client": "^2.1.0",
+    "ts-node": "^5.0.1",
     "turf-overlaps": "^1.0.3",
     "typescript": "^2.6.2",
     "underscore": "^1.8.3",
@@ -109,10 +110,9 @@
   "scripts": {
     "develop": "./scripts/develop.sh",
     "prettier": "./scripts/prettier.sh --write",
-    "lint": "tslint --type-check --project tsconfig.json",
+    "lint": "tslint --project tsconfig.json",
     "tsc": "tsc",
-    "test":
-      "yarn prettier-test && yarn lint && yarn build && yarn sub-builds && yarn coverage && yarn webpack-all && yarn check-yarn"
+    "test": "yarn prettier-test && yarn lint && yarn build && yarn sub-builds && yarn coverage && yarn webpack-all && yarn check-yarn"
   },
   "author": "Sidewalk Engineers <eng@sidewalklabs.com>"
 }

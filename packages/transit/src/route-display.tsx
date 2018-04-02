@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as _ from 'underscore';
 
-import {Route, Step} from './datastore';
 import {LegMode, TransitModes} from '../common/r5-types';
+import {Route, Step} from './datastore';
 import glyphs from './glyphs';
 import routes from './toronto-routes';
 
