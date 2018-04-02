@@ -28,4 +28,9 @@ jobs:
           key: v1-dependencies-{{ checksum "yarn.lock" }}
 
       # run tests!
-      - run: yarn circleci
+      - run:
+        - yarn prettier-test
+        - yarn lint
+        - yarn tsc
+        - yarn test
+        - yarn webpack
