@@ -1,5 +1,5 @@
 import {LatLng} from '../../coordinates';
-import {BoxPlusLevel, DrawingStyle, Marker, OverlayMap, StyledFeatureData} from '../../overlaymap';
+import {BoxPlusLevel, DrawingStyle, Marker, StyledFeatureData} from '../../overlaymap';
 import {Feature} from '../../utils';
 
 import * as React from 'react';
@@ -8,6 +8,7 @@ import Action from './action';
 import BasemapStyle from './basemap-style';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
+import {Map} from './mapbox-map';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
@@ -60,7 +61,6 @@ export default class Root extends React.Component<ViewProps, {}> {
     this.onLoad = () => this.props.handleAction({type: 'map-ready'});
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
-    this.clearError = this.clearError.bind(this);
     this.handleBoundsChange = this.handleBoundsChange.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
   }
@@ -114,10 +114,9 @@ export default class Root extends React.Component<ViewProps, {}> {
     }
 
     return (
-      <OverlayMap
+      <Map
         view={this.props.view}
         data={data}
-        mapStyles={BasemapStyle}
         onLoad={this.onLoad}
         onClick={this.onClick}
         onError={this.onError}
@@ -130,7 +129,7 @@ export default class Root extends React.Component<ViewProps, {}> {
         />
         {secondMarker}
         {destinationMarker}
-      </OverlayMap>
+      </Map>
     );
   }
 
@@ -138,13 +137,6 @@ export default class Root extends React.Component<ViewProps, {}> {
     this.props.handleAction({
       type: 'update-bounds',
       bounds,
-    });
-  }
-
-  clearError() {
-    this.props.handleAction({
-      type: 'report-error',
-      error: null,
     });
   }
 
