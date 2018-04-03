@@ -32,6 +32,7 @@ export class Map extends React.Component<Props, State> {
     return (
       <MapboxGL
         center={[center.lng, center.lat]}
+        containerStyle={{flex: '1'}}
         style={'mapbox://styles/kevgrenn/cj907tt8x0q4v2sqmrebamelo'}
         onStyleLoad={this.props.onLoad}
       />

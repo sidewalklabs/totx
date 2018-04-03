@@ -723,6 +723,10 @@ span.commute-time {
   display: none;
 }
 
+#root, .view-map, .mapboxgl-map {
+  height: 100%;
+}
+
 @media only screen and (max-device-width: 700px) {
   .routing-settings,
   .compare-settings,
