@@ -1,10 +1,10 @@
 import {
   LatLng,
+  LegMode,
   ProfileOption,
   StreetEdgeInfo,
   TransitEdgeInfo,
   TransitModes,
-  LegMode,
 } from '../../common/r5-types';
 import {Route, Step} from '../route';
 
@@ -146,15 +146,15 @@ function stepFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Step {
 }
 
 function modeToLineStyle(mode: LegMode): string {
-  switch(mode) {
+  switch (mode) {
     case LegMode.BICYCLE:
-      return "#0000ff";
+      return '#0000ff';
     case LegMode.BICYCLE_RENT:
-      return "#800080";
+      return '#800080';
     case LegMode.CAR:
-      return "#ff0000";
+      return '#ff0000';
     case LegMode.WALK:
     default:
-     return "#00ff00";
+      return '#00ff00';
   }
 }
