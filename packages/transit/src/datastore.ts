@@ -625,7 +625,6 @@ function createStore() {
       isLoadingGeoJSON = false;
       const torontoGeojson = topojson.feature(torontoTopojson, torontoTopojson.objects['-']);
       torontoGeojson.features.forEach((feature: any) => {
-        feature.geometry = transformGeometryLatLngToGoogle(feature.geometry);
         feature.id = feature.properties.geo_id;
       });
       geojson = torontoGeojson;

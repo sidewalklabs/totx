@@ -6,6 +6,8 @@ import {CenterZoomLevel} from '../../coordinates';
 import {StyledFeatureData, BoxPlusLevel} from '../../overlaymap';
 import {Feature} from '../../utils';
 
+import {ChoroplethLayer} from './choropleth-layer';
+
 export interface Props {
   view: CenterZoomLevel;
   data: StyledFeatureData[];
@@ -29,13 +31,20 @@ const MapboxGL = ReactMapboxGl({
 export class Map extends React.Component<Props, State> {
   render() {
     const center = this.props.view.center;
+    const data = this.props.data[0];
     return (
       <MapboxGL
         center={[center.lng, center.lat]}
         containerStyle={{flex: '1'}}
         style={'mapbox://styles/kevgrenn/cj907tt8x0q4v2sqmrebamelo'}
-        onStyleLoad={this.props.onLoad}
-      />
+        onStyleLoad={this.props.onLoad}>
+        <ChoroplethLayer
+          geojson={data.geojson}
+          styleFn={data.styleFn}
+          visibility="visible"
+          before="poi-small"
+        />
+      </MapboxGL>
     );
   }
 }
