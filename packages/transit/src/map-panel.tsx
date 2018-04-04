@@ -1,6 +1,6 @@
-import {LatLng} from '../../coordinates';
 import {DrawingStyle, StyledFeatureData} from '../../overlaymap';
 import {Feature} from '../../utils';
+import {LatLng} from './latlng';
 
 import * as React from 'react';
 

@@ -2,7 +2,7 @@
  * All actions which can be taken within the Transit Accessibility UI.
  */
 
-import {LatLng} from '../../coordinates';
+import {LatLng} from './latlng';
 
 import {QueryOptions} from './datastore';
 

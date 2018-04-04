@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {GeoJSONLayer} from 'react-mapbox-gl';
 import {StyleFn} from '../../overlaymap';
-import {FeatureCollection, shallowEqual} from '../../utils';
+import {shallowEqual, FeatureCollection} from '../../utils';
 
 export interface Props {
   geojson: FeatureCollection;
