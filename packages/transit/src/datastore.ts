@@ -3,10 +3,10 @@ import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
 import * as ramps from './ramps';
 
-import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
-import {ajaxPromise, FeatureCollection} from '../../utils';
 import Action, * as actions from './action';
 import {LegMode, TransitModes} from '../common/r5-types';
+import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
+import {ajaxPromise, FeatureCollection} from '../../utils';
 
 import {StyleFn} from '../../overlaymap';
 import {getPromise} from '../../utils';

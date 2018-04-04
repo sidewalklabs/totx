@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as _ from 'underscore';
 
-import {Route, Step} from './datastore';
 import {LegMode, TransitModes} from '../common/r5-types';
+import {Route, Step} from './datastore';
 import glyphs from './glyphs';
 import routes from './toronto-routes';
 
@@ -129,7 +129,7 @@ function describeStep(step: Step): string {
     } else {
       distance = Math.round(step.distanceKm * 3280.84) + ' ft.';
     }
-    return `Walk ${distance} from ${from} to ${to}.`;
+    return `${step.mode} ${distance} from ${from} to ${to}.`;
   }
 }
 
