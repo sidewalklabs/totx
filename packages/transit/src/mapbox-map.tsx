@@ -13,9 +13,7 @@ export interface Props {
   routes: StyledFeatureData[];
   onLoad?: () => void;
   onError: (error: Error) => void;
-
   onClick?: (point: LatLng) => void;
-
   children?: any; // TODO(danvk): refine
 }
 

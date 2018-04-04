@@ -6,9 +6,7 @@ import {LatLng} from './latlng';
 export interface MarkerProps {
   /** The (lat, lng) position at which to show the marker. */
   position: LatLng;
-
   draggable?: boolean;
-
   icon?: string; // Path to a marker image URL. Default is a red pin.
 
   /** Fired when the user drops the marker in a new location. */
