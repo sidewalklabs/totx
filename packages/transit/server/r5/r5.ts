@@ -11,10 +11,7 @@ import {
   ProfileRequest,
   TransitModes,
 } from '../../common/r5-types';
-<<<<<<< HEAD
 import {parseTime, requestPromise} from '../utils';
-=======
->>>>>>> Display bikeshare on frontend and list final mode options. Added coloring for different parts of route to more easily see them for debugging
 import {profileOptionToRoute, SECONDS_PER_HOUR} from './route-converter';
 
 import {QueryOptions} from '../../src/datastore';
