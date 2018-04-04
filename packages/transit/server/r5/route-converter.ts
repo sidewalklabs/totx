@@ -4,6 +4,7 @@ import {
   StreetEdgeInfo,
   TransitEdgeInfo,
   TransitModes,
+  LegMode,
 } from '../../common/r5-types';
 import {Route, Step} from '../route';
 
@@ -75,6 +76,7 @@ function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
       streetName: e.streetName,
       distance_m: e.distance,
       edgeId: e.edgeId,
+      stroke: modeToLineStyle(e.mode),
     },
   };
 }
@@ -141,4 +143,18 @@ function stepFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Step {
     description: '',
     routeId: e.routeID,
   };
+}
+
+function modeToLineStyle(mode: LegMode): string {
+  switch(mode) {
+    case LegMode.BICYCLE:
+      return "#0000ff";
+    case LegMode.BICYCLE_RENT:
+      return "#800080";
+    case LegMode.CAR:
+      return "#ff0000";
+    case LegMode.WALK:
+    default:
+     return "#00ff00";
+  }
 }

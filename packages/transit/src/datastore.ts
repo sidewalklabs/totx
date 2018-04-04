@@ -3,10 +3,17 @@ import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
 import * as ramps from './ramps';
 
+<<<<<<< HEAD
 import {ajaxPromise, FeatureCollection} from '../../utils';
 import {LegMode, TransitModes} from '../common/r5-types';
 import Action, * as actions from './action';
 import {CenterZoomLevel, LatLng} from './latlng';
+=======
+import Action, * as actions from './action';
+import {LegMode, TransitModes} from '../common/r5-types';
+import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
+import {ajaxPromise, FeatureCollection} from '../../utils';
+>>>>>>> Display bikeshare on frontend and list final mode options. Added coloring for different parts of route to more easily see them for debugging
 
 import {getPromise} from '../../utils';
 import Cache from '../../utils/cache';
