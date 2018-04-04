@@ -9,7 +9,7 @@ import ReactMapboxGl, {
 import {GeoJSONLayer} from 'react-mapbox-gl';
 
 import {CenterZoomLevel, LatLng} from '../../coordinates';
-import {StyledFeatureData, BoxPlusLevel} from '../../overlaymap';
+import {StyledFeatureData} from '../../overlaymap';
 import {Feature as GeoJSONFeature} from '../../utils';
 
 import {ChoroplethLayer} from './choropleth-layer';
@@ -24,9 +24,6 @@ export interface Props {
   onError: (error: Error) => void;
 
   onClick?: (point: LatLng) => void;
-
-  // TODO(danvk): eliminate this in favor of a ref.
-  onBoundsChanged?: (bounds: BoxPlusLevel) => void;
 
   children?: any; // TODO(danvk): refine
 }
