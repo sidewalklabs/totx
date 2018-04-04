@@ -1,4 +1,4 @@
-import {Feature, FeatureCollection} from '../utils';
+import {Feature, FeatureCollection} from '../../utils';
 
 export interface DrawingStyle {
   fillColor?: string;

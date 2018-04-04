@@ -1,6 +1,6 @@
-import {DrawingStyle, StyledFeatureData} from '../../overlaymap';
 import {Feature} from '../../utils';
 import {LatLng} from './latlng';
+import {DrawingStyle, StyledFeatureData} from './stylefn';
 
 import * as React from 'react';
 

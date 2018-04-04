@@ -8,10 +8,10 @@ import {LegMode, TransitModes} from '../common/r5-types';
 import Action, * as actions from './action';
 import {CenterZoomLevel, LatLng} from './latlng';
 
-import {StyleFn} from '../../overlaymap';
 import {getPromise} from '../../utils';
 import Cache from '../../utils/cache';
 import Stories from './stories';
+import {StyleFn} from './stylefn';
 import {withoutDefaults} from './utils';
 
 /** This is the state exported by this store via store.getState(). */

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ReactMapboxGl, {ZoomControl} from 'react-mapbox-gl';
 
-import {StyledFeatureData} from '../../overlaymap';
 import {CenterZoomLevel, LatLng} from './latlng';
+import {StyledFeatureData} from './stylefn';
 
 import {ChoroplethLayer} from './choropleth-layer';
 import {RouteLayer} from './route-layer';

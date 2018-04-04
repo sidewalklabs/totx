@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import {GeoJSONLayer} from 'react-mapbox-gl';
-import {StyleFn} from '../../overlaymap';
 import {shallowEqual, FeatureCollection} from '../../utils';
+import {StyleFn} from './stylefn';
 
 /**
  * GeoJSON layer with a style function.
