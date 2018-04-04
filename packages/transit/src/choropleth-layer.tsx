@@ -49,7 +49,7 @@ export class ChoroplethLayer extends React.Component<Props, State> {
 
   render() {
     const {before, visibility} = this.props;
-    console.log('rendering choropleth', this.state.styledFeatures.features[0].properties);
+    // console.log('rendering choropleth', this.state.styledFeatures.features[0].properties);
     return (
       <GeoJSONLayer
         id="choropleth"

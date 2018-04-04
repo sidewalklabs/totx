@@ -7,6 +7,7 @@ import {StyledFeatureData, BoxPlusLevel} from '../../overlaymap';
 import {Feature} from '../../utils';
 
 import {ChoroplethLayer} from './choropleth-layer';
+import {MapboxMarker} from './mapbox-marker';
 
 export interface Props {
   view: CenterZoomLevel;
@@ -18,6 +19,8 @@ export interface Props {
 
   // TODO(danvk): eliminate this in favor of a ref.
   onBoundsChanged?: (bounds: BoxPlusLevel) => void;
+
+  children?: any; // TODO(danvk): refine
 }
 
 interface State {}
@@ -44,6 +47,7 @@ export class Map extends React.Component<Props, State> {
           visibility="visible"
           before="poi-small"
         />
+        {this.props.children}
       </MapboxGL>
     );
   }

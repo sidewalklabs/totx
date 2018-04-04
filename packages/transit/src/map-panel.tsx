@@ -9,6 +9,7 @@ import BasemapStyle from './basemap-style';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
 import {Map} from './mapbox-map';
+import {MapboxMarker} from './mapbox-marker';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
@@ -92,7 +93,7 @@ export default class Root extends React.Component<ViewProps, {}> {
     if (this.props.mode === 'compare-origin') {
       firstMarkerImage = 'pin-blue-A-24x34.png';
       secondMarker = (
-        <Marker
+        <MapboxMarker
           position={this.props.origin2}
           draggable={true}
           icon="pin-orange-B-24x34.png"
@@ -104,7 +105,7 @@ export default class Root extends React.Component<ViewProps, {}> {
     let destinationMarker: JSX.Element = null;
     if (this.props.destination) {
       destinationMarker = (
-        <Marker
+        <MapboxMarker
           position={this.props.destination}
           draggable={true}
           icon="pin-gray-blank-24x34.png"
@@ -121,7 +122,7 @@ export default class Root extends React.Component<ViewProps, {}> {
         onClick={this.onClick}
         onError={this.onError}
         onBoundsChanged={this.handleBoundsChange}>
-        <Marker
+        <MapboxMarker
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
