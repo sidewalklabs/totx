@@ -14,10 +14,12 @@ import {Feature as GeoJSONFeature} from '../../utils';
 
 import {ChoroplethLayer} from './choropleth-layer';
 import {MapboxMarker} from './mapbox-marker';
+import {RouteLayer} from './route-layer';
 
 export interface Props {
   view: CenterZoomLevel;
-  data: StyledFeatureData[];
+  data: StyledFeatureData;
+  routes: StyledFeatureData[];
   onLoad?: () => void;
   onError: (error: Error) => void;
 
@@ -46,7 +48,18 @@ export class Map extends React.Component<Props, State> {
 
   render() {
     const center = this.props.view.center;
-    const data = this.props.data[0];
+    const {data, routes} = this.props;
+
+    const routesEls = routes.map((r, i) => (
+      <RouteLayer
+        geojson={r.geojson}
+        styleFn={r.styleFn}
+        visibility={'visible'}
+        before={'poi-small'}
+        key={`route${i}`}
+      />
+    ));
+
     return (
       <MapboxGL
         center={[center.lng, center.lat]}
@@ -60,7 +73,9 @@ export class Map extends React.Component<Props, State> {
           visibility="visible"
           before="poi-small"
         />
+        {routesEls}
         {this.props.children}
+        <ZoomControl position="bottom-right" />
       </MapboxGL>
     );
   }

@@ -67,18 +67,17 @@ export default class Root extends React.Component<ViewProps, {}> {
   }
 
   render() {
-    const data: StyledFeatureData[] = [
-      {
-        geojson: this.props.geojson,
-        styleFn: this.props.style,
-        selectedStyleFn: null,
-        selectedFeatureId: null,
-      },
-    ];
+    const data: StyledFeatureData = {
+      geojson: this.props.geojson,
+      styleFn: this.props.style,
+      selectedStyleFn: null,
+      selectedFeatureId: null,
+    };
+    const routes: StyledFeatureData[] = [];
     if (this.props.routes) {
       for (const route of this.props.routes) {
         if (!route) continue;
-        data.unshift({
+        routes.push({
           geojson: route.geojson,
           styleFn: routeStyle,
           selectedStyleFn: null,
@@ -118,6 +117,7 @@ export default class Root extends React.Component<ViewProps, {}> {
       <Map
         view={this.props.view}
         data={data}
+        routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
         onError={this.onError}

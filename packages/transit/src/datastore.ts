@@ -3,7 +3,7 @@ import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
 import * as ramps from './ramps';
 
-import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
+import {CenterZoomLevel, LatLng} from '../../coordinates';
 import {ajaxPromise, FeatureCollection} from '../../utils';
 import {LegMode, TransitModes} from '../common/r5-types';
 import Action, * as actions from './action';
@@ -170,7 +170,6 @@ async function fetchRoute(key: RoutesKey): Promise<Route> {
     throw new Error('Unable to load route');
   }
   route.geojson.features.forEach((f, i) => {
-    f.geometry = transformGeometryLatLngToGoogle(f.geometry);
     if (!f.id) f.id = 'route-' + i;
   });
 
