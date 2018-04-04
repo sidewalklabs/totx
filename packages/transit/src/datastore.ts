@@ -261,7 +261,7 @@ function createStore() {
   function handleAction(action: Action) {
     // Note: to ensure that gaEnabled works as intended, action handlers shouldn't make asynchronous
     // recursive calls to handleAction.
-    if (gaEnabled && action.type !== 'update-bounds' && action.type !== 'map-ready') {
+    if (gaEnabled && action.type !== 'map-ready') {
       ga('send', 'event', 'UI', action.type);
     }
 
@@ -271,9 +271,6 @@ function createStore() {
         break;
       case 'clear-destination':
         deselect();
-        break;
-      case 'update-bounds':
-        updateBounds(action);
         break;
       case 'report-error':
         reportError(action);
@@ -319,15 +316,6 @@ function createStore() {
   function deselect() {
     destination = null;
     stateChanged();
-  }
-
-  function updateBounds(action: actions.UpdateBounds) {
-    const bounds = action.bounds;
-    passiveViewport = {center: bounds.center, zoomLevel: bounds.zoomLevel};
-
-    // There's no need to go through a full state update when the viewport changes, and doing so is
-    // a significant performance hit. Just updating the hash makes panning much smoother.
-    updateHash();
   }
 
   function reportError(action: actions.ReportError) {

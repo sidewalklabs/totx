@@ -3,7 +3,6 @@
  */
 
 import {LatLng} from '../../coordinates';
-import {BoxPlusLevel} from '../../overlaymap';
 
 import {QueryOptions} from './datastore';
 
@@ -22,11 +21,6 @@ export interface SetDestination {
 
 export interface ClearDestination {
   type: 'clear-destination';
-}
-
-export interface UpdateBounds {
-  type: 'update-bounds';
-  bounds: BoxPlusLevel;
 }
 
 export interface ReportError {
@@ -63,7 +57,6 @@ type Action =
   | SetOptions
   | SetOrigin
   | SetStory
-  | ReportError
-  | UpdateBounds;
+  | ReportError;
 
 export default Action;

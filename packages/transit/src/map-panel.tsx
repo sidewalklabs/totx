@@ -1,11 +1,10 @@
 import {LatLng} from '../../coordinates';
-import {BoxPlusLevel, DrawingStyle, Marker, StyledFeatureData} from '../../overlaymap';
+import {DrawingStyle, StyledFeatureData} from '../../overlaymap';
 import {Feature} from '../../utils';
 
 import * as React from 'react';
 
 import Action from './action';
-import BasemapStyle from './basemap-style';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
 import {Map} from './mapbox-map';
@@ -62,7 +61,6 @@ export default class Root extends React.Component<ViewProps, {}> {
     this.onLoad = () => this.props.handleAction({type: 'map-ready'});
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
-    this.handleBoundsChange = this.handleBoundsChange.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
   }
 
@@ -120,8 +118,7 @@ export default class Root extends React.Component<ViewProps, {}> {
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
-        onError={this.onError}
-        onBoundsChanged={this.handleBoundsChange}>
+        onError={this.onError}>
         <MapboxMarker
           position={this.props.origin}
           draggable={true}
@@ -132,13 +129,6 @@ export default class Root extends React.Component<ViewProps, {}> {
         {destinationMarker}
       </Map>
     );
-  }
-
-  handleBoundsChange(bounds: BoxPlusLevel) {
-    this.props.handleAction({
-      type: 'update-bounds',
-      bounds,
-    });
   }
 
   handleMarkerMove(isSecondary: boolean, latLng: LatLng) {
