@@ -254,10 +254,6 @@ function createStore() {
     stringify: (key: LatLng) => key.toString(),
   });
 
-  // Neither of these are part of state; they're observed from the map and
-  // used for making links and requests.
-  let passiveViewport: CenterZoomLevel;
-
   function handleAction(action: Action) {
     // Note: to ensure that gaEnabled works as intended, action handlers shouldn't make asynchronous
     // recursive calls to handleAction.
@@ -631,13 +627,6 @@ function createStore() {
 
   function constructHash() {
     const obj: UrlParams = {origin, options: withoutDefaults(options, DEFAULT_OPTIONS)};
-    if (passiveViewport) {
-      const {lat, lng} = passiveViewport.center;
-      _.extend(obj, {
-        center: {lat, lng},
-        zoomLevel: passiveViewport.zoomLevel,
-      });
-    }
 
     if (mode !== 'single') {
       obj.mode = mode;
