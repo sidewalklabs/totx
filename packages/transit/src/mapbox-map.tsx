@@ -8,7 +8,7 @@ import ReactMapboxGl, {
 } from 'react-mapbox-gl';
 import {GeoJSONLayer} from 'react-mapbox-gl';
 
-import {CenterZoomLevel} from '../../coordinates';
+import {CenterZoomLevel, LatLng} from '../../coordinates';
 import {StyledFeatureData, BoxPlusLevel} from '../../overlaymap';
 import {Feature as GeoJSONFeature} from '../../utils';
 
@@ -21,11 +21,7 @@ export interface Props {
   onLoad?: () => void;
   onError: (error: Error) => void;
 
-  onClick?: (
-    event: google.maps.Data.MouseEvent,
-    layerIndex?: number,
-    feature?: GeoJSONFeature,
-  ) => void;
+  onClick?: (point: LatLng) => void;
 
   // TODO(danvk): eliminate this in favor of a ref.
   onBoundsChanged?: (bounds: BoxPlusLevel) => void;
@@ -42,6 +38,12 @@ const MapboxGL = ReactMapboxGl({
 });
 
 export class Map extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.onClick = this.onClick.bind(this);
+  }
+
   render() {
     const center = this.props.view.center;
     const data = this.props.data[0];
@@ -50,7 +52,8 @@ export class Map extends React.Component<Props, State> {
         center={[center.lng, center.lat]}
         containerStyle={{flex: '1'}}
         style={'mapbox://styles/kevgrenn/cj907tt8x0q4v2sqmrebamelo'}
-        onStyleLoad={this.props.onLoad}>
+        onStyleLoad={this.props.onLoad}
+        onClick={this.onClick}>
         <ChoroplethLayer
           geojson={data.geojson}
           styleFn={data.styleFn}
@@ -60,5 +63,11 @@ export class Map extends React.Component<Props, State> {
         {this.props.children}
       </MapboxGL>
     );
+  }
+
+  onClick(map: mapboxgl.Map, event: React.SyntheticEvent<any>) {
+    if (this.props.onClick) {
+      this.props.onClick((event as any).lngLat);
+    }
   }
 }

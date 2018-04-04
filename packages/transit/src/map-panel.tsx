@@ -158,20 +158,11 @@ export default class Root extends React.Component<ViewProps, {}> {
     });
   }
 
-  onClick(event: any, layerIndex: number, feature: Feature) {
-    if (feature && feature.properties.geo_id) {
-      // It's a block group.
-      const lat = event.latLng.lat();
-      const lng = event.latLng.lng();
-      this.props.handleAction({
-        type: 'set-destination',
-        lat,
-        lng,
-      });
-    } else {
-      this.props.handleAction({
-        type: 'clear-destination',
-      });
-    }
+  onClick(point: LatLng) {
+    this.props.handleAction({
+      type: 'set-destination',
+      lat: point.lat,
+      lng: point.lng,
+    });
   }
 }
