@@ -1,13 +1,14 @@
-import {LatLng} from '../../coordinates';
-import {BoxPlusLevel, DrawingStyle, Marker, OverlayMap, StyledFeatureData} from '../../overlaymap';
 import {Feature} from '../../utils';
+import {LatLng} from './latlng';
+import {DrawingStyle, StyledFeatureData} from './stylefn';
 
 import * as React from 'react';
 
 import Action from './action';
-import BasemapStyle from './basemap-style';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
+import {Map} from './mapbox-map';
+import {MapboxMarker} from './mapbox-marker';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
@@ -60,24 +61,21 @@ export default class Root extends React.Component<ViewProps, {}> {
     this.onLoad = () => this.props.handleAction({type: 'map-ready'});
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
-    this.clearError = this.clearError.bind(this);
-    this.handleBoundsChange = this.handleBoundsChange.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
   }
 
   render() {
-    const data: StyledFeatureData[] = [
-      {
-        geojson: this.props.geojson,
-        styleFn: this.props.style,
-        selectedStyleFn: null,
-        selectedFeatureId: null,
-      },
-    ];
+    const data: StyledFeatureData = {
+      geojson: this.props.geojson,
+      styleFn: this.props.style,
+      selectedStyleFn: null,
+      selectedFeatureId: null,
+    };
+    const routes: StyledFeatureData[] = [];
     if (this.props.routes) {
       for (const route of this.props.routes) {
         if (!route) continue;
-        data.unshift({
+        routes.push({
           geojson: route.geojson,
           styleFn: routeStyle,
           selectedStyleFn: null,
@@ -92,7 +90,7 @@ export default class Root extends React.Component<ViewProps, {}> {
     if (this.props.mode === 'compare-origin') {
       firstMarkerImage = 'pin-blue-A-24x34.png';
       secondMarker = (
-        <Marker
+        <MapboxMarker
           position={this.props.origin2}
           draggable={true}
           icon="pin-orange-B-24x34.png"
@@ -104,7 +102,7 @@ export default class Root extends React.Component<ViewProps, {}> {
     let destinationMarker: JSX.Element = null;
     if (this.props.destination) {
       destinationMarker = (
-        <Marker
+        <MapboxMarker
           position={this.props.destination}
           draggable={true}
           icon="pin-gray-blank-24x34.png"
@@ -114,15 +112,14 @@ export default class Root extends React.Component<ViewProps, {}> {
     }
 
     return (
-      <OverlayMap
+      <Map
         view={this.props.view}
         data={data}
-        mapStyles={BasemapStyle}
+        routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
-        onError={this.onError}
-        onBoundsChanged={this.handleBoundsChange}>
-        <Marker
+        onError={this.onError}>
+        <MapboxMarker
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
@@ -130,22 +127,8 @@ export default class Root extends React.Component<ViewProps, {}> {
         />
         {secondMarker}
         {destinationMarker}
-      </OverlayMap>
+      </Map>
     );
-  }
-
-  handleBoundsChange(bounds: BoxPlusLevel) {
-    this.props.handleAction({
-      type: 'update-bounds',
-      bounds,
-    });
-  }
-
-  clearError() {
-    this.props.handleAction({
-      type: 'report-error',
-      error: null,
-    });
   }
 
   handleMarkerMove(isSecondary: boolean, latLng: LatLng) {
@@ -165,20 +148,11 @@ export default class Root extends React.Component<ViewProps, {}> {
     });
   }
 
-  onClick(event: any, layerIndex: number, feature: Feature) {
-    if (feature && feature.properties.geo_id) {
-      // It's a block group.
-      const lat = event.latLng.lat();
-      const lng = event.latLng.lng();
-      this.props.handleAction({
-        type: 'set-destination',
-        lat,
-        lng,
-      });
-    } else {
-      this.props.handleAction({
-        type: 'clear-destination',
-      });
-    }
+  onClick(point: LatLng) {
+    this.props.handleAction({
+      type: 'set-destination',
+      lat: point.lat,
+      lng: point.lng,
+    });
   }
 }

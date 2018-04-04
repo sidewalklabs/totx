@@ -2,8 +2,7 @@
  * All actions which can be taken within the Transit Accessibility UI.
  */
 
-import {LatLng} from '../../coordinates';
-import {BoxPlusLevel} from '../../overlaymap';
+import {LatLng} from './latlng';
 
 import {QueryOptions} from './datastore';
 
@@ -22,11 +21,6 @@ export interface SetDestination {
 
 export interface ClearDestination {
   type: 'clear-destination';
-}
-
-export interface UpdateBounds {
-  type: 'update-bounds';
-  bounds: BoxPlusLevel;
 }
 
 export interface ReportError {
@@ -63,7 +57,6 @@ type Action =
   | SetOptions
   | SetOrigin
   | SetStory
-  | ReportError
-  | UpdateBounds;
+  | ReportError;
 
 export default Action;

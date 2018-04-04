@@ -3,15 +3,15 @@ import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
 import * as ramps from './ramps';
 
-import {transformGeometryLatLngToGoogle, CenterZoomLevel, LatLng} from '../../coordinates';
 import {ajaxPromise, FeatureCollection} from '../../utils';
 import {LegMode, TransitModes} from '../common/r5-types';
 import Action, * as actions from './action';
+import {CenterZoomLevel, LatLng} from './latlng';
 
-import {StyleFn} from '../../overlaymap';
 import {getPromise} from '../../utils';
 import Cache from '../../utils/cache';
 import Stories from './stories';
+import {StyleFn} from './stylefn';
 import {withoutDefaults} from './utils';
 
 /** This is the state exported by this store via store.getState(). */
@@ -170,7 +170,6 @@ async function fetchRoute(key: RoutesKey): Promise<Route> {
     throw new Error('Unable to load route');
   }
   route.geojson.features.forEach((f, i) => {
-    f.geometry = transformGeometryLatLngToGoogle(f.geometry);
     if (!f.id) f.id = 'route-' + i;
   });
 
@@ -255,14 +254,10 @@ function createStore() {
     stringify: (key: LatLng) => key.toString(),
   });
 
-  // Neither of these are part of state; they're observed from the map and
-  // used for making links and requests.
-  let passiveViewport: CenterZoomLevel;
-
   function handleAction(action: Action) {
     // Note: to ensure that gaEnabled works as intended, action handlers shouldn't make asynchronous
     // recursive calls to handleAction.
-    if (gaEnabled && action.type !== 'update-bounds' && action.type !== 'map-ready') {
+    if (gaEnabled && action.type !== 'map-ready') {
       ga('send', 'event', 'UI', action.type);
     }
 
@@ -272,9 +267,6 @@ function createStore() {
         break;
       case 'clear-destination':
         deselect();
-        break;
-      case 'update-bounds':
-        updateBounds(action);
         break;
       case 'report-error':
         reportError(action);
@@ -320,15 +312,6 @@ function createStore() {
   function deselect() {
     destination = null;
     stateChanged();
-  }
-
-  function updateBounds(action: actions.UpdateBounds) {
-    const bounds = action.bounds;
-    passiveViewport = {center: bounds.center, zoomLevel: bounds.zoomLevel};
-
-    // There's no need to go through a full state update when the viewport changes, and doing so is
-    // a significant performance hit. Just updating the hash makes panning much smoother.
-    updateHash();
   }
 
   function reportError(action: actions.ReportError) {
@@ -422,6 +405,10 @@ function createStore() {
     }
   }
 
+  function isDefined(x: number) {
+    return x !== null && x !== undefined;
+  }
+
   function getStyleFn() {
     const times = commuteTimesCache.getFromCache({origin, options}) || {};
     if (mode === 'single') {
@@ -429,14 +416,14 @@ function createStore() {
         const id = feature.properties['geo_id'];
         const secs = times[id];
         return {
-          fillColor: secs !== null ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)',
+          fillColor: isDefined(secs) ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)',
           lineWidth: 0,
         };
       };
     }
 
     const times2 = commuteTimesCache.getFromCache(getSecondaryParams()) || {};
-    const secsOrBig = (secs: number) => (secs === null ? 10000 : secs);
+    const secsOrBig = (secs: number) => (!isDefined(secs) ? 10000 : secs);
     const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
     return (feature: any) => {
       const id = feature.properties['geo_id'];
@@ -444,7 +431,7 @@ function createStore() {
       const secs2 = times2[id];
       return {
         fillColor:
-          secs1 !== null || secs2 !== null
+          isDefined(secs1) || isDefined(secs2)
             ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
             : 'rgba(0,0,0,0)',
         lineWidth: 0,
@@ -625,7 +612,6 @@ function createStore() {
       isLoadingGeoJSON = false;
       const torontoGeojson = topojson.feature(torontoTopojson, torontoTopojson.objects['-']);
       torontoGeojson.features.forEach((feature: any) => {
-        feature.geometry = transformGeometryLatLngToGoogle(feature.geometry);
         feature.id = feature.properties.geo_id;
       });
       geojson = torontoGeojson;
@@ -641,13 +627,6 @@ function createStore() {
 
   function constructHash() {
     const obj: UrlParams = {origin, options: withoutDefaults(options, DEFAULT_OPTIONS)};
-    if (passiveViewport) {
-      const {lat, lng} = passiveViewport.center;
-      _.extend(obj, {
-        center: {lat, lng},
-        zoomLevel: passiveViewport.zoomLevel,
-      });
-    }
 
     if (mode !== 'single') {
       obj.mode = mode;
