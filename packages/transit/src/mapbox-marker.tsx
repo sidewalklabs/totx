@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import {Marker, Layer, Feature} from 'react-mapbox-gl';
+import {Feature, Layer} from 'react-mapbox-gl';
 import {LatLng} from '../../coordinates';
-import {FeatureCollection} from '../../utils';
 
 export interface MarkerProps {
   /** The (lat, lng) position at which to show the marker. */

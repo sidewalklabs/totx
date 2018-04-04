@@ -1,19 +1,10 @@
 import * as React from 'react';
-import ReactMapboxGl, {
-  RotationControl,
-  ScaleControl,
-  ZoomControl,
-  Layer,
-  Feature,
-} from 'react-mapbox-gl';
-import {GeoJSONLayer} from 'react-mapbox-gl';
+import ReactMapboxGl, {ZoomControl} from 'react-mapbox-gl';
 
 import {CenterZoomLevel, LatLng} from '../../coordinates';
 import {StyledFeatureData} from '../../overlaymap';
-import {Feature as GeoJSONFeature} from '../../utils';
 
 import {ChoroplethLayer} from './choropleth-layer';
-import {MapboxMarker} from './mapbox-marker';
 import {RouteLayer} from './route-layer';
 
 export interface Props {
