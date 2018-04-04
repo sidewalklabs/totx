@@ -1,10 +1,16 @@
 import * as React from 'react';
-import ReactMapboxGl, {RotationControl, ScaleControl, ZoomControl} from 'react-mapbox-gl';
+import ReactMapboxGl, {
+  RotationControl,
+  ScaleControl,
+  ZoomControl,
+  Layer,
+  Feature,
+} from 'react-mapbox-gl';
 import {GeoJSONLayer} from 'react-mapbox-gl';
 
 import {CenterZoomLevel} from '../../coordinates';
 import {StyledFeatureData, BoxPlusLevel} from '../../overlaymap';
-import {Feature} from '../../utils';
+import {Feature as GeoJSONFeature} from '../../utils';
 
 import {ChoroplethLayer} from './choropleth-layer';
 import {MapboxMarker} from './mapbox-marker';
@@ -15,7 +21,11 @@ export interface Props {
   onLoad?: () => void;
   onError: (error: Error) => void;
 
-  onClick?: (event: google.maps.Data.MouseEvent, layerIndex?: number, feature?: Feature) => void;
+  onClick?: (
+    event: google.maps.Data.MouseEvent,
+    layerIndex?: number,
+    feature?: GeoJSONFeature,
+  ) => void;
 
   // TODO(danvk): eliminate this in favor of a ref.
   onBoundsChanged?: (bounds: BoxPlusLevel) => void;
