@@ -421,6 +421,10 @@ function createStore() {
     }
   }
 
+  function isDefined(x: number) {
+    return x !== null && x !== undefined;
+  }
+
   function getStyleFn() {
     const times = commuteTimesCache.getFromCache({origin, options}) || {};
     if (mode === 'single') {
@@ -428,14 +432,14 @@ function createStore() {
         const id = feature.properties['geo_id'];
         const secs = times[id];
         return {
-          fillColor: secs !== null ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)',
+          fillColor: isDefined(secs) ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)',
           lineWidth: 0,
         };
       };
     }
 
     const times2 = commuteTimesCache.getFromCache(getSecondaryParams()) || {};
-    const secsOrBig = (secs: number) => (secs === null ? 10000 : secs);
+    const secsOrBig = (secs: number) => (!isDefined(secs) ? 10000 : secs);
     const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
     return (feature: any) => {
       const id = feature.properties['geo_id'];
@@ -443,7 +447,7 @@ function createStore() {
       const secs2 = times2[id];
       return {
         fillColor:
-          secs1 !== null || secs2 !== null
+          isDefined(secs1) || isDefined(secs2)
             ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
             : 'rgba(0,0,0,0)',
         lineWidth: 0,
