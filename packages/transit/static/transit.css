@@ -723,7 +723,9 @@ span.commute-time {
   display: none;
 }
 
-#root, .view-map, .mapboxgl-map {
+#root,
+.view-map,
+.mapboxgl-map {
   height: 100%;
 }
 
