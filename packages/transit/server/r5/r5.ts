@@ -95,63 +95,57 @@ function paramsToProfileRequest(
   return req;
 }
 
-function interpretTravelMode(
-  mode: string,
-): {
+interface R5ModeData {
   transitModes: string[];
   accessModes: LegMode[];
   egressModes: LegMode[];
   directModes: LegMode[];
   wheelchair: boolean;
-} {
+}
+
+function interpretTravelMode(
+  mode: string,
+): R5ModeData {
+  const legModes = (m: LegMode) => ({accessModes: [m], egressModes: [m], directModes: [m]});
+
   switch (mode) {
     case 'BICYCLE_RENT':
       return {
         transitModes: [],
-        accessModes: [LegMode.BICYCLE_RENT],
-        egressModes: [LegMode.BICYCLE_RENT],
-        directModes: [LegMode.BICYCLE_RENT],
+        ...legModes(LegMode.BICYCLE_RENT),
         wheelchair: false,
       };
     case 'WHEELCHAIR':
       return {
         transitModes: _.values(TransitModes),
-        accessModes: [LegMode.WALK],
-        egressModes: [LegMode.WALK],
-        directModes: [LegMode.WALK],
+        ...legModes(LegMode.WALK),
         wheelchair: true,
       };
     case 'BICYCLE_RENT+TRANSIT':
       return {
         transitModes: _.values(TransitModes),
         accessModes: [LegMode.BICYCLE_RENT],
-        egressModes: [LegMode.WALK], // TODO: change this when it becomes possible to bikeshare egress from transit (on r5 side)
+        egressModes: [LegMode.WALK], // TODO: change this to BICYCLE_RENT when it becomes possible to bikeshare egress from transit (on r5 side)
         directModes: [LegMode.BICYCLE_RENT],
         wheelchair: false,
       };
     case 'BICYCLE':
       return {
         transitModes: [],
-        accessModes: [LegMode.BICYCLE],
-        egressModes: [LegMode.BICYCLE],
-        directModes: [LegMode.BICYCLE],
+        ...legModes(LegMode.BICYCLE),
         wheelchair: false,
       };
     case 'WALK':
       return {
         transitModes: [],
-        accessModes: [LegMode.WALK],
-        egressModes: [LegMode.WALK],
-        directModes: [LegMode.WALK],
+        ...legModes(LegMode.WALK),
         wheelchair: false,
       };
     case 'TRANSIT':
     default:
       return {
         transitModes: _.values(TransitModes),
-        accessModes: [LegMode.WALK],
-        egressModes: [LegMode.WALK],
-        directModes: [LegMode.WALK],
+        ...legModes(LegMode.WALK),
         wheelchair: false,
       };
   }
