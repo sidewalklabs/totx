@@ -31,7 +31,7 @@ export interface Step {
   description: string;
 }
 
-export interface LegSummaryStep {
+export interface StreetSummaryStep {
   mode: LegMode;
   duration: number; // in seconds
   distance: number; // in millimeters
@@ -43,7 +43,7 @@ export interface TransitSummaryStep {
   shortName: string;
 }
 
-export type SummaryStep = LegSummaryStep | TransitSummaryStep;
+export type SummaryStep = StreetSummaryStep | TransitSummaryStep;
 
 /** A complete route from one location to another. */
 export interface Route {
