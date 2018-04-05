@@ -10,10 +10,10 @@ import {CenterZoomLevel, LatLng} from './latlng';
 
 import {getPromise} from '../../utils';
 import Cache from '../../utils/cache';
+import {SummaryStep} from '../server/route';
 import Stories from './stories';
 import {StyleFn} from './stylefn';
 import {withoutDefaults} from './utils';
-import {SummaryStep} from '../server/route';
 
 /** This is the state exported by this store via store.getState(). */
 export interface State {
