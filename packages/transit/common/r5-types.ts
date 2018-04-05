@@ -85,6 +85,7 @@ interface ZonedDateTime {
 interface TransitSegment {
   mode: TransitModes;
   transitEdges: TransitEdgeInfo[];
+  middle: StreetSegment;
 }
 
 interface StreetSegment {
