@@ -2,6 +2,7 @@ import * as _ from 'underscore';
 
 import {
   LatLng,
+  LegMode,
   ProfileOption,
   StreetEdgeInfo,
   TransitEdgeInfo,
@@ -73,9 +74,14 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
       }
       const {shortName, agencyName} = s.routes[0];
       summary.push({mode: s.mode, shortName, agencyName});
+
       const {middle} = s;
       if (middle) {
         summary.push(makeLegSummary(middle));
+        for (const m of s.middle.streetEdges) {
+          features.push(featureFromStreetEdgeInfo(m));
+          steps.push(stepFromStreetEdgeInfo(m));
+        }
       }
     }
     for (const e of option.egress[0].streetEdges) {
@@ -96,6 +102,7 @@ function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
       streetName: e.streetName,
       distance_m: e.distance,
       edgeId: e.edgeId,
+      stroke: modeToLineStyle(e.mode),
     },
   };
 }
@@ -162,4 +169,18 @@ function stepFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Step {
     description: '',
     routeId: e.routeID,
   };
+}
+
+function modeToLineStyle(mode: LegMode): string {
+  switch (mode) {
+    case LegMode.BICYCLE:
+      return '#0000ff';
+    case LegMode.BICYCLE_RENT:
+      return '#800080';
+    case LegMode.CAR:
+      return '#ff0000';
+    case LegMode.WALK:
+    default:
+      return '#00ff00';
+  }
 }

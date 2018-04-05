@@ -132,7 +132,7 @@ function describeStep(step: Step): string {
     } else {
       distance = Math.round(step.distanceKm * 3280.84) + ' ft.';
     }
-    return `Walk ${distance} from ${from} to ${to}.`;
+    return `${step.mode} ${distance} from ${from} to ${to}.`;
   }
 }
 
