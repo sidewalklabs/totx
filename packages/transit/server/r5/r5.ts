@@ -103,9 +103,7 @@ interface R5ModeData {
   wheelchair: boolean;
 }
 
-function interpretTravelMode(
-  mode: string,
-): R5ModeData {
+function interpretTravelMode(mode: string): R5ModeData {
   const legModes = (m: LegMode) => ({accessModes: [m], egressModes: [m], directModes: [m]});
 
   switch (mode) {
