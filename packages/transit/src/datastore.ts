@@ -13,6 +13,7 @@ import Cache from '../../utils/cache';
 import Stories from './stories';
 import {StyleFn} from './stylefn';
 import {withoutDefaults} from './utils';
+import {SummaryStep} from '../server/route';
 
 /** This is the state exported by this store via store.getState(). */
 export interface State {
@@ -62,6 +63,7 @@ export interface Route {
   arriveTimeSecs: number;
   travelTimeSecs: number;
   geojson: FeatureCollection;
+  summary: SummaryStep[];
   steps: Step[];
 }
 

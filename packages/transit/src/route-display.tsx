@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as _ from 'underscore';
 
 import {LegMode, TransitModes} from '../common/r5-types';
+import {SummaryStep, TransitSummaryStep} from '../server/route';
 import {Route, Step} from './datastore';
 import glyphs from './glyphs';
 import routes from './toronto-routes';
@@ -13,6 +14,10 @@ interface RouteDisplayProps {
 
 interface RouteDisplayState {
   showExpanded: boolean;
+}
+
+function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
+  return step.mode in TransitModes;
 }
 
 /**
@@ -30,16 +35,14 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
     if (!route) {
       return <span className={className}>Not accessible with current settings</span>;
     }
-    const steps = route.steps
-      .filter(step => step.mode in TransitModes || step.distanceKm > 0.1)
-      .map(
-        (step, i) =>
-          step.mode in TransitModes ? (
-            <RouteSymbol key={'r' + i} id={step.routeId} />
-          ) : (
-            <span key={'r' + i} className={'walk'} />
-          ),
-      );
+    const steps = route.summary.map(
+      (step, i) =>
+        isTransitStep(step) ? (
+          <RouteSymbol key={'r' + i} id={step.shortName} />
+        ) : (
+          <span key={'r' + i} className={'walk'} />
+        ),
+    );
     const arrowSteps = [] as Array<JSX.Element | string>;
     steps.forEach((step, i) => {
       if (i) arrowSteps.push(<span key={'a' + i} className="transit-connector" />);

@@ -82,9 +82,26 @@ interface ZonedDateTime {
   second: number;
 }
 
+interface LegSegment {
+  mode: LegMode;
+  distance: number;
+  duration: number;
+  geometryGeoJSON: string;
+}
+
+interface Route {
+  agencyName: string;
+  id: string;
+  mode: TransitModes;
+  routeIdx: number;
+  shortName: string;
+}
+
 interface TransitSegment {
   mode: TransitModes;
   transitEdges: TransitEdgeInfo[];
+  routes: Route[];
+  middle: LegSegment;
 }
 
 interface StreetSegment {

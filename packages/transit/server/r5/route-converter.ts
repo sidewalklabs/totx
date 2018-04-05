@@ -1,3 +1,5 @@
+import * as _ from 'underscore';
+
 import {
   LatLng,
   ProfileOption,
@@ -5,18 +7,25 @@ import {
   TransitEdgeInfo,
   TransitModes,
 } from '../../common/r5-types';
-import {Route, Step} from '../route';
+import {Route, Step, SummaryStep} from '../route';
 
 import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
+
+/** High-level summary of the route, e.g. Walk -> Bus -> Walk */
+interface SummarizedRoute {
+  features: Feature[];
+  steps: Step[];
+  summary: SummaryStep[];
+}
 
 export function profileOptionToRoute(
   origin: LatLng,
   destination: LatLng,
   option: ProfileOption,
 ): Route {
-  const {features, steps} = optionToFeaturesAndSteps(option);
+  const {features, steps, summary} = summarizeOption(option);
 
   const itinerary = option.itinerary[0];
   const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR;
@@ -39,6 +48,7 @@ export function profileOptionToRoute(
     travelTimeSecs,
     walkingDistanceKm: 0, // fill this in
     steps,
+    summary,
     geojson: {
       type: 'FeatureCollection',
       features,
@@ -46,10 +56,13 @@ export function profileOptionToRoute(
   };
 }
 
-function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; steps: Step[]} {
+function summarizeOption(option: ProfileOption): SummarizedRoute {
   const {streetEdges} = option.access[0];
   const features = streetEdges.map(featureFromStreetEdgeInfo);
   const steps = streetEdges.map(stepFromStreetEdgeInfo);
+
+  const summary: SummaryStep[] = [];
+  summary.push(_.pick(option.access[0], 'mode', 'distance', 'duration'));
 
   if (option.transit) {
     for (const s of option.transit) {
@@ -57,13 +70,20 @@ function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; 
         features.push(featureFromTransitEdgeInfo(e, s.mode));
         steps.push(stepFromTransitEdgeInfo(e, s.mode));
       }
+      const {shortName, agencyName} = s.routes[0];
+      summary.push({mode: s.mode, shortName, agencyName});
+      const {middle} = s;
+      if (middle) {
+        summary.push(_.pick(middle, 'mode', 'distance', 'duration'));
+      }
     }
     for (const e of option.egress[0].streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
       steps.push(stepFromStreetEdgeInfo(e));
     }
+    summary.push(_.pick(option.egress[0], 'mode', 'distance', 'duration'));
   }
-  return {features, steps};
+  return {features, steps, summary};
 }
 
 function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
