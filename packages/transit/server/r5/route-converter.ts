@@ -58,6 +58,12 @@ function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; 
         features.push(featureFromTransitEdgeInfo(e, s.mode));
         steps.push(stepFromTransitEdgeInfo(e, s.mode));
       }
+      if (s.middle) {
+        for (const m of s.middle.streetEdges) {
+          features.push(featureFromStreetEdgeInfo(m));
+          steps.push(stepFromStreetEdgeInfo(m));
+        }
+      }
     }
     for (const e of option.egress[0].streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
