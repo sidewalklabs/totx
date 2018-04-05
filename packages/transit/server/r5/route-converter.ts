@@ -57,12 +57,13 @@ export function profileOptionToRoute(
 }
 
 function summarizeOption(option: ProfileOption): SummarizedRoute {
+  const makeLegSummary = (leg: any) => _.pick(leg, 'mode', 'distance', 'duration');
   const {streetEdges} = option.access[0];
   const features = streetEdges.map(featureFromStreetEdgeInfo);
   const steps = streetEdges.map(stepFromStreetEdgeInfo);
 
   const summary: SummaryStep[] = [];
-  summary.push(_.pick(option.access[0], 'mode', 'distance', 'duration'));
+  summary.push(makeLegSummary(option.access[0]));
 
   if (option.transit) {
     for (const s of option.transit) {
@@ -74,14 +75,14 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
       summary.push({mode: s.mode, shortName, agencyName});
       const {middle} = s;
       if (middle) {
-        summary.push(_.pick(middle, 'mode', 'distance', 'duration'));
+        summary.push(makeLegSummary(middle));
       }
     }
     for (const e of option.egress[0].streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
       steps.push(stepFromStreetEdgeInfo(e));
     }
-    summary.push(_.pick(option.egress[0], 'mode', 'distance', 'duration'));
+    summary.push(makeLegSummary(option.egress[0]));
   }
   return {features, steps, summary};
 }
