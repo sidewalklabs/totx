@@ -1,12 +1,10 @@
 kind: Service
 apiVersion: v1
-_aliases:
-  - &service_name transit-ttx
 metadata:
-  name: *service_name
+  name: ttx
 spec:
   selector:
-    app: *service_name
+    app: ttx
   ports:
     - name: http
       protocol: TCP

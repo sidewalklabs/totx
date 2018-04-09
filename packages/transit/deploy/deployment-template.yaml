@@ -1,12 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
-_aliases:
-  - &prod_image us.gcr.io/nyc-tlc-1225/monoimage:${SWL_DEPLOY_TAG}
-  - &staging_image us.gcr.io/nyc-tlc-1225/monoimage:${SWL_DEPLOY_COMMIT_SHA}
-  - &local_image us.gcr.io/nyc-tlc-1225/monoimage:${SWL_DEPLOY_COMMIT_SHA}
-  - &app_name transit-ttx
 metadata:
-  name: *app_name
+  name: ttx
 spec:
   strategy:
     type: RollingUpdate
@@ -16,9 +11,9 @@ spec:
   replicas: 1
   template:
     metadata:
-      name: *app_name
+      name: ttx
       labels:
-        app: *app_name
+        app: ttx
         # Note that version must stay stable so that the replace command knows
         # to actually tie the new replicaset with the older one, and eventually
         # scale down the old replicaset.
@@ -27,10 +22,9 @@ spec:
       # Any changes in this section will cause a new replicaset to perform a
       # rolling update of the transit server.
       containers:
-      - name: *app_name
-        image: *${SWL_DEPLOY_ENV}_image
-        _dockerfile: ../../../Dockerfile
-        args: ["transit"]
+      - name: ttx
+        image: us.gcr.io/nyc-tlc-1225/transit-ttx:3
+        command: [ "yarn", "develop", "--", "transit", "router-url", "http://router-ttx" ]
         ports:
         - containerPort: 1337
         livenessProbe:
