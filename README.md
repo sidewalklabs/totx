@@ -18,3 +18,29 @@ java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --graph
 ## Start the frontend
 1. `yarn develop -- transit --router-url http://localhost:8080`
 1. Go to http://localhost:1337 in your browser.
+
+
+## Updating the deployment
+The name of the docker image is transit-ttx; the name of the app is ttx.
+
+## 1. Configuring GKE
+`gcloud container clusters get-credentials staging  --project nyc-tlc-1225`
+
+## 2. Building the image
+Find the most recent tag number.
+`docker image list us.gcr.io/nyc-tlc-1225/transit-ttx`
+
+Build the image.
+`docker build -f Dockerfile -t us.gcr.io/nyc-tlc-1225/transit-ttx:<new version number> .`
+
+## 3. Uploading the image
+`gcloud docker --project=nyc-tlc-1225 -- push us.gcr.io/nyc-tlc-1225/transit-ttx:<new version number>`
+
+## 4. Updating the Kubernetes deployment
+Edit `packages/transit/deploy/deployment-template.yaml` to update the version number to that of the new image.
+Then run
+`kubectl apply -f packages/transit/deploy/deployment-template.yaml`
+
+## 5. Check it's working:
+`kubectl get pods`
+You should see the new timestamp for the deployment you just updated.
