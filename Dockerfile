@@ -11,8 +11,8 @@ COPY yarn.lock /usr/src/app/yarn.lock
 
 COPY . /usr/src/app
 
-RUN yarn && yarn webpack
+RUN yarn
 
 EXPOSE 1337
 
-ENTRYPOINT ["yarn", "develop", "--", "transit", "router-url", "http://router-ttx" ]
+ENTRYPOINT ["yarn", "develop", "--", "transit", "router-url", "http://localhost:8080" ]
