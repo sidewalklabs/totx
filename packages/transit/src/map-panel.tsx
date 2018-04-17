@@ -2,54 +2,17 @@ import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 import {Popup} from 'react-mapbox-gl';
 
-import {memoizeLast, Feature} from '../../utils';
+import {memoizeLast, Feature, FeatureCollection} from '../../utils';
 import Action from './action';
-import Colors from './colors';
 import {State as DataStoreState} from './datastore';
 import {LatLng} from './latlng';
 import {Map} from './mapbox-map';
 import {MapboxMarker} from './mapbox-marker';
 import * as ramps from './ramps';
-import {DrawingStyle, StyledFeatureData} from './stylefn';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
 };
-
-// Styles for steps and stops on a point-to-point route.
-function routeStyle(feature: Feature): DrawingStyle {
-  const {properties} = feature;
-  const isWalk = !('tripId' in properties);
-  let pointRadius: number;
-  let pointColor: string;
-  let pointOutlineColor: string;
-  let pointOutlineWidth: number;
-  if (feature.geometry.type === 'Point') {
-    const {name} = properties;
-    if (name === 'Origin') {
-      pointColor = Colors.blackTransparent;
-      pointRadius = 8;
-    } else if (name === 'Destination') {
-      pointColor = Colors.blackTransparent;
-      pointRadius = 8;
-    } else {
-      pointColor = Colors.white; // station
-      pointOutlineColor = Colors.black;
-      pointOutlineWidth = 2;
-      pointRadius = 3;
-    }
-  }
-  return {
-    pointColor,
-    pointRadius,
-    pointOutlineColor,
-    pointOutlineWidth,
-    lineWidth: isWalk ? properties['stroke-width'] || 2 : properties['stroke-width'] || 4,
-    lineDash: isWalk ? [2, 4] : null, // Walks are dotted: 2px on, 4px off.
-    strokeOutlineColor: isWalk ? null : Colors.whiteTransparent,
-    strokeColor: properties['stroke'] || 'black',
-  };
-}
 
 interface State {
   hover: {
@@ -109,16 +72,11 @@ export default class Root extends React.Component<ViewProps, State> {
   }
 
   render() {
-    const routes: StyledFeatureData[] = [];
+    const routes: FeatureCollection[] = [];
     if (this.props.routes) {
       for (const route of this.props.routes) {
         if (!route) continue;
-        routes.push({
-          geojson: route.geojson,
-          styleFn: routeStyle,
-          selectedStyleFn: null,
-          selectedFeatureId: null,
-        });
+        routes.push(route.geojson);
       }
     }
 
@@ -212,9 +170,9 @@ export default class Root extends React.Component<ViewProps, State> {
   }
 
   handleFeatureLeave(map: mapboxgl.Map) {
-    // this.setState({
-    //   hover: null,
-    // });
+    this.setState({
+      hover: null,
+    });
     map.getCanvas().style.cursor = '';
   }
 

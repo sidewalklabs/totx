@@ -1,13 +1,11 @@
 import * as React from 'react';
-
 import {GeoJSONLayer} from 'react-mapbox-gl';
-import {shallowEqual, FeatureCollection} from '../../utils';
-import {StyleFn} from './stylefn';
+
+import {shallowEqual, Feature, FeatureCollection} from '../../utils';
+import Colors from './colors';
 
 export interface Props {
   geojson: FeatureCollection;
-  /** only fillColor is supported */
-  styleFn: StyleFn;
   visibility: 'visible' | 'none';
   before?: string;
 }
@@ -16,17 +14,56 @@ interface State {
   /** Same as props.geojson, but with fillColor set */
   styledFeatures: FeatureCollection;
 }
-function makeStyledFeatures(geojson: FeatureCollection, styleFn: StyleFn): FeatureCollection {
+
+// Styles for steps and stops on a point-to-point route.
+function routeStyle(feature: Feature) {
+  const {properties} = feature;
+  const isWalk = !('tripId' in properties);
+  let pointRadius: number;
+  let pointColor: string;
+  let pointOutlineColor: string;
+  let pointOutlineWidth: number;
+  if (feature.geometry.type === 'Point') {
+    const {name} = properties;
+    if (name === 'Origin') {
+      pointColor = Colors.blackTransparent;
+      pointRadius = 8;
+    } else if (name === 'Destination') {
+      pointColor = Colors.blackTransparent;
+      pointRadius = 8;
+    } else {
+      pointColor = Colors.white; // station
+      pointOutlineColor = Colors.black;
+      pointOutlineWidth = 2;
+      pointRadius = 3;
+    }
+  }
+  return {
+    pointColor,
+    pointRadius,
+    pointOutlineColor,
+    pointOutlineWidth,
+    lineWidth: isWalk ? properties['stroke-width'] || 2 : properties['stroke-width'] || 4,
+    lineDash: isWalk ? [2, 4] : null, // Walks are dotted: 2px on, 4px off.
+    strokeOutlineColor: isWalk ? null : Colors.whiteTransparent,
+    strokeColor: properties['stroke'] || 'black',
+  };
+}
+
+function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
   return {
     type: 'FeatureCollection',
-    features: geojson.features.map(f => ({
-      ...f,
-      properties: {
-        ...f.properties,
-        lineColor: styleFn(f).strokeColor || 'black',
-        lineWidth: styleFn(f).lineWidth || 2,
-      },
-    })),
+    features: geojson.features.map(f => {
+      const style = routeStyle(f);
+      return {
+        ...f,
+        properties: {
+          ...f.properties,
+          lineColor: style.strokeColor || 'black',
+          lineWidth: style.lineWidth || 2,
+        },
+      };
+    }),
   };
 }
 
@@ -41,7 +78,7 @@ export class RouteLayer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      styledFeatures: makeStyledFeatures(props.geojson, props.styleFn),
+      styledFeatures: makeStyledFeatures(props.geojson),
     };
   }
 
@@ -64,12 +101,12 @@ export class RouteLayer extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (this.props.geojson === nextProps.geojson && this.props.styleFn === nextProps.styleFn) {
+    if (this.props.geojson === nextProps.geojson) {
       return;
     }
 
     this.setState({
-      styledFeatures: makeStyledFeatures(nextProps.geojson, nextProps.styleFn),
+      styledFeatures: makeStyledFeatures(nextProps.geojson),
     });
   }
 }

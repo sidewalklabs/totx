@@ -6,13 +6,12 @@ import {Feature, FeatureCollection} from '../../utils';
 import {ChoroplethLayer} from './choropleth-layer';
 import {CenterZoomLevel, LatLng} from './latlng';
 import {RouteLayer} from './route-layer';
-import {StyledFeatureData} from './stylefn';
 
 export interface Props {
   view: CenterZoomLevel;
   geojson: FeatureCollection;
   styleFn: (f: Feature) => string;
-  routes: StyledFeatureData[];
+  routes: FeatureCollection[];
   onLoad?: () => void;
   onError: (error: Error) => void;
   onClick?: (point: LatLng) => void;
@@ -57,10 +56,9 @@ export class Map extends React.Component<Props, State> {
     const {center, zoom} = this.state;
     const {geojson, routes, styleFn, onMouseHover, onMouseLeave} = this.props;
 
-    const routesEls = routes.map((r, i) => (
+    const routesEls = routes.map((routeGeojson, i) => (
       <RouteLayer
-        geojson={r.geojson}
-        styleFn={r.styleFn}
+        geojson={routeGeojson}
         visibility={'visible'}
         before={'poi-small'}
         key={`route${i}`}
