@@ -1,7 +1,8 @@
 import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
+import {Popup} from 'react-mapbox-gl';
 
-import {Feature, memoizeLast} from '../../utils';
+import {memoizeLast, Feature} from '../../utils';
 import Action from './action';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
@@ -10,7 +11,6 @@ import {Map} from './mapbox-map';
 import {MapboxMarker} from './mapbox-marker';
 import * as ramps from './ramps';
 import {DrawingStyle, StyledFeatureData} from './stylefn';
-import {Popup} from 'react-mapbox-gl';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
@@ -179,7 +179,7 @@ export default class Root extends React.Component<ViewProps, State> {
     );
   }
 
-  handleFeatureHover(feature: Feature, lngLat: LngLat) {
+  handleFeatureHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
     const id = feature.properties.geo_id;
     const secs = this.props.times[id] || 10000;
     this.setState({
@@ -188,12 +188,14 @@ export default class Root extends React.Component<ViewProps, State> {
         text: `Travel time: ${secs}`,
       },
     });
+    map.getCanvas().style.cursor = 'pointer';
   }
 
-  handleFeatureLeave() {
+  handleFeatureLeave(map: mapboxgl.Map) {
     this.setState({
       hover: null,
     });
+    map.getCanvas().style.cursor = '';
   }
 
   handleMarkerMove(isSecondary: boolean, latLng: LatLng) {

@@ -16,8 +16,8 @@ export interface Props {
   onLoad?: () => void;
   onError: (error: Error) => void;
   onClick?: (point: LatLng) => void;
-  onMouseHover?: (feature: Feature, lngLat: LngLat) => any;
-  onMouseLeave?: () => any;
+  onMouseHover?: (feature: Feature, lngLat: LngLat, map: mapboxgl.Map) => any;
+  onMouseLeave?: (map: mapboxgl.Map) => any;
   children?: any; // TODO(danvk): refine
 }
 

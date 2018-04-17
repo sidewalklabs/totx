@@ -18,8 +18,8 @@ export interface Props {
   visibility: 'visible' | 'none';
   before?: string;
 
-  onMouseHover?: (feature: Feature, lngLat: LngLat) => any;
-  onMouseLeave?: () => any;
+  onMouseHover?: (feature: Feature, lngLat: LngLat, map: mapboxgl.Map) => any;
+  onMouseLeave?: (map: mapboxgl.Map) => any;
 }
 
 interface State {
@@ -71,10 +71,10 @@ export class ChoroplethLayer extends React.Component<Props, State> {
     );
   }
 
-  onMouseLeave() {
+  onMouseLeave(event: mapboxgl.MapMouseEvent) {
     const {onMouseLeave} = this.props;
     if (onMouseLeave) {
-      onMouseLeave();
+      onMouseLeave(event.target);
     }
   }
 
@@ -82,7 +82,7 @@ export class ChoroplethLayer extends React.Component<Props, State> {
     const {onMouseHover} = this.props;
     if (onMouseHover) {
       const feature = (event as any).features[0];
-      onMouseHover(feature, event.lngLat);
+      onMouseHover(feature, event.lngLat, event.target);
     }
   }
 
