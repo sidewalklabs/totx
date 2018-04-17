@@ -6,6 +6,7 @@ import {StyledFeatureData} from './stylefn';
 
 import {ChoroplethLayer} from './choropleth-layer';
 import {RouteLayer} from './route-layer';
+import {memoize} from '../../utils';
 
 export interface Props {
   view: CenterZoomLevel;
@@ -17,7 +18,10 @@ export interface Props {
   children?: any; // TODO(danvk): refine
 }
 
-interface State {}
+interface State {
+  center: [number, number];
+  zoom: [number];
+}
 
 // TODO(danvk): load this via an environment variable.
 const MapboxGL = ReactMapboxGl({
@@ -25,15 +29,24 @@ const MapboxGL = ReactMapboxGl({
     'pk.eyJ1IjoiZGFudmsiLCJhIjoiY2lrZzJvNDR0MDBhNXR4a2xqNnlsbWx3ciJ9.myJhweYd_hrXClbKk8XLgQ',
 });
 
+function viewToState(view: CenterZoomLevel): State {
+  return {
+    center: [view.center.lng, view.center.lat],
+    zoom: [view.zoomLevel],
+  };
+}
+
 export class Map extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 
+    this.state = viewToState(props.view);
     this.onClick = this.onClick.bind(this);
+    this.onZoomEnd = this.onZoomEnd.bind(this);
   }
 
   render() {
-    const center = this.props.view.center;
+    const {center, zoom} = this.state;
     const {data, routes} = this.props;
 
     const routesEls = routes.map((r, i) => (
@@ -48,10 +61,12 @@ export class Map extends React.Component<Props, State> {
 
     return (
       <MapboxGL
-        center={[center.lng, center.lat]}
+        center={center}
+        zoom={zoom}
         containerStyle={{flex: '1'}}
         style={'mapbox://styles/danvk/cjg3tbb346bbk2sps9pzy6f99'}
         onStyleLoad={this.props.onLoad}
+        onZoomEnd={this.onZoomEnd}
         onClick={this.onClick}>
         <ChoroplethLayer
           geojson={data.geojson}
@@ -70,5 +85,21 @@ export class Map extends React.Component<Props, State> {
     if (this.props.onClick) {
       this.props.onClick((event as any).lngLat);
     }
+  }
+
+  componentWillReceiveProps(nextProps: Readonly<Props>) {
+    const {view} = nextProps;
+    if (view !== this.props.view) {
+      this.setState(viewToState(view));
+    }
+  }
+
+  onZoomEnd(map: mapboxgl.Map) {
+    const {lng, lat} = map.getCenter();
+    const zoom = map.getZoom();
+    this.setState({
+      center: [lng, lat],
+      zoom: [zoom],
+    });
   }
 }
