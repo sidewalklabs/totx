@@ -1,6 +1,8 @@
+import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 import ReactMapboxGl, {ZoomControl} from 'react-mapbox-gl';
 
+import {Feature} from '../../utils';
 import {ChoroplethLayer} from './choropleth-layer';
 import {CenterZoomLevel, LatLng} from './latlng';
 import {RouteLayer} from './route-layer';
@@ -13,6 +15,8 @@ export interface Props {
   onLoad?: () => void;
   onError: (error: Error) => void;
   onClick?: (point: LatLng) => void;
+  onMouseHover?: (feature: Feature, lngLat: LngLat) => any;
+  onMouseLeave?: () => any;
   children?: any; // TODO(danvk): refine
 }
 
@@ -50,7 +54,7 @@ export class Map extends React.Component<Props, State> {
 
   render() {
     const {center, zoom} = this.state;
-    const {data, routes} = this.props;
+    const {data, routes, onMouseHover, onMouseLeave} = this.props;
 
     const routesEls = routes.map((r, i) => (
       <RouteLayer
@@ -76,6 +80,8 @@ export class Map extends React.Component<Props, State> {
           styleFn={data.styleFn}
           visibility="visible"
           before="poi-small"
+          onMouseHover={onMouseHover}
+          onMouseLeave={onMouseLeave}
         />
         {routesEls}
         {this.props.children}

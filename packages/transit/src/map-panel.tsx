@@ -1,14 +1,14 @@
-import {Feature} from '../../utils';
-import {LatLng} from './latlng';
-import {DrawingStyle, StyledFeatureData} from './stylefn';
-
+import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 
+import {Feature} from '../../utils';
 import Action from './action';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
+import {LatLng} from './latlng';
 import {Map} from './mapbox-map';
 import {MapboxMarker} from './mapbox-marker';
+import {DrawingStyle, StyledFeatureData} from './stylefn';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
@@ -49,10 +49,14 @@ function routeStyle(feature: Feature): DrawingStyle {
   };
 }
 
+interface State {
+  hoveredFeatureId: string | null;
+}
+
 /**
  * This component muxes between the data store and the generic Google Maps component.
  */
-export default class Root extends React.Component<ViewProps, {}> {
+export default class Root extends React.Component<ViewProps, State> {
   private onLoad: () => void;
   private onError: (error: Error) => void;
 
@@ -62,9 +66,18 @@ export default class Root extends React.Component<ViewProps, {}> {
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
+    this.handleFeatureHover = this.handleFeatureHover.bind(this);
+    this.handleFeatureLeave = this.handleFeatureLeave.bind(this);
+
+    this.state = {
+      hoveredFeatureId: null,
+    };
   }
 
   render() {
+    if (this.props.geojson) {
+      console.log(this.props.geojson.features[0]);
+    }
     const data: StyledFeatureData = {
       geojson: this.props.geojson,
       styleFn: this.props.style,
@@ -119,6 +132,8 @@ export default class Root extends React.Component<ViewProps, {}> {
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
+        onMouseHover={this.handleFeatureHover}
+        onMouseLeave={this.handleFeatureLeave}
         onError={this.onError}>
         <MapboxMarker
           position={this.props.origin}
@@ -130,6 +145,19 @@ export default class Root extends React.Component<ViewProps, {}> {
         {destinationMarker}
       </Map>
     );
+  }
+
+  handleFeatureHover(feature: Feature, lngLat: LngLat) {
+    this.setState({
+      hoveredFeatureId: id,
+      hoverLngLat: lngLat,
+    });
+  }
+
+  handleFeatureLeave() {
+    this.setState({
+      hoveredFeatureId: null,
+    });
   }
 
   handleMarkerMove(isSecondary: boolean, latLng: LatLng) {
