@@ -1,13 +1,14 @@
 import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 
-import {Feature} from '../../utils';
+import {Feature, memoizeLast} from '../../utils';
 import Action from './action';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
 import {LatLng} from './latlng';
 import {Map} from './mapbox-map';
 import {MapboxMarker} from './mapbox-marker';
+import * as ramps from './ramps';
 import {DrawingStyle, StyledFeatureData} from './stylefn';
 
 type ViewProps = DataStoreState & {
@@ -49,9 +50,35 @@ function routeStyle(feature: Feature): DrawingStyle {
   };
 }
 
-interface State {
-  hoveredFeatureId: string | null;
+interface State {}
+
+function isDefined(x: number) {
+  return x !== null && x !== undefined;
 }
+
+function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
+  const {mode, times, times2} = args;
+  if (mode === 'single') {
+    return (feature: any) => {
+      const id = feature.properties['geo_id'];
+      const secs = times[id];
+      return isDefined(secs) ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)';
+    };
+  }
+
+  const secsOrBig = (secs: number) => (!isDefined(secs) ? 10000 : secs);
+  const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
+  return (feature: any) => {
+    const id = feature.properties['geo_id'];
+    const secs1 = times[id];
+    const secs2 = times2[id];
+    return isDefined(secs1) || isDefined(secs2)
+      ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
+      : 'rgba(255,0,0,0)';
+  };
+}
+
+const getStyleFn = memoizeLast(makeStyleFn);
 
 /**
  * This component muxes between the data store and the generic Google Maps component.
@@ -68,22 +95,9 @@ export default class Root extends React.Component<ViewProps, State> {
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
     this.handleFeatureHover = this.handleFeatureHover.bind(this);
     this.handleFeatureLeave = this.handleFeatureLeave.bind(this);
-
-    this.state = {
-      hoveredFeatureId: null,
-    };
   }
 
   render() {
-    if (this.props.geojson) {
-      console.log(this.props.geojson.features[0]);
-    }
-    const data: StyledFeatureData = {
-      geojson: this.props.geojson,
-      styleFn: this.props.style,
-      selectedStyleFn: null,
-      selectedFeatureId: null,
-    };
     const routes: StyledFeatureData[] = [];
     if (this.props.routes) {
       for (const route of this.props.routes) {
@@ -128,7 +142,8 @@ export default class Root extends React.Component<ViewProps, State> {
     return (
       <Map
         view={this.props.view}
-        data={data}
+        geojson={this.props.geojson}
+        styleFn={getStyleFn(this.props)}
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
@@ -147,12 +162,7 @@ export default class Root extends React.Component<ViewProps, State> {
     );
   }
 
-  handleFeatureHover(feature: Feature, lngLat: LngLat) {
-    this.setState({
-      hoveredFeatureId: id,
-      hoverLngLat: lngLat,
-    });
-  }
+  handleFeatureHover(feature: Feature, lngLat: LngLat) {}
 
   handleFeatureLeave() {
     this.setState({

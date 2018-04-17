@@ -3,7 +3,8 @@ import * as React from 'react';
 
 import {GeoJSONLayer} from 'react-mapbox-gl';
 import {shallowEqual, Feature, FeatureCollection} from '../../utils';
-import {StyleFn} from './stylefn';
+
+type StyleFn = (feature: Feature) => string;
 
 /**
  * GeoJSON layer with a style function.
@@ -12,7 +13,7 @@ import {StyleFn} from './stylefn';
 
 export interface Props {
   geojson: FeatureCollection;
-  /** only fillColor is supported */
+  /** The style function returns the fill color for each feature */
   styleFn: StyleFn;
   visibility: 'visible' | 'none';
   before?: string;
@@ -33,7 +34,7 @@ function makeStyledFeatures(geojson: FeatureCollection, styleFn: StyleFn): Featu
       ...f,
       properties: {
         ...f.properties,
-        fillColor: styleFn(f).fillColor,
+        fillColor: styleFn(f),
       },
     })),
   };
