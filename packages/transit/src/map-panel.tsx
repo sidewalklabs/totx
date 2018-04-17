@@ -150,9 +150,12 @@ export default class Root extends React.Component<ViewProps, State> {
     }
 
     let popup: JSX.Element = null;
+    let ghostMarker: JSX.Element = null;
     const {hover} = this.state;
     if (hover) {
       popup = <Popup coordinates={hover.coordinates}>{hover.text}</Popup>;
+      const position = new LatLng(hover.coordinates[1], hover.coordinates[0]);
+      ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
     }
 
     return (
@@ -175,6 +178,7 @@ export default class Root extends React.Component<ViewProps, State> {
         {secondMarker}
         {destinationMarker}
         {popup}
+        {ghostMarker}
       </Map>
     );
   }
