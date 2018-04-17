@@ -10,6 +10,7 @@ import {Map} from './mapbox-map';
 import {MapboxMarker} from './mapbox-marker';
 import * as ramps from './ramps';
 import {DrawingStyle, StyledFeatureData} from './stylefn';
+import {Popup} from 'react-mapbox-gl';
 
 type ViewProps = DataStoreState & {
   handleAction: (action: Action) => any;
@@ -50,7 +51,12 @@ function routeStyle(feature: Feature): DrawingStyle {
   };
 }
 
-interface State {}
+interface State {
+  hover: {
+    coordinates: [number, number]; // lng, lat
+    text: string;
+  } | null;
+}
 
 function isDefined(x: number) {
   return x !== null && x !== undefined;
@@ -95,6 +101,10 @@ export default class Root extends React.Component<ViewProps, State> {
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
     this.handleFeatureHover = this.handleFeatureHover.bind(this);
     this.handleFeatureLeave = this.handleFeatureLeave.bind(this);
+
+    this.state = {
+      hover: null,
+    };
   }
 
   render() {
@@ -139,6 +149,12 @@ export default class Root extends React.Component<ViewProps, State> {
       );
     }
 
+    let popup: JSX.Element = null;
+    const {hover} = this.state;
+    if (hover) {
+      popup = <Popup coordinates={hover.coordinates}>{hover.text}</Popup>;
+    }
+
     return (
       <Map
         view={this.props.view}
@@ -158,15 +174,25 @@ export default class Root extends React.Component<ViewProps, State> {
         />
         {secondMarker}
         {destinationMarker}
+        {popup}
       </Map>
     );
   }
 
-  handleFeatureHover(feature: Feature, lngLat: LngLat) {}
+  handleFeatureHover(feature: Feature, lngLat: LngLat) {
+    const id = feature.properties.geo_id;
+    const secs = this.props.times[id] || 10000;
+    this.setState({
+      hover: {
+        coordinates: [lngLat.lng, lngLat.lat],
+        text: `Travel time: ${secs}`,
+      },
+    });
+  }
 
   handleFeatureLeave() {
     this.setState({
-      hoveredFeatureId: null,
+      hover: null,
     });
   }
 
