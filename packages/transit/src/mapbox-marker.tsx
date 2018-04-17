@@ -8,6 +8,7 @@ export interface MarkerProps {
   position: LatLng;
   draggable?: boolean;
   icon: string; // Symbol name in Mapbox style.
+  iconAnchor?: string; // e.g. 'center' or 'bottom'.
 
   /** Fired when the user drops the marker in a new location. */
   onDragEnd?: (newPosition: LatLng) => void;
@@ -24,7 +25,7 @@ export class MapboxMarker extends React.Component<MarkerProps, {}> {
     const {draggable, position} = this.props;
     const layout = {
       'icon-image': this.props.icon,
-      'icon-anchor': 'bottom',
+      'icon-anchor': this.props.iconAnchor || 'bottom',
     };
     return (
       <Layer type="symbol" layout={layout}>

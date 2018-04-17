@@ -105,7 +105,8 @@ export default class Root extends React.Component<ViewProps, {}> {
         <MapboxMarker
           position={this.props.destination}
           draggable={true}
-          icon="blue-marker"
+          icon="measle"
+          iconAnchor="center"
           onDragEnd={this.handleDestinationMove}
         />
       );
