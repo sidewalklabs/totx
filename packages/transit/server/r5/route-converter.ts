@@ -1,22 +1,32 @@
+import * as _ from 'underscore';
+
 import {
   LatLng,
+  LegMode,
   ProfileOption,
   StreetEdgeInfo,
   TransitEdgeInfo,
   TransitModes,
 } from '../../common/r5-types';
-import {Route, Step} from '../route';
+import {Route, Step, SummaryStep} from '../route';
 
 import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
+
+/** High-level summary of the route, e.g. Walk -> Bus -> Walk */
+interface SummarizedRoute {
+  features: Feature[];
+  steps: Step[];
+  summary: SummaryStep[];
+}
 
 export function profileOptionToRoute(
   origin: LatLng,
   destination: LatLng,
   option: ProfileOption,
 ): Route {
-  const {features, steps} = optionToFeaturesAndSteps(option);
+  const {features, steps, summary} = summarizeOption(option);
 
   const itinerary = option.itinerary[0];
   const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR;
@@ -39,6 +49,7 @@ export function profileOptionToRoute(
     travelTimeSecs,
     walkingDistanceKm: 0, // fill this in
     steps,
+    summary,
     geojson: {
       type: 'FeatureCollection',
       features,
@@ -46,10 +57,14 @@ export function profileOptionToRoute(
   };
 }
 
-function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; steps: Step[]} {
+function summarizeOption(option: ProfileOption): SummarizedRoute {
+  const makeLegSummary = (leg: any) => _.pick(leg, 'mode', 'distance', 'duration');
   const {streetEdges} = option.access[0];
   const features = streetEdges.map(featureFromStreetEdgeInfo);
   const steps = streetEdges.map(stepFromStreetEdgeInfo);
+
+  const summary: SummaryStep[] = [];
+  summary.push(makeLegSummary(option.access[0]));
 
   if (option.transit) {
     for (const s of option.transit) {
@@ -57,13 +72,25 @@ function optionToFeaturesAndSteps(option: ProfileOption): {features: Feature[]; 
         features.push(featureFromTransitEdgeInfo(e, s.mode));
         steps.push(stepFromTransitEdgeInfo(e, s.mode));
       }
+      const {shortName, agencyName} = s.routes[0];
+      summary.push({mode: s.mode, shortName, agencyName});
+
+      const {middle} = s;
+      if (middle) {
+        summary.push(makeLegSummary(middle));
+        for (const m of s.middle.streetEdges) {
+          features.push(featureFromStreetEdgeInfo(m));
+          steps.push(stepFromStreetEdgeInfo(m));
+        }
+      }
     }
     for (const e of option.egress[0].streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
       steps.push(stepFromStreetEdgeInfo(e));
     }
+    summary.push(makeLegSummary(option.egress[0]));
   }
-  return {features, steps};
+  return {features, steps, summary};
 }
 
 function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
@@ -75,6 +102,7 @@ function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
       streetName: e.streetName,
       distance_m: e.distance,
       edgeId: e.edgeId,
+      stroke: modeToLineStyle(e.mode),
     },
   };
 }
@@ -141,4 +169,18 @@ function stepFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Step {
     description: '',
     routeId: e.routeID,
   };
+}
+
+function modeToLineStyle(mode: LegMode): string {
+  switch (mode) {
+    case LegMode.BICYCLE:
+      return '#0000ff';
+    case LegMode.BICYCLE_RENT:
+      return '#800080';
+    case LegMode.CAR:
+      return '#ff0000';
+    case LegMode.WALK:
+    default:
+      return '#00ff00';
+  }
 }

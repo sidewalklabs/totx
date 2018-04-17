@@ -31,6 +31,20 @@ export interface Step {
   description: string;
 }
 
+export interface StreetSummaryStep {
+  mode: LegMode;
+  duration: number; // in seconds
+  distance: number; // in millimeters
+}
+
+export interface TransitSummaryStep {
+  mode: TransitModes;
+  agencyName: string;
+  shortName: string;
+}
+
+export type SummaryStep = StreetSummaryStep | TransitSummaryStep;
+
 /** A complete route from one location to another. */
 export interface Route {
   origin: Location;
@@ -41,4 +55,5 @@ export interface Route {
   walkingDistanceKm: number;
   steps: Step[];
   geojson: FeatureCollection;
+  summary: SummaryStep[];
 }

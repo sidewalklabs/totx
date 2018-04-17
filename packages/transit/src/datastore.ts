@@ -10,6 +10,7 @@ import {CenterZoomLevel, LatLng} from './latlng';
 
 import {getPromise} from '../../utils';
 import Cache from '../../utils/cache';
+import {SummaryStep} from '../server/route';
 import Stories from './stories';
 import {StyleFn} from './stylefn';
 import {withoutDefaults} from './utils';
@@ -62,6 +63,7 @@ export interface Route {
   arriveTimeSecs: number;
   travelTimeSecs: number;
   geojson: FeatureCollection;
+  summary: SummaryStep[];
   steps: Step[];
 }
 

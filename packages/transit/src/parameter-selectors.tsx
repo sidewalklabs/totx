@@ -45,9 +45,10 @@ export const MaxTransfers: React.StatelessComponent<SelectProps> = props => (
 export const TravelMode: React.StatelessComponent<SelectProps> = props => (
   <WrappedSelect {...props}>
     <option value="TRANSIT">Transit</option>
-    <option value="CAR">Car</option>
-    <option value="BICYCLE">Bicycle</option>
     <option value="BICYCLE_RENT">Bike Share</option>
+    <option value="WHEELCHAIR">Wheelchair</option>
+    <option value="BICYCLE_RENT+TRANSIT">Bike Share + Transit</option>
+    <option value="BICYCLE">Bicycle</option>
     <option value="WALK">Walk</option>
   </WrappedSelect>
 );
