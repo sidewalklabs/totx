@@ -1,12 +1,10 @@
 import * as React from 'react';
 import ReactMapboxGl, {ZoomControl} from 'react-mapbox-gl';
 
-import {CenterZoomLevel, LatLng} from './latlng';
-import {StyledFeatureData} from './stylefn';
-
 import {ChoroplethLayer} from './choropleth-layer';
+import {CenterZoomLevel, LatLng} from './latlng';
 import {RouteLayer} from './route-layer';
-import {memoize} from '../../utils';
+import {StyledFeatureData} from './stylefn';
 
 export interface Props {
   view: CenterZoomLevel;
@@ -18,6 +16,11 @@ export interface Props {
   children?: any; // TODO(danvk): refine
 }
 
+// react-mapbox-gl uses reference equality on the Map's center and zoom props to determine whether
+// it needs to change the viewport. We derive center and zoom and store them in state to get
+// control over when this happens. Changes to props.view result in the viewport being updated.
+// When the user pans/zooms, we also track that in State. This is the recommended approach, see
+// https://github.com/alex3165/react-mapbox-gl#why-are-zoom-bearing-and-pitch-arrays-
 interface State {
   center: [number, number];
   zoom: [number];
@@ -90,11 +93,13 @@ export class Map extends React.Component<Props, State> {
   componentWillReceiveProps(nextProps: Readonly<Props>) {
     const {view} = nextProps;
     if (view !== this.props.view) {
+      // See comment for State interface.
       this.setState(viewToState(view));
     }
   }
 
   onZoomEnd(map: mapboxgl.Map) {
+    // See comment for State interface.
     const {lng, lat} = map.getCenter();
     const zoom = map.getZoom();
     this.setState({
