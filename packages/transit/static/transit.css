@@ -729,6 +729,17 @@ span.commute-time {
   height: 100%;
 }
 
+.mapboxgl-popup-tip {
+  border-top-color: #0089F8 !important;
+}
+.mapboxgl-popup-content {
+  background-color: #0089F8 !important;
+  padding: 5px 10px !important;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+
 @media only screen and (max-device-width: 700px) {
   .routing-settings,
   .compare-settings,

@@ -185,11 +185,12 @@ export default class Root extends React.Component<ViewProps, State> {
 
   handleFeatureHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
     const id = feature.properties.geo_id;
-    const secs = this.props.times[id] || 10000;
+    const secs = this.props.times[id] || -1;
+    const minutes = secs >= 0 ? Math.floor(secs / 60) : 'n/a';
     this.setState({
       hover: {
         coordinates: [lngLat.lng, lngLat.lat],
-        text: `Travel time: ${secs}`,
+        text: `${minutes} mins`,
       },
     });
     map.getCanvas().style.cursor = 'pointer';
