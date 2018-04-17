@@ -88,8 +88,7 @@ export default class Root extends React.Component<ViewProps, {}> {
     let firstMarkerImage = 'blue-marker';
     let secondMarker: JSX.Element = null;
     if (this.props.mode === 'compare-origin') {
-      firstMarkerImage = 'blue-marker'; // 'pin-blue-A-24x34.png';
-      // icon="pin-orange-B-24x34.png"
+      firstMarkerImage = 'blue-marker';
       secondMarker = (
         <MapboxMarker
           position={this.props.origin2}
@@ -102,7 +101,6 @@ export default class Root extends React.Component<ViewProps, {}> {
 
     let destinationMarker: JSX.Element = null;
     if (this.props.destination) {
-      // icon="pin-gray-blank-24x34.png"
       destinationMarker = (
         <MapboxMarker
           position={this.props.destination}
