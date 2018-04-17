@@ -54,7 +54,8 @@ function routeStyle(feature: Feature): DrawingStyle {
 interface State {
   hover: {
     coordinates: [number, number]; // lng, lat
-    text: string;
+    minutes: number;
+    minutes2?: number;
   } | null;
 }
 
@@ -153,8 +154,16 @@ export default class Root extends React.Component<ViewProps, State> {
     let ghostMarker: JSX.Element = null;
     const {hover} = this.state;
     if (hover) {
-      popup = <Popup coordinates={hover.coordinates}>{hover.text}</Popup>;
-      const position = new LatLng(hover.coordinates[1], hover.coordinates[0]);
+      popup = (
+        <Popup coordinates={hover.coordinates}>
+          {hover.minutes2 ? (
+            <div className={'secondary ' + this.props.mode}>{hover.minutes2} min</div>
+          ) : null}
+          <div className="primary">{hover.minutes} min</div>
+        </Popup>
+      );
+      const [lng, lat] = hover.coordinates;
+      const position = new LatLng(lat, lng);
       ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
     }
 
@@ -185,21 +194,27 @@ export default class Root extends React.Component<ViewProps, State> {
 
   handleFeatureHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
     const id = feature.properties.geo_id;
-    const secs = this.props.times[id] || -1;
-    const minutes = secs >= 0 ? Math.floor(secs / 60) : 'n/a';
+    const secs = this.props.times[id] || 0;
+    const minutes = Math.floor(secs / 60);
+    let minutes2;
+    if (this.props.mode !== 'single') {
+      const secs2 = this.props.times2[id];
+      minutes2 = Math.floor(secs2 / 60);
+    }
     this.setState({
       hover: {
         coordinates: [lngLat.lng, lngLat.lat],
-        text: `${minutes} mins`,
+        minutes,
+        minutes2,
       },
     });
     map.getCanvas().style.cursor = 'pointer';
   }
 
   handleFeatureLeave(map: mapboxgl.Map) {
-    this.setState({
-      hover: null,
-    });
+    // this.setState({
+    //   hover: null,
+    // });
     map.getCanvas().style.cursor = '';
   }
 

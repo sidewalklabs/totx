@@ -730,14 +730,31 @@ span.commute-time {
 }
 
 .mapboxgl-popup-tip {
-  border-top-color: #0089F8 !important;
+  border-top-color: #0089f8 !important;
 }
 .mapboxgl-popup-content {
-  background-color: #0089F8 !important;
-  padding: 5px 10px !important;
+  background-color: #0089f8 !important;
+  padding: 0 !important;
   color: white;
   font-weight: bold;
   font-size: 12px;
+}
+
+.mapboxgl-popup .primary,
+.mapboxgl-popup .secondary {
+  padding: 5px 10px !important;
+}
+
+.mapboxgl-popup .primary {
+  background-color: #0089f8;
+}
+
+.mapboxgl-popup .secondary.compare-settings {
+  background-color: rgb(103, 32, 68);
+}
+
+.mapboxgl-popup .secondary.compare-origin {
+  background-color: rgb(231, 100, 0);
 }
 
 @media only screen and (max-device-width: 700px) {
