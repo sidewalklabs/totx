@@ -50,7 +50,7 @@ export class Map extends React.Component<Props, State> {
       <MapboxGL
         center={[center.lng, center.lat]}
         containerStyle={{flex: '1'}}
-        style={'mapbox://styles/kevgrenn/cj907tt8x0q4v2sqmrebamelo'}
+        style={'mapbox://styles/danvk/cjg3tbb346bbk2sps9pzy6f99'}
         onStyleLoad={this.props.onLoad}
         onClick={this.onClick}>
         <ChoroplethLayer

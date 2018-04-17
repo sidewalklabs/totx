@@ -85,15 +85,16 @@ export default class Root extends React.Component<ViewProps, {}> {
     }
 
     // Compare origins mode has A/B pins. Other modes have a single, blank pin.
-    let firstMarkerImage = 'pin-blue-blank-24x34.png';
+    let firstMarkerImage = 'blue-marker';
     let secondMarker: JSX.Element = null;
     if (this.props.mode === 'compare-origin') {
-      firstMarkerImage = 'pin-blue-A-24x34.png';
+      firstMarkerImage = 'blue-marker'; // 'pin-blue-A-24x34.png';
+      // icon="pin-orange-B-24x34.png"
       secondMarker = (
         <MapboxMarker
           position={this.props.origin2}
           draggable={true}
-          icon="pin-orange-B-24x34.png"
+          icon="blue-marker"
           onDragEnd={loc => this.handleMarkerMove(true, loc)}
         />
       );
@@ -101,11 +102,12 @@ export default class Root extends React.Component<ViewProps, {}> {
 
     let destinationMarker: JSX.Element = null;
     if (this.props.destination) {
+      // icon="pin-gray-blank-24x34.png"
       destinationMarker = (
         <MapboxMarker
           position={this.props.destination}
           draggable={true}
-          icon="pin-gray-blank-24x34.png"
+          icon="blue-marker"
           onDragEnd={this.handleDestinationMove}
         />
       );
