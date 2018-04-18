@@ -29,3 +29,101 @@ jobs:
 
       # run tests!
       - run: yarn circleci
+
+  publish-docker:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - run: &setup_gcloud
+          name: Setup gcloud
+          command: |
+            echo ${GCP_SERVICE_ACCOUNT_KEY} | base64 -d > ${HOME}/gcp-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+            gcloud --quiet config set project nyc-tlc-1225
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Choose a tag
+          command: git rev-parse --short=8 HEAD > /tmp/tag
+      - run:
+          name: Build image
+          command: docker build . -t us.gcr.io/nyc-tlc-1225/swl-api-server:$(cat /tmp/tag)
+      - run:
+          name: Push image
+          command: gcloud docker -- push us.gcr.io/nyc-tlc-1225/swl-api-server:$(cat /tmp/tag)
+      - run:
+          name: Create K8s configs
+          command: |
+            mkdir /tmp/k8s
+            kubectl patch --local -o yaml -p \ '
+            {
+                "spec": {
+                    "template": {
+                        "spec": {
+                          "containers": [
+                                {
+                                    "name": "swl-api-server-web",
+                                    "image": "us.gcr.io/nyc-tlc-1225/swl-api-server:'$(cat /tmp/tag)'"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }' -f ./web-deployment.yaml > /tmp/k8s/web-deployment.yaml
+
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - k8s
+  deploy-staging:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          <<: *setup_gcloud
+      - run:
+          name: Apply K8s configs
+          command: |
+            gcloud container clusters get-credentials staging --zone=us-east1-b
+            kubectl apply -f /tmp/k8s/*yaml
+  deploy-production:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          <<: *setup_gcloud
+      - run:
+          name: Apply K8s configs
+          command: |
+            gcloud container clusters get-credentials prod --zone=us-east1-b
+            kubectl apply -f /tmp/k8s/*yaml
+
+
+workflows:
+  version: 2
+  build-and-publish:
+    jobs:
+      - build
+      - publish-docker:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - deploy-staging:
+          requires:
+            - publish-docker
+          filters:
+            branches:
+              only: master
+      - hold:
+          type: approval
+          requires:
+            - deploy-staging
+      - deploy-production:
+          requires:
+            - hold
