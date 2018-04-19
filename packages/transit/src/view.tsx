@@ -11,6 +11,7 @@ import RoutingParameters from './routing-parameters';
 import Scenarios from './scenarios';
 
 const ABOUT_URL = 'https://docs.google.com/document/d/1YzZ6xbSuqVFyPolkVk1390vIzY1ktrc5OfNXTG3Enj0';
+const FEEDBACK_LINK = 'mailto:ttx@sidewalklabs.com';
 
 const rootEl = document.getElementById('root');
 const store = createStore();
@@ -51,8 +52,13 @@ class Root extends React.Component<{}, State> {
           clearError={this.clearError}
         />
         <MapPanel handleAction={handleAction} {...this.state} />
-        <div className="about">
-          <a href={ABOUT_URL}>About</a>
+        <div className="feedback-about">
+          <a className="mdl-shadow--4dp" href={ABOUT_URL}>
+            About
+          </a>
+          <a className="mdl-shadow--4dp" href={FEEDBACK_LINK}>
+            Feedback
+          </a>
         </div>
         <div className="front-matter">
           <RoutingParameters

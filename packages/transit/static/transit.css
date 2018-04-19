@@ -1,135 +1,3 @@
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-}
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-ol,
-ul {
-  list-style: none;
-}
-blockquote,
-q {
-  quotes: none;
-}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
-}
-
-/* end of reset */
-
 *,
 *:before,
 *:after {
@@ -146,22 +14,14 @@ html {
   height: 100%;
 }
 
-body {
-  font-family: 'Circular-Medium', 'Roboto', sans-serif;
-  font-size: 13px;
-  line-height: 16px;
-  color: #444;
-  -webkit-text-size-adjust: 100%;
-}
-
 body,
 select {
   margin: 0;
 }
 
-a,
-a:visited {
-  color: #00a;
+a, a:visited {
+  text-decoration: none;
+  color: #0072CE;
 }
 
 h1 {
@@ -632,93 +492,6 @@ span.commute-time {
   margin-right: 8px;
 }
 
-.scenarios {
-  position: absolute;
-  left: 0;
-  background: #263238;
-  padding: 24px 24px 28px;
-  height: 120px;
-  right: 0;
-  bottom: 0;
-  color: white;
-}
-
-.scenarios .header {
-  font-size: 24px;
-}
-
-.scenarios .subheader {
-  font-size: 16px;
-}
-
-.scenarios .header,
-.scenarios .subheader {
-  padding: 4px;
-  margin-right: 12px; /* shift the "close" button over a bit. */
-  max-width: 600px;
-}
-
-.prev-scenario,
-.next-scenario {
-  cursor: pointer;
-  font-size: 32px;
-}
-
-.scenarios .close-button {
-  font-size: 16px;
-  opacity: 0.6;
-  margin-left: 8px;
-  vertical-align: super;
-}
-
-.scenarios .close-button:hover {
-  opacity: 1;
-}
-
-.scenarios {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.about {
-  position: absolute;
-  top: 16px;
-  right: 220px;
-}
-
-.about a {
-  color: black;
-  text-decoration: none;
-}
-
-.about a:hover {
-  color: #00a;
-  text-decoration: underline;
-}
-
-.route-details ol {
-  margin-right: 24px;
-}
-
-.compare-origin .route-details {
-  width: 440px;
-}
-
-.minimized-scenarios {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  background: #263238;
-  color: #eee;
-  padding: 8px 24px;
-  cursor: pointer;
-}
-
-.minimized-scenarios:hover {
-  color: #fff;
-}
-
 .mobile-warning {
   display: none;
 }
@@ -755,6 +528,22 @@ span.commute-time {
 
 .mapboxgl-popup .secondary.compare-origin {
   background-color: rgb(231, 100, 0);
+}
+
+.feedback-about {
+  position: absolute;
+  right: 25px;
+  top: 25px;
+  height: 21px;
+  margin-top: 6px;
+}
+
+.feedback-about a {
+  background: #000000aa;  /* TODO(danvk): this should be a multiply blend */
+  color: white;
+  text-transform: uppercase;
+  padding: 6px 11px;
+  margin-right: 5px;
 }
 
 @media only screen and (max-device-width: 700px) {
