@@ -1,7 +1,6 @@
 import * as Cookies from 'js-cookie';
 import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
-import * as ramps from './ramps';
 
 import {ajaxPromise, FeatureCollection} from '../../utils';
 import {LegMode, TransitModes} from '../common/r5-types';
@@ -12,7 +11,6 @@ import {getPromise} from '../../utils';
 import Cache from '../../utils/cache';
 import {SummaryStep} from '../server/route';
 import Stories from './stories';
-import {StyleFn} from './stylefn';
 import {withoutDefaults} from './utils';
 
 /** This is the state exported by this store via store.getState(). */
@@ -22,16 +20,17 @@ export interface State {
   destinationAddress: string;
   view: CenterZoomLevel;
   mode: actions.Mode;
-  style: StyleFn;
   error: string;
   isLoading: boolean;
   origin: LatLng;
   originAddress: string;
   options: Partial<QueryOptions>;
+  times: CommuteTimes;
   // origin2 and options2 are always set but have no effect on the UI unless mode=comparison.
   origin2: LatLng;
   origin2Address: string;
   options2: Partial<QueryOptions>;
+  times2: CommuteTimes;
   routes: Route[];
   currentStory: string;
 }
@@ -222,7 +221,6 @@ function createStore() {
   let destination: LatLng = null;
   let isLoadingGeoJSON: boolean = false;
   let error: string = null;
-  let style: StyleFn = () => ({});
   let origin: LatLng = new LatLng(INTRO_STORY.origin.lat, INTRO_STORY.origin.lng);
   let options = {...DEFAULT_OPTIONS, ...INTRO_STORY.options};
   let origin2: LatLng = new LatLng(
@@ -407,40 +405,6 @@ function createStore() {
     }
   }
 
-  function isDefined(x: number) {
-    return x !== null && x !== undefined;
-  }
-
-  function getStyleFn() {
-    const times = commuteTimesCache.getFromCache({origin, options}) || {};
-    if (mode === 'single') {
-      return (feature: any) => {
-        const id = feature.properties['geo_id'];
-        const secs = times[id];
-        return {
-          fillColor: isDefined(secs) ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)',
-          lineWidth: 0,
-        };
-      };
-    }
-
-    const times2 = commuteTimesCache.getFromCache(getSecondaryParams()) || {};
-    const secsOrBig = (secs: number) => (!isDefined(secs) ? 10000 : secs);
-    const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
-    return (feature: any) => {
-      const id = feature.properties['geo_id'];
-      const secs1 = times[id];
-      const secs2 = times2[id];
-      return {
-        fillColor:
-          isDefined(secs1) || isDefined(secs2)
-            ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
-            : 'rgba(0,0,0,0)',
-        lineWidth: 0,
-      };
-    };
-  }
-
   async function getCommuteTimePromises(): Promise<CommuteTimes[]> {
     const secondaryParams = getSecondaryParams();
     const secondaryPromise = secondaryParams
@@ -454,15 +418,23 @@ function createStore() {
     return Promise.all(promises);
   }
 
+  function getCommuteTimes() {
+    const times = commuteTimesCache.getFromCache({origin, options}) || {};
+    let times2 = {};
+    if (mode !== 'single') {
+      times2 = commuteTimesCache.getFromCache(getSecondaryParams()) || {};
+    } else {
+      times2 = {};
+    }
+    return {times, times2};
+  }
+
   function handleSetMode(action: actions.SetMode) {
     if (action.mode === mode) return; // no-op
     mode = action.mode;
 
     getCommuteTimePromises()
-      .then(() => {
-        style = getStyleFn();
-        stateChanged();
-      })
+      .then(stateChanged)
       .catch(stateChanged);
 
     // If there's a second origin, we need to fetch its address.
@@ -484,7 +456,6 @@ function createStore() {
         .then(stateChanged, stateChanged);
     }
 
-    style = getStyleFn();
     stateChanged();
   }
 
@@ -495,10 +466,7 @@ function createStore() {
       origin = action.origin;
     }
 
-    getCommuteTimePromises().then(() => {
-      style = getStyleFn();
-      stateChanged();
-    });
+    getCommuteTimePromises().then(stateChanged);
     fetchRoutes();
     addressCache.get(action.origin).then(stateChanged, stateChanged);
     stateChanged();
@@ -512,10 +480,7 @@ function createStore() {
     }
 
     getCommuteTimePromises()
-      .then(() => {
-        style = getStyleFn();
-        stateChanged();
-      })
+      .then(stateChanged)
       .catch(stateChanged);
     fetchRoutes();
 
@@ -659,11 +624,12 @@ function createStore() {
   }
 
   function getState(): State {
+    const {times, times2} = getCommuteTimes();
     return {
       geojson,
       destination,
       destinationAddress: destination && addressCache.getFromCache(destination),
-      style,
+      times,
       error,
       isLoading: areTherePendingRequests(),
       mode,
@@ -674,6 +640,7 @@ function createStore() {
       origin2,
       origin2Address: addressCache.getFromCache(origin2),
       options2,
+      times2,
       routes: getRoutes(),
       currentStory,
     };

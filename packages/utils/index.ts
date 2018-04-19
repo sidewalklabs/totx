@@ -135,3 +135,22 @@ export function checkNonNull<T>(x: T | null): T {
   }
   return x;
 }
+
+/**
+ * Returns a version of the function that returns the same value if it's repeatedly called with the
+ * same arguments (according to shallowEquals). This only remembers the last invocation.
+ * Useful for React components.
+ */
+export function memoizeLast<T, U>(fn: (args: T) => U): ((args: T) => U) {
+  let lastArgs: T;
+  let lastResult: U;
+
+  return (args: T) => {
+    if (args === lastArgs || shallowEqual(args, lastArgs)) {
+      return lastResult;
+    }
+    lastArgs = args;
+    lastResult = fn(args);
+    return lastResult;
+  };
+}

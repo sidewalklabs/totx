@@ -1,18 +1,22 @@
+import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 import ReactMapboxGl, {ZoomControl} from 'react-mapbox-gl';
 
+import {Feature, FeatureCollection} from '../../utils';
 import {ChoroplethLayer} from './choropleth-layer';
 import {CenterZoomLevel, LatLng} from './latlng';
 import {RouteLayer} from './route-layer';
-import {StyledFeatureData} from './stylefn';
 
 export interface Props {
   view: CenterZoomLevel;
-  data: StyledFeatureData;
-  routes: StyledFeatureData[];
+  geojson: FeatureCollection;
+  styleFn: (f: Feature) => string;
+  routes: FeatureCollection[];
   onLoad?: () => void;
   onError: (error: Error) => void;
   onClick?: (point: LatLng) => void;
+  onMouseHover?: (feature: Feature, lngLat: LngLat, map: mapboxgl.Map) => any;
+  onMouseLeave?: (map: mapboxgl.Map) => any;
   children?: any; // TODO(danvk): refine
 }
 
@@ -50,12 +54,11 @@ export class Map extends React.Component<Props, State> {
 
   render() {
     const {center, zoom} = this.state;
-    const {data, routes} = this.props;
+    const {geojson, routes, styleFn, onMouseHover, onMouseLeave} = this.props;
 
-    const routesEls = routes.map((r, i) => (
+    const routesEls = routes.map((routeGeojson, i) => (
       <RouteLayer
-        geojson={r.geojson}
-        styleFn={r.styleFn}
+        geojson={routeGeojson}
         visibility={'visible'}
         before={'poi-small'}
         key={`route${i}`}
@@ -72,10 +75,12 @@ export class Map extends React.Component<Props, State> {
         onZoomEnd={this.onZoomEnd}
         onClick={this.onClick}>
         <ChoroplethLayer
-          geojson={data.geojson}
-          styleFn={data.styleFn}
+          geojson={geojson}
+          styleFn={styleFn}
           visibility="visible"
           before="poi-small"
+          onMouseHover={onMouseHover}
+          onMouseLeave={onMouseLeave}
         />
         {routesEls}
         {this.props.children}
