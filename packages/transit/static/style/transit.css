@@ -19,9 +19,10 @@ select {
   margin: 0;
 }
 
-a, a:visited {
+a,
+a:visited {
   text-decoration: none;
-  color: #0072CE;
+  color: #0072ce;
 }
 
 .map {
@@ -143,7 +144,7 @@ table.tooltip tr:nth-child(even) {
 }
 
 .routing-settings .value {
-  color: #0072CE;
+  color: #0072ce;
   font-weight: 700;
 }
 
@@ -407,7 +408,7 @@ span.commute-time {
 }
 
 .feedback-about a {
-  background: #000000aa;  /* TODO(danvk): this should be a multiply blend */
+  background: #000000aa; /* TODO(danvk): this should be a multiply blend */
   color: white;
   text-transform: uppercase;
   padding: 6px 11px;
@@ -419,7 +420,7 @@ span.commute-time {
   position: absolute;
   top: 25px;
   left: 25px;
-  background: #EFEFEF;
+  background: #efefef;
   z-index: 0;
 }
 
@@ -429,7 +430,8 @@ span.commute-time {
   flex: 0 0 auto;
 }
 
-.left-nav .TitleLogo, .left-nav .TitleLogo-Super {
+.left-nav .TitleLogo,
+.left-nav .TitleLogo-Super {
   text-transform: uppercase;
   display: block;
 }
@@ -456,7 +458,8 @@ span.commute-time {
   padding: 15px 25px;
 }
 
-.route-clear, .comparison-clear {
+.route-clear,
+.comparison-clear {
   float: right;
   cursor: pointer;
 }
