@@ -60,7 +60,8 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
           <span className="route-length-distance">1.9 km</span>
         </div>
 
-        {arrowSteps}
+        {arrowSteps.length > 0 ? <div className="route-summary">{arrowSteps}</div> : null}
+        {route ? <RouteDetails route={route} /> : null}
         <div>TODO: AP-208</div>
       </div>
     );
@@ -109,37 +110,23 @@ function formatTime(secs: number) {
   return `${hours}:${strMins}`;
 }
 
-function describeStep(step: Step): string {
-  const from = step.from.stopName;
-  const to = step.to.stopName;
-
-  if (step.mode in TransitModes) {
-    return `Take ${TORONTO_ROUTES[step.routeId].route_long_name} ${
-      step.numStops
-    } stops from ${from} to ${to}.`;
-  } else if (step.mode in LegMode) {
-    let distance: string;
-    if (step.distanceKm >= 0.16) {
-      // 0.1 mile
-      distance = (step.distanceKm * 0.6214).toFixed(1) + ' mi.';
-    } else {
-      distance = Math.round(step.distanceKm * 3280.84) + ' ft.';
-    }
-    return `${step.mode} ${distance} from ${from} to ${to}.`;
+function describeStep(step: SummaryStep): string {
+  if (isTransitStep(step)) {
+    return `Take ${step.mode} ${step.shortName}`;
+  } else {
+    const distanceKm = (step.distance / 1e6).toFixed(1);
+    const minutes = Math.round(step.duration / 60);
+    return `${step.mode} ${distanceKm} km (${minutes} min)`;
   }
 }
 
 function RouteDetails(props: {route: Route}): JSX.Element {
-  const steps = props.route.steps;
-  const lis = steps.map((step, i) => (
-    <li key={i}>
-      {formatTime(step.departTimeSecs)} {describeStep(step)}
-    </li>
-  ));
+  const steps = props.route.summary;
+  const stepEls = steps.map((step, i) => <div key={i}>{describeStep(step)}</div>);
   return (
-    <ol>
-      {lis}
-      <li>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</li>
-    </ol>
+    <div className="route-details">
+      {stepEls}
+      <div>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</div>
+    </div>
   );
 }

@@ -320,18 +320,6 @@ span.close-button:hover {
   margin-right: 8px;
 }
 
-.route-details {
-  position: absolute;
-  background: #546e7a;
-  color: #fff;
-  padding: 16px;
-  line-height: 1.8em;
-  width: 400px;
-  z-index: 1;
-  left: 0;
-  top: 118px;
-}
-
 .route {
   cursor: pointer;
   background-color: #f2f4f6;
@@ -499,4 +487,11 @@ span.commute-time {
 
 .nav-bottom {
   padding: 20px 30px;
+}
+
+
+.route-details {
+  font-size: 9px;
+  line-height: 18px;
+  font-weight: 600;
 }
