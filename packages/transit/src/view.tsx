@@ -53,6 +53,7 @@ class Root extends React.Component<{}, State> {
             <div className="TitleLogo">Explorer</div>
             <div className="Title-Subhead">Discovering ways to travel the city</div>
           </div>
+
           {mode === 'single' ? (
             <div className="compare-button-wrapper">
               <div
@@ -61,7 +62,15 @@ class Root extends React.Component<{}, State> {
               />
             </div>
           ) : null}
-          <RouteDisplay className="route" route={routes[0]} onClearDestination={clearDestination} />
+
+          {routes[0] ? (
+            <RouteDisplay
+              className="route"
+              route={routes[0]}
+              onClearDestination={clearDestination}
+            />
+          ) : null}
+
           <div className="mode-choice">Mode choice slider: AP-197</div>
           <div className="nav-bottom">
             <div className="origin-destination">
