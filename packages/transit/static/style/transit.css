@@ -125,13 +125,6 @@ table.tooltip tr:nth-child(even) {
   left: 0;
 }
 
-.front-matter {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  vertical-align: top;
-}
-
 .box-outline {
   border: 1px solid #777;
   background: white;
@@ -285,11 +278,11 @@ table.tooltip tr:nth-child(even) {
 }
 
 .transit-connector {
-  background-image: url('arrow-right-1x.png');
+  background-image: url('/arrow-right-1x.png');
 }
 
 .walk {
-  background-image: url('walk.png');
+  background-image: url('/walk.png');
   opacity: 0.5;
 }
 
@@ -544,6 +537,43 @@ span.commute-time {
   text-transform: uppercase;
   padding: 6px 11px;
   margin-right: 5px;
+}
+
+.left-nav {
+  width: 300px;
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  bottom: 25px;
+  background: rgb(245, 245, 245);
+  z-index: 0;
+}
+
+.left-nav .mdl-card__title {
+  background: rgb(0, 114, 206);
+  color: white;
+  flex: 0 0 auto;
+}
+
+.left-nav .TitleLogo {
+  text-transform: uppercase;
+  display: block;
+}
+
+.mdl-card__title {
+  flex-direction: column;
+}
+
+.mapleleaf {
+  display: inline-block;
+}
+
+.nav-contents {
+  padding: 22px;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 }
 
 @media only screen and (max-device-width: 700px) {

@@ -8,7 +8,6 @@ import Legend from './legend';
 import MapPanel from './map-panel';
 import NotificationBar from './notification-bar';
 import RoutingParameters from './routing-parameters';
-import Scenarios from './scenarios';
 
 const ABOUT_URL = 'https://docs.google.com/document/d/1YzZ6xbSuqVFyPolkVk1390vIzY1ktrc5OfNXTG3Enj0';
 const FEEDBACK_LINK = 'mailto:ttx@sidewalklabs.com';
@@ -60,7 +59,11 @@ class Root extends React.Component<{}, State> {
             Feedback
           </a>
         </div>
-        <div className="front-matter">
+        <div className="left-nav mdl-card mdl-shadow--8dp">
+          <div className="mdl-card__title">
+            <div className="TitleLogo">Toronto Transit Explorer</div>
+            <div className="Title-Subhead">Discovering ways to travel the city</div>
+          </div>
           <RoutingParameters
             {...this.state}
             handleAction={handleAction}
@@ -74,10 +77,7 @@ class Root extends React.Component<{}, State> {
           ) : null}
         </div>
         <Legend mode={this.state.mode} currentStory={this.state.currentStory} />
-        <Scenarios
-          currentStory={this.state.currentStory}
-          onSetStory={story => handleAction({type: 'set-story', story})}
-        />
+
         {this.state.currentStory !== null ? (
           <div className="mobile-warning">
             For a better experience, use a tablet or desktop device.
