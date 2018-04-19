@@ -2,7 +2,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import 'whatwg-fetch'; // fetch() polyfill.
 
-import * as actions from './action';
 import createStore, {QueryOptions, State} from './datastore';
 import Legend from './legend';
 import MapPanel from './map-panel';
@@ -16,19 +15,6 @@ const FEEDBACK_LINK = 'mailto:ttx@sidewalklabs.com';
 const rootEl = document.getElementById('root');
 const store = createStore();
 
-const CompareToAnotherOrigin = (props: {onClick: () => any}) => (
-  <div className="mode-switch compare-origin" {...props}>
-    <span>+</span>
-    Compare to another origin
-  </div>
-);
-const CompareToOtherSettings = (props: {onClick: () => any}) => (
-  <div className="mode-switch compare-settings" {...props}>
-    <span>+</span>
-    Compare to other settings
-  </div>
-);
-
 /** Root component for the transit accessibility visualization. */
 class Root extends React.Component<{}, State> {
   constructor(props: {}) {
@@ -40,12 +26,9 @@ class Root extends React.Component<{}, State> {
 
   render(): JSX.Element {
     const handleAction = store.dispatch.bind(store);
-    const setMode = (mode: actions.Mode) => () => {
-      handleAction({type: 'set-mode', mode});
-    };
 
     const {state} = this;
-    const {routes} = state;
+    const {mode, routes} = state;
     const clearDestination = () => store.dispatch({type: 'clear-destination'});
 
     return (
@@ -70,6 +53,14 @@ class Root extends React.Component<{}, State> {
             <div className="TitleLogo">Explorer</div>
             <div className="Title-Subhead">Discovering ways to travel the city</div>
           </div>
+          {mode === 'single' ? (
+            <div className="compare-button-wrapper">
+              <div
+                className="compare-button"
+                onClick={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
+              />
+            </div>
+          ) : null}
           <RouteDisplay className="route" route={routes[0]} onClearDestination={clearDestination} />
           <div className="mode-choice">Mode choice slider: AP-197</div>
           <div className="nav-bottom">

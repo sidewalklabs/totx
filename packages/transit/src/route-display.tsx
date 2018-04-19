@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as _ from 'underscore';
 
-import {LegMode, TransitModes} from '../common/r5-types';
+import {TransitModes} from '../common/r5-types';
 import {SummaryStep, TransitSummaryStep} from '../server/route';
-import {Route, Step} from './datastore';
+import {Route} from './datastore';
 import routes from './toronto-routes';
 
 interface RouteDisplayProps {

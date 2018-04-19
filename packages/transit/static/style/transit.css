@@ -489,9 +489,22 @@ span.commute-time {
   padding: 20px 30px;
 }
 
-
 .route-details {
   font-size: 9px;
-  line-height: 18px;
+  line-height: 17px;
   font-weight: 600;
+}
+
+.compare-button-wrapper {
+  position: relative;
+}
+
+.compare-button {
+  cursor: pointer;
+  position: absolute;
+  height: 38px;
+  width: 38px;
+  background: url('/plus.svg');
+  top: -19px;
+  right: 8px;
 }
