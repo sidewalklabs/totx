@@ -55,12 +55,13 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
           ×
         </div>
         <div className="route-length">
-          <span className="route-length-title">Route Length</span>
+          <span className="route-length-title label">Route Length</span>
           <span className="route-length-time">{minutes} min</span>
           <span className="route-length-distance">1.9 km</span>
         </div>
 
         {arrowSteps}
+        <div>TODO: AP-208</div>
       </div>
     );
   }

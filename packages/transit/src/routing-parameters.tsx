@@ -3,9 +3,7 @@ import * as React from 'react';
 
 import Action from './action';
 import {DEFAULT_OPTIONS, QueryOptions, State} from './datastore';
-import glyphs from './glyphs';
 import * as controls from './parameter-selectors';
-import RouteDisplay from './route-display';
 
 interface Props extends State {
   onChange(which: number, newOptions: Partial<QueryOptions>): any;
@@ -123,22 +121,11 @@ const SettingsRow: React.StatelessComponent<SettingRowProps> = props => {
     value,
     onChange: v => props.onSetValue(1, v),
   });
-  let secondary: React.ReactElement<controls.SelectProps> = null;
-  if (props.mode === 'compare-settings') {
-    const value2 = getValue(props.options2);
-    secondary = React.createElement<controls.SelectProps>(props.component, {
-      value: value2,
-      onChange: v => props.onSetValue(2, v),
-      isSecondary: true,
-      isMismatch: value !== value2,
-    });
-  }
 
   return (
     <div className="row">
       <span className="label">{props.label}</span>
       {primary}
-      {secondary}
     </div>
   );
 };

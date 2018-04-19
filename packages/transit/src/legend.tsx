@@ -6,7 +6,6 @@ import {ORIGIN_COMPARISON_COLORS, SETTINGS_COMPARISON_COLORS, SINGLE_COLORS} fro
 
 interface LegendProps {
   mode: Mode;
-  currentStory: string;
 }
 
 export default function Legend(props: LegendProps) {
@@ -79,7 +78,6 @@ export default function Legend(props: LegendProps) {
 
 interface GeneralLegendProps {
   mode: Mode;
-  currentStory: string;
   labelTopLeft: string | JSX.Element;
   labelTopMiddle?: string | JSX.Element;
   labelTopRight?: string | JSX.Element;
@@ -92,18 +90,16 @@ function GeneralLegend(props: GeneralLegendProps) {
   const swatches = props.swatches.map((backgroundColor, i) => (
     <div key={`swatch${i}`} className="swatch" style={{backgroundColor}} />
   ));
-  const className = classNames('legend', 'legend-' + props.mode, {
-    'scenarios-visible': props.currentStory !== null,
-  });
+  const className = classNames('legend', 'legend-' + props.mode);
   return (
     <div className={className}>
-      <div className="label-top">
+      <div className="label label-top">
         <div className="left">{props.labelTopLeft}</div>
         {props.labelTopMiddle ? <div className="middle">{props.labelTopMiddle}</div> : null}
         {props.labelTopRight ? <div className="right">{props.labelTopRight}</div> : null}
       </div>
       <div className="swatches">{swatches}</div>
-      <div className="label-bottom">
+      <div className="label label-bottom">
         <div className="left">{props.labelBottomLeft}</div>
         <div className="right">{props.labelBottomRight}</div>
       </div>

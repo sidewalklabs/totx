@@ -71,23 +71,22 @@ class Root extends React.Component<{}, State> {
             <div className="Title-Subhead">Discovering ways to travel the city</div>
           </div>
           <RouteDisplay className="route" route={routes[0]} onClearDestination={clearDestination} />
-          <div className="mode-choice">(Mode choice placeholder)</div>
-          <div className="origin">
-            <img src="blue-marker.svg" width={19} height={27} /> {this.state.originAddress}
-          </div>
-          <RoutingParameters
-            {...this.state}
-            handleAction={handleAction}
-            onChange={this.setOptions}
-          />
-          {this.state.mode === 'single' ? (
-            <div className="mode-switchers-container">
-              <CompareToAnotherOrigin onClick={setMode('compare-origin')} />
-              <CompareToOtherSettings onClick={setMode('compare-settings')} />
+          <div className="mode-choice">Mode choice slider: AP-197</div>
+          <div className="nav-bottom">
+            <div className="origin-destination">
+              <img src="blue-marker.svg" width={19} height={27} /> {this.state.originAddress}
+              <div>TODO: AP-199</div>
             </div>
-          ) : null}
+            <hr />
+            <RoutingParameters
+              {...this.state}
+              handleAction={handleAction}
+              onChange={this.setOptions}
+            />
+            <hr />
+            <Legend mode={this.state.mode} />
+          </div>
         </div>
-        <Legend mode={this.state.mode} currentStory={this.state.currentStory} />
 
         {this.state.currentStory !== null ? (
           <div className="mobile-warning">
