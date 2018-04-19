@@ -14,9 +14,21 @@
     limitations under the License.
  */
 
+.TitleLogo-Super {
+  font-family: Montserrat;
+  font-size: 23px;
+  font-weight: bold;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #ffffff;
+  color: var(--white);
+}
+
 .TitleLogo {
   font-family: Montserrat;
-  font-size: 38px;
+  font-size: 42px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;

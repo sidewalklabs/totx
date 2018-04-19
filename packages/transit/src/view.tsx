@@ -61,7 +61,8 @@ class Root extends React.Component<{}, State> {
         </div>
         <div className="left-nav mdl-card mdl-shadow--8dp">
           <div className="mdl-card__title">
-            <div className="TitleLogo">Toronto Transit Explorer</div>
+            <div className="TitleLogo-Super">Toronto Transit</div>
+            <div className="TitleLogo">Explorer</div>
             <div className="Title-Subhead">Discovering ways to travel the city</div>
           </div>
           <RoutingParameters

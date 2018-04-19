@@ -555,7 +555,7 @@ span.commute-time {
   flex: 0 0 auto;
 }
 
-.left-nav .TitleLogo {
+.left-nav .TitleLogo, .left-nav .TitleLogo-Super {
   text-transform: uppercase;
   display: block;
 }
