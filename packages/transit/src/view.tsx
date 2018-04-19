@@ -7,6 +7,7 @@ import createStore, {QueryOptions, State} from './datastore';
 import Legend from './legend';
 import MapPanel from './map-panel';
 import NotificationBar from './notification-bar';
+import RouteDisplay from './route-display';
 import RoutingParameters from './routing-parameters';
 
 const ABOUT_URL = 'https://docs.google.com/document/d/1YzZ6xbSuqVFyPolkVk1390vIzY1ktrc5OfNXTG3Enj0';
@@ -43,6 +44,10 @@ class Root extends React.Component<{}, State> {
       handleAction({type: 'set-mode', mode});
     };
 
+    const {state} = this;
+    const {routes} = state;
+    const clearDestination = () => store.dispatch({type: 'clear-destination'});
+
     return (
       <div className="view-map">
         <NotificationBar
@@ -64,6 +69,11 @@ class Root extends React.Component<{}, State> {
             <div className="TitleLogo-Super">Toronto Transit</div>
             <div className="TitleLogo">Explorer</div>
             <div className="Title-Subhead">Discovering ways to travel the city</div>
+          </div>
+          <RouteDisplay className="route" route={routes[0]} onClearDestination={clearDestination} />
+          <div className="mode-choice">(Mode choice placeholder)</div>
+          <div className="origin">
+            <img src="blue-marker.svg" width={19} height={27} /> {this.state.originAddress}
           </div>
           <RoutingParameters
             {...this.state}

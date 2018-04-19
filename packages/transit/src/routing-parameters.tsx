@@ -31,67 +31,11 @@ export default class RoutingParameters extends React.Component<Props, {}> {
       which: number,
       value: string,
     ) => this.props.onChange(which, {[field]: transform(value)});
-    const clearDestination = () => this.props.handleAction({type: 'clear-destination'});
-    const backToSingle = () => this.props.handleAction({type: 'set-mode', mode: 'single'});
-
-    const isComparison = props.mode !== 'single';
 
     const obj = {mode: props.mode, options, options2};
 
-    const routeBit =
-      props.routes.length === 0
-        ? []
-        : [
-            <div key="route-header" className="row">
-              <RouteDisplay className="route" route={props.routes[0]} />
-              {props.routes.length > 1 ? (
-                <RouteDisplay className="route secondary" route={props.routes[1]} />
-              ) : null}
-            </div>,
-            <div key="route-destination" className="row target-address">
-              <span className="address">
-                <img src="pin-gray-blank-24x34.png" width="18" height="26" />
-                <span className="close-button" onClick={clearDestination}>
-                  {glyphs.close}
-                </span>
-                {props.destinationAddress}
-              </span>
-            </div>,
-          ];
-
-    const firstMarker =
-      props.mode === 'compare-origin' ? (
-        <img src="pin-blue-A-18x26.png" width={18} height={26} />
-      ) : (
-        <img src="pin-blue-blank-18x26.png" width={18} height={26} />
-      );
-
     return (
       <div className={classNames('routing-settings', props.mode)}>
-        <div className="header row">
-          <span className="primary">
-            {firstMarker}
-            <div className="origin-address">{props.originAddress}</div>
-          </span>
-          {isComparison ? (
-            <span className="secondary">
-              <span className="close-button" onClick={backToSingle}>
-                {glyphs.close}
-              </span>
-              {props.mode === 'compare-origin'
-                ? [
-                    <img key="pin" src="pin-orange-B-18x26.png" width={18} height={26} />,
-                    <div key="address" className="origin-address">
-                      {props.origin2Address}
-                    </div>,
-                  ]
-                : 'Alternate settings'}
-            </span>
-          ) : null}
-        </div>
-
-        {routeBit}
-
         <SettingsRow
           {...obj}
           field="departure_time"

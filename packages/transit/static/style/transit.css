@@ -24,34 +24,6 @@ a, a:visited {
   color: #0072CE;
 }
 
-h1 {
-  background: #fff;
-  color: #000;
-  font-weight: 700;
-  font-size: 16px;
-  text-align: left;
-  margin: 10px;
-}
-
-h2 {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 0;
-}
-
-h3 {
-  font-size: 13px;
-  opacity: 0.54;
-  font-weight: 400;
-  margin: 0;
-}
-
-h4 {
-  font-weight: 500;
-  margin: 0;
-  line-height: 26px;
-}
-
 .map {
   position: absolute;
   top: 0;
@@ -201,73 +173,6 @@ table.tooltip tr:nth-child(even) {
 
 .routing-settings select:focus {
   outline: none;
-}
-
-.routing-settings .row {
-  display: flex;
-}
-
-.routing-settings .row .primary,
-.routing-settings .row .label,
-.routing-settings .row .value,
-.routing-settings .row.target-address > span.address,
-.routing-settings .row .route {
-  flex: 1;
-  padding: 16px;
-}
-
-.routing-settings .row.target-address {
-  color: #fff;
-  background-color: #607d8b;
-}
-
-.routing-settings select {
-  direction: rtl;
-}
-
-.routing-settings option {
-  direction: ltr;
-}
-
-.routing-settings {
-  width: 400px;
-  display: inline-block;
-}
-
-.routing-settings.compare-settings,
-.routing-settings.compare-origin {
-  width: 440px;
-}
-
-.routing-settings .header {
-  display: flex;
-}
-
-.routing-settings .header .secondary {
-  padding: 16px;
-}
-
-.routing-settings.compare-settings .row > .secondary {
-  flex: 0 0 200px;
-}
-
-.routing-settings.compare-settings .header .secondary {
-  background-color: #ffc6c4;
-  color: #93345d;
-}
-
-.routing-settings.compare-origin .header .secondary {
-  background-color: #f5dfce;
-  color: #e76400;
-  flex: 1;
-}
-
-.routing-settings.compare-origin .row .route.secondary {
-  background-color: #fbf1ea;
-}
-
-.routing-settings.compare-settings .row .route.secondary {
-  background-color: #fff7f7;
 }
 
 .transit-connector,
@@ -576,6 +481,12 @@ span.commute-time {
   flex: 1 1 auto;
 }
 
+.route {
+  background: #002440;
+  color: white;
+  padding: 15px 25px;
+}
+
 @media only screen and (max-device-width: 700px) {
   .routing-settings,
   .compare-settings,
@@ -605,4 +516,26 @@ span.commute-time {
     text-align: center;
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
   }
+}
+
+
+.route-clear {
+  float: right;
+}
+
+.route-length-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.route-length-time {
+  font-size: 20px;
+  font-weight: 700;
+  margin-right: 18px;
+}
+
+.route-length-length {
+  font-size: 12px;
+  font-weight: 500;
 }

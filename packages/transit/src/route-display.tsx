@@ -4,17 +4,15 @@ import * as _ from 'underscore';
 import {LegMode, TransitModes} from '../common/r5-types';
 import {SummaryStep, TransitSummaryStep} from '../server/route';
 import {Route, Step} from './datastore';
-import glyphs from './glyphs';
 import routes from './toronto-routes';
 
 interface RouteDisplayProps {
   route: Route;
   className: string;
+  onClearDestination: () => any;
 }
 
-interface RouteDisplayState {
-  showExpanded: boolean;
-}
+interface RouteDisplayState {}
 
 function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
   return step.mode in TransitModes;
@@ -27,7 +25,7 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
   constructor(props: RouteDisplayProps) {
     super(props);
     this.state = {showExpanded: false};
-    this.toggleVerboseDisplay = this.toggleVerboseDisplay.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
 
   render() {
@@ -52,29 +50,23 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
     const minutes = Math.floor(route.travelTimeSecs / 60);
 
     return (
-      <span className={className} onClick={this.toggleVerboseDisplay}>
-        <span className="commute-time">{minutes}min</span>
+      <div className={className}>
+        <div className="route-clear" onClick={this.handleClear}>
+          ×
+        </div>
+        <div className="route-length">
+          <span className="route-length-title">Route Length</span>
+          <span className="route-length-time">{minutes} min</span>
+          <span className="route-length-distance">1.9 km</span>
+        </div>
+
         {arrowSteps}
-        {this.state.showExpanded ? (
-          <div className="route-details">
-            <span className="close-button" onClick={this.toggleVerboseDisplay}>
-              {glyphs.close}
-            </span>
-            <RouteDetails route={route} />
-          </div>
-        ) : null}
-      </span>
+      </div>
     );
   }
 
-  toggleVerboseDisplay() {
-    this.setState({showExpanded: !this.state.showExpanded});
-  }
-
-  componentWillUpdate(newProps: RouteDisplayProps, newState: RouteDisplayState) {
-    if (newProps.route !== this.props.route) {
-      this.setState({showExpanded: false});
-    }
+  handleClear() {
+    this.props.onClearDestination();
   }
 }
 
