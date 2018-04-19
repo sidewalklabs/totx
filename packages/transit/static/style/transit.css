@@ -456,8 +456,9 @@ span.commute-time {
   padding: 15px 25px;
 }
 
-.route-clear {
+.route-clear, .comparison-clear {
   float: right;
+  cursor: pointer;
 }
 
 .label {

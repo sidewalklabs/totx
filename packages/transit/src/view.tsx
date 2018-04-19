@@ -83,6 +83,11 @@ class Root extends React.Component<{}, State> {
             </div>
             {mode === 'compare-settings' ? (
               <div className="row">
+                <div
+                  className="comparison-clear"
+                  onClick={() => store.dispatch({type: 'set-mode', mode: 'single'})}>
+                  ×
+                </div>
                 <TravelMode
                   value={state.options2.travel_mode}
                   onChange={travel_mode => {
