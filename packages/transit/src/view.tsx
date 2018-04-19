@@ -6,9 +6,9 @@ import createStore, {QueryOptions, State} from './datastore';
 import Legend from './legend';
 import MapPanel from './map-panel';
 import NotificationBar from './notification-bar';
-import {TravelMode} from './parameter-selectors';
 import RouteDisplay from './route-display';
 import RoutingParameters from './routing-parameters';
+import TravelModeSelector from './travel-mode-selector';
 
 const ABOUT_URL = 'https://docs.google.com/document/d/1YzZ6xbSuqVFyPolkVk1390vIzY1ktrc5OfNXTG3Enj0';
 const FEEDBACK_LINK = 'mailto:ttx@sidewalklabs.com';
@@ -23,6 +23,7 @@ class Root extends React.Component<{}, State> {
     this.state = store.getState();
     this.clearError = this.clearError.bind(this);
     this.setOptions = this.setOptions.bind(this);
+    this.setTravelMode = this.setTravelMode.bind(this);
   }
 
   render(): JSX.Element {
@@ -72,36 +73,13 @@ class Root extends React.Component<{}, State> {
             />
           ) : null}
 
-          <div className="mode-choice">
-            <div className="row">
-              <TravelMode
-                value={state.options.travel_mode}
-                onChange={travel_mode => {
-                  store.dispatch({type: 'set-options', options: {travel_mode}});
-                }}
-              />
-            </div>
-            {mode === 'compare-settings' ? (
-              <div className="row">
-                <div
-                  className="comparison-clear"
-                  onClick={() => store.dispatch({type: 'set-mode', mode: 'single'})}>
-                  ×
-                </div>
-                <TravelMode
-                  value={state.options2.travel_mode}
-                  onChange={travel_mode => {
-                    store.dispatch({
-                      type: 'set-options',
-                      options: {travel_mode},
-                      isSecondary: true,
-                    });
-                  }}
-                />
-              </div>
-            ) : null}
-            Mode choice slider: AP-197
-          </div>
+          <TravelModeSelector
+            mode={state.mode}
+            travelMode={state.options.travel_mode}
+            travelMode2={state.options2.travel_mode}
+            onChange={this.setTravelMode}
+            onClear={() => store.dispatch({type: 'set-mode', mode: 'single'})}
+          />
 
           <div className="nav-bottom">
             <div className="origin-destination">
@@ -146,6 +124,16 @@ class Root extends React.Component<{}, State> {
       type: 'set-options',
       isSecondary: which === 2,
       options,
+    });
+  }
+
+  setTravelMode(newMode: string, isSecondary: boolean) {
+    store.dispatch({
+      type: 'set-options',
+      isSecondary,
+      options: {
+        travel_mode: newMode,
+      },
     });
   }
 }
