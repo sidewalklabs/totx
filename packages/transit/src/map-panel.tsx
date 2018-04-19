@@ -4,6 +4,7 @@ import {Popup} from 'react-mapbox-gl';
 
 import {memoizeLast, Feature, FeatureCollection} from '../../utils';
 import Action from './action';
+import Colors from './colors';
 import {State as DataStoreState} from './datastore';
 import {LatLng} from './latlng';
 import {Map} from './mapbox-map';
@@ -32,7 +33,7 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
     return (feature: any) => {
       const id = feature.properties['geo_id'];
       const secs = times[id];
-      return isDefined(secs) ? ramps.SINGLE(secs) : 'rgba(0,0,0,0)';
+      return isDefined(secs) ? ramps.SINGLE(secs) : Colors.clear;
     };
   }
 
@@ -44,7 +45,7 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
     const secs2 = times2[id];
     return isDefined(secs1) || isDefined(secs2)
       ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
-      : 'rgba(255,0,0,0)';
+      : Colors.clear;
   };
 }
 
