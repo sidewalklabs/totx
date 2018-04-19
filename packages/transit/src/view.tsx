@@ -6,6 +6,7 @@ import createStore, {QueryOptions, State} from './datastore';
 import Legend from './legend';
 import MapPanel from './map-panel';
 import NotificationBar from './notification-bar';
+import {TravelMode} from './parameter-selectors';
 import RouteDisplay from './route-display';
 import RoutingParameters from './routing-parameters';
 
@@ -71,7 +72,32 @@ class Root extends React.Component<{}, State> {
             />
           ) : null}
 
-          <div className="mode-choice">Mode choice slider: AP-197</div>
+          <div className="mode-choice">
+            <div className="row">
+              <TravelMode
+                value={state.options.travel_mode}
+                onChange={travel_mode => {
+                  store.dispatch({type: 'set-options', options: {travel_mode}});
+                }}
+              />
+            </div>
+            {mode === 'compare-settings' ? (
+              <div className="row">
+                <TravelMode
+                  value={state.options2.travel_mode}
+                  onChange={travel_mode => {
+                    store.dispatch({
+                      type: 'set-options',
+                      options: {travel_mode},
+                      isSecondary: true,
+                    });
+                  }}
+                />
+              </div>
+            ) : null}
+            Mode choice slider: AP-197
+          </div>
+
           <div className="nav-bottom">
             <div className="origin-destination">
               <img src="blue-marker.svg" width={19} height={27} /> {this.state.originAddress}

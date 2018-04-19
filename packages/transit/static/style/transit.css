@@ -164,7 +164,7 @@ table.tooltip tr:nth-child(even) {
   padding: 14px;
 }
 
-.routing-settings select {
+select {
   padding: 4px 8px;
   border: none;
   box-shadow: none;
@@ -176,7 +176,7 @@ table.tooltip tr:nth-child(even) {
   font: inherit;
 }
 
-.routing-settings select:focus {
+select:focus {
   outline: none;
 }
 
@@ -506,5 +506,5 @@ span.commute-time {
   width: 38px;
   background: url('/plus.svg');
   top: -19px;
-  right: 8px;
+  right: 7px;
 }
