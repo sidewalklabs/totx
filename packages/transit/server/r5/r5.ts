@@ -28,6 +28,7 @@ class R5Router {
   ): Promise<Route> {
     const req = paramsToProfileRequest(origin, options, destination);
     const url = this.routerUrl + '/route';
+    console.log(url);
     const body = await requestPromise<ProfileOption>({
       url,
       method: 'POST',
@@ -44,6 +45,7 @@ class R5Router {
     };
 
     const url = this.routerUrl + '/travelTimeMap';
+    console.log(url);
     const body = await requestPromise<{[id: string]: number}>({
       url,
       method: 'POST',
