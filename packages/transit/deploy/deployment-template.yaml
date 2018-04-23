@@ -23,7 +23,7 @@ spec:
       # rolling update of the transit server.
       containers:
       - name: ttx
-        image: us.gcr.io/nyc-tlc-1225/transit-ttx:3
+        image: us.gcr.io/nyc-tlc-1225/transit-ttx
         command: [ "yarn", "develop", "--", "transit", "router-url", "http://router-ttx" ]
         ports:
         - containerPort: 1337

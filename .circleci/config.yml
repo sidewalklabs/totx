@@ -47,10 +47,10 @@ jobs:
           command: git rev-parse --short=8 HEAD > /tmp/tag
       - run:
           name: Build image
-          command: docker build . -t us.gcr.io/nyc-tlc-1225/swl-api-server:$(cat /tmp/tag)
+          command: docker build . -t us.gcr.io/nyc-tlc-1225/transit-ttx:$(cat /tmp/tag)
       - run:
           name: Push image
-          command: gcloud docker -- push us.gcr.io/nyc-tlc-1225/swl-api-server:$(cat /tmp/tag)
+          command: gcloud docker -- push us.gcr.io/nyc-tlc-1225/transit-ttx:$(cat /tmp/tag)
       - run:
           name: Create K8s configs
           command: |
@@ -62,14 +62,14 @@ jobs:
                         "spec": {
                           "containers": [
                                 {
-                                    "name": "swl-api-server-web",
-                                    "image": "us.gcr.io/nyc-tlc-1225/swl-api-server:'$(cat /tmp/tag)'"
+                                    "name": "transit-ttx",
+                                    "image": "us.gcr.io/nyc-tlc-1225/transit-ttx:'$(cat /tmp/tag)'"
                                 }
                             ]
                         }
                     }
                 }
-            }' -f ./web-deployment.yaml > /tmp/k8s/web-deployment.yaml
+            }' -f ./packages/transit/deploy/deployment-template.yaml > /tmp/k8s/ttx-deployment.yaml
 
       - persist_to_workspace:
           root: /tmp
