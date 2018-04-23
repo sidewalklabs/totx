@@ -91,6 +91,9 @@ export default class Root extends React.Component<ViewProps, State> {
   constructor(props: ViewProps) {
     super(props);
     this.onLoad = map => {
+      // See https://github.com/alex3165/react-mapbox-gl/issues/580
+      (map as any)._fadeDuration = 0;
+
       const mapboxCanvas = map.getCanvas();
       let wasHovering = false;
       mapboxCanvas.addEventListener('mousemove', e => {
