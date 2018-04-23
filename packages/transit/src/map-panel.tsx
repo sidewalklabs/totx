@@ -51,6 +51,35 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
 
 const getStyleFn = memoizeLast(makeStyleFn);
 
+const MARKER_SIZES = {
+  origin: {
+    minDx: -25,
+    maxDx: 25,
+    minDy: -15,
+    maxDy: 45,
+  },
+  destination: {
+    minDx: -20,
+    maxDx: 20,
+    minDy: -20,
+    maxDy: 20,
+  },
+};
+
+interface PointXY {
+  x: number;
+  y: number;
+}
+
+function isDeltaInRange(delta: PointXY, range: typeof MARKER_SIZES.origin) {
+  return (
+    delta.x >= range.minDx &&
+    delta.x <= range.maxDx &&
+    delta.y >= range.minDy &&
+    delta.y <= range.maxDy
+  );
+}
+
 /**
  * This component muxes between the data store and the generic Google Maps component.
  */
@@ -66,30 +95,25 @@ export default class Root extends React.Component<ViewProps, State> {
       mapboxCanvas.addEventListener('mousemove', e => {
         const {clientX, clientY} = e;
         const pt = [clientX, clientY];
-        const features = map.queryRenderedFeatures(pt);
 
-        let marker = false;
-
-        const markerPoint = map.project([this.props.origin.lng, this.props.origin.lat]);
-        const dPx2 = Math.pow(markerPoint.x - pt[0], 2) + Math.pow(markerPoint.y - pt[1], 2);
-        if (dPx2 < 30 * 30) {
-          marker = true;
+        const overMarker = this.isMouseOverMarker({x: pt[0], y: pt[1]}, map);
+        if (overMarker) {
+          if (wasHovering) {
+            this.handleChoroplethLeave(map);
+            wasHovering = false;
+          }
+          return;
         }
 
+        const features = map.queryRenderedFeatures(pt);
         let hoverFeature: typeof features[0];
         for (const feature of features) {
-          // NB: the geo_id check is a hack
           if (feature.properties && feature.properties.geo_id) {
             hoverFeature = feature;
           }
         }
 
-        if (marker) {
-          if (wasHovering) {
-            this.handleChoroplethLeave(map);
-            wasHovering = false;
-          }
-        } else if (hoverFeature) {
+        if (hoverFeature) {
           const lngLat = map.unproject(pt);
           this.handleChoroplethHover(hoverFeature, lngLat, map);
           wasHovering = true;
@@ -242,5 +266,32 @@ export default class Root extends React.Component<ViewProps, State> {
       lat: point.lat,
       lng: point.lng,
     });
+  }
+
+  getDxDy(point: PointXY, marker: LatLng, map: mapboxgl.Map): PointXY {
+    const markerPoint = map.project([marker.lng, marker.lat]);
+    const dx = markerPoint.x - point.x;
+    const dy = markerPoint.y - point.y;
+    return {x: dx, y: dy};
+  }
+
+  // Determine whether the mouse is over any of the markers on the map.
+  isMouseOverMarker(point: PointXY, map: mapboxgl.Map) {
+    if (isDeltaInRange(this.getDxDy(point, this.props.origin, map), MARKER_SIZES.origin)) {
+      return true;
+    }
+    if (
+      this.props.origin2 &&
+      isDeltaInRange(this.getDxDy(point, this.props.origin2, map), MARKER_SIZES.origin)
+    ) {
+      return true;
+    }
+    if (
+      this.props.destination &&
+      isDeltaInRange(this.getDxDy(point, this.props.destination, map), MARKER_SIZES.destination)
+    ) {
+      return true;
+    }
+    return false;
   }
 }
