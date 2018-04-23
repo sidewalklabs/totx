@@ -91,52 +91,11 @@ export default class Root extends React.Component<ViewProps, State> {
   constructor(props: ViewProps) {
     super(props);
     this.onLoad = map => {
+      // This eliminates a flicker as you drag markers around.
       // See https://github.com/alex3165/react-mapbox-gl/issues/580
       (map as any)._fadeDuration = 0;
 
-      const mapboxCanvas = map.getCanvas();
-      let wasHovering = false;
-      mapboxCanvas.addEventListener('mousemove', e => {
-        if (this.state.isDraggingMarker) return;
-
-        const {clientX, clientY} = e;
-        const pt = [clientX, clientY];
-
-        const overMarker = this.isMouseOverMarker({x: pt[0], y: pt[1]}, map);
-        if (overMarker) {
-          if (wasHovering) {
-            this.handleChoroplethLeave(map);
-            wasHovering = false;
-          }
-          return;
-        }
-
-        const features = map.queryRenderedFeatures(pt);
-        let hoverFeature: typeof features[0];
-        for (const feature of features) {
-          if (feature.properties && feature.properties.geo_id) {
-            hoverFeature = feature;
-          }
-        }
-
-        if (hoverFeature) {
-          const lngLat = map.unproject(pt);
-          this.handleChoroplethHover(hoverFeature, lngLat, map);
-          wasHovering = true;
-        } else {
-          if (wasHovering) {
-            this.handleChoroplethLeave(map);
-            wasHovering = false;
-          }
-        }
-      });
-      mapboxCanvas.addEventListener('mouseleave', e => {
-        if (wasHovering) {
-          wasHovering = false;
-          this.handleChoroplethLeave(map);
-        }
-      });
-
+      this.addMapCanvasEventListeners(map);
       this.props.handleAction({type: 'map-ready'});
     };
 
@@ -144,8 +103,6 @@ export default class Root extends React.Component<ViewProps, State> {
     this.onClick = this.onClick.bind(this);
     this.startDrag = this.startDrag.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
-    this.handleChoroplethHover = this.handleChoroplethHover.bind(this);
-    this.handleChoroplethLeave = this.handleChoroplethLeave.bind(this);
 
     this.state = {
       hover: null,
@@ -306,21 +263,63 @@ export default class Root extends React.Component<ViewProps, State> {
 
   // Determine whether the mouse is over any of the markers on the map.
   isMouseOverMarker(point: PointXY, map: mapboxgl.Map) {
-    if (isDeltaInRange(this.getDxDy(point, this.props.origin, map), MARKER_SIZES.origin)) {
-      return true;
-    }
-    if (
-      this.props.origin2 &&
-      isDeltaInRange(this.getDxDy(point, this.props.origin2, map), MARKER_SIZES.origin)
-    ) {
-      return true;
-    }
-    if (
-      this.props.destination &&
-      isDeltaInRange(this.getDxDy(point, this.props.destination, map), MARKER_SIZES.destination)
-    ) {
-      return true;
-    }
-    return false;
+    const {origin, origin2, destination} = this.props;
+    return (
+      isDeltaInRange(this.getDxDy(point, origin, map), MARKER_SIZES.origin) ||
+      (origin2 && isDeltaInRange(this.getDxDy(point, origin2, map), MARKER_SIZES.origin)) ||
+      (destination &&
+        isDeltaInRange(this.getDxDy(point, destination, map), MARKER_SIZES.destination))
+    );
+  }
+
+  addMapCanvasEventListeners(map: mapboxgl.Map) {
+    const mapboxCanvas = map.getCanvas();
+    let wasHovering = false;
+
+    // We want to synthesize hover events, but only when the mouse is over the
+    // choropleth, rather than over a draggable marker. We do this by registering
+    // events on the map's <canvas> element (rather than on the mapbox Map) because of
+    // https://github.com/alex3165/react-mapbox-gl/issues/579
+    mapboxCanvas.addEventListener('mousemove', e => {
+      if (this.state.isDraggingMarker) return;
+
+      const {clientX, clientY} = e;
+      const pt = [clientX, clientY];
+
+      const overMarker = this.isMouseOverMarker({x: pt[0], y: pt[1]}, map);
+      if (overMarker) {
+        if (wasHovering) {
+          this.handleChoroplethLeave(map);
+          wasHovering = false;
+        }
+        return;
+      }
+
+      const features = map.queryRenderedFeatures(pt);
+      let hoverFeature: typeof features[0];
+      for (const feature of features) {
+        if (feature.properties && feature.properties.geo_id) {
+          hoverFeature = feature;
+        }
+      }
+
+      if (hoverFeature) {
+        const lngLat = map.unproject(pt);
+        this.handleChoroplethHover(hoverFeature, lngLat, map);
+        wasHovering = true;
+      } else {
+        if (wasHovering) {
+          this.handleChoroplethLeave(map);
+          wasHovering = false;
+        }
+      }
+    });
+
+    mapboxCanvas.addEventListener('mouseleave', e => {
+      if (wasHovering) {
+        wasHovering = false;
+        this.handleChoroplethLeave(map);
+      }
+    });
   }
 }

@@ -59,7 +59,7 @@ export class Map extends React.Component<Props, State> {
 
   render() {
     const {center, zoom} = this.state;
-    const {geojson, routes, styleFn, onChoroplethHover, onChoroplethLeave} = this.props;
+    const {geojson, routes, styleFn} = this.props;
 
     const routesEls = routes.map((routeGeojson, i) => (
       <RouteLayer
@@ -84,8 +84,6 @@ export class Map extends React.Component<Props, State> {
           styleFn={styleFn}
           visibility="visible"
           before="poi-small"
-          onMouseHover={onChoroplethHover}
-          onMouseLeave={onChoroplethLeave}
         />
         {routesEls}
         {this.props.children}

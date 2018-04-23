@@ -1,4 +1,3 @@
-import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 
 import {GeoJSONLayer} from 'react-mapbox-gl';
@@ -17,8 +16,6 @@ export interface Props {
   styleFn: StyleFn;
   visibility: 'visible' | 'none';
   before?: string;
-  onMouseHover?: (feature: Feature, lngLat: LngLat, map: mapboxgl.Map) => any;
-  onMouseLeave?: (map: mapboxgl.Map) => any;
 }
 
 interface State {
@@ -49,9 +46,6 @@ export class ChoroplethLayer extends React.Component<Props, State> {
     this.state = {
       styledFeatures: makeStyledFeatures(props.geojson, props.styleFn),
     };
-
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseLeave = this.onMouseLeave.bind(this);
   }
 
   render() {
@@ -65,21 +59,6 @@ export class ChoroplethLayer extends React.Component<Props, State> {
         before={before}
       />
     );
-  }
-
-  onMouseLeave(event: mapboxgl.MapMouseEvent) {
-    const {onMouseLeave} = this.props;
-    if (onMouseLeave) {
-      onMouseLeave(event.target);
-    }
-  }
-
-  onMouseMove(event: mapboxgl.MapMouseEvent) {
-    const {onMouseHover} = this.props;
-    if (onMouseHover) {
-      const feature = (event as any).features[0];
-      onMouseHover(feature, event.lngLat, event.target);
-    }
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
