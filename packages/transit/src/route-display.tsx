@@ -1,19 +1,15 @@
 import * as React from 'react';
 import * as _ from 'underscore';
 
-import {LegMode, TransitModes} from '../common/r5-types';
+import {TransitModes} from '../common/r5-types';
 import {SummaryStep, TransitSummaryStep} from '../server/route';
-import {Route, Step} from './datastore';
-import glyphs from './glyphs';
+import {Route} from './datastore';
 import routes from './toronto-routes';
 
 interface RouteDisplayProps {
   route: Route;
   className: string;
-}
-
-interface RouteDisplayState {
-  showExpanded: boolean;
+  onClearDestination: () => any;
 }
 
 function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
@@ -23,11 +19,11 @@ function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
 /**
  * A component for displaying a route in a compact form, e.g. "walk -> L -> 4 -> walk".
  */
-export default class RouteDisplay extends React.Component<RouteDisplayProps, RouteDisplayState> {
+export default class RouteDisplay extends React.Component<RouteDisplayProps, {}> {
   constructor(props: RouteDisplayProps) {
     super(props);
     this.state = {showExpanded: false};
-    this.toggleVerboseDisplay = this.toggleVerboseDisplay.bind(this);
+    this.handleClear = this.handleClear.bind(this);
   }
 
   render() {
@@ -52,29 +48,25 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, Rou
     const minutes = Math.floor(route.travelTimeSecs / 60);
 
     return (
-      <span className={className} onClick={this.toggleVerboseDisplay}>
-        <span className="commute-time">{minutes}min</span>
-        {arrowSteps}
-        {this.state.showExpanded ? (
-          <div className="route-details">
-            <span className="close-button" onClick={this.toggleVerboseDisplay}>
-              {glyphs.close}
-            </span>
-            <RouteDetails route={route} />
-          </div>
-        ) : null}
-      </span>
+      <div className={className}>
+        <div className="route-clear" onClick={this.handleClear}>
+          ×
+        </div>
+        <div className="route-length">
+          <span className="route-length-title label">Route Length</span>
+          <span className="route-length-time">{minutes} min</span>
+          <span className="route-length-distance">1.9 km</span>
+        </div>
+
+        {arrowSteps.length > 0 ? <div className="route-summary">{arrowSteps}</div> : null}
+        {route ? <RouteDetails route={route} /> : null}
+        <div>TODO: AP-208</div>
+      </div>
     );
   }
 
-  toggleVerboseDisplay() {
-    this.setState({showExpanded: !this.state.showExpanded});
-  }
-
-  componentWillUpdate(newProps: RouteDisplayProps, newState: RouteDisplayState) {
-    if (newProps.route !== this.props.route) {
-      this.setState({showExpanded: false});
-    }
+  handleClear() {
+    this.props.onClearDestination();
   }
 }
 
@@ -116,37 +108,23 @@ function formatTime(secs: number) {
   return `${hours}:${strMins}`;
 }
 
-function describeStep(step: Step): string {
-  const from = step.from.stopName;
-  const to = step.to.stopName;
-
-  if (step.mode in TransitModes) {
-    return `Take ${TORONTO_ROUTES[step.routeId].route_long_name} ${
-      step.numStops
-    } stops from ${from} to ${to}.`;
-  } else if (step.mode in LegMode) {
-    let distance: string;
-    if (step.distanceKm >= 0.16) {
-      // 0.1 mile
-      distance = (step.distanceKm * 0.6214).toFixed(1) + ' mi.';
-    } else {
-      distance = Math.round(step.distanceKm * 3280.84) + ' ft.';
-    }
-    return `${step.mode} ${distance} from ${from} to ${to}.`;
+function describeStep(step: SummaryStep): string {
+  if (isTransitStep(step)) {
+    return `Take ${step.mode} ${step.shortName}`;
+  } else {
+    const distanceKm = (step.distance / 1e6).toFixed(1);
+    const minutes = Math.round(step.duration / 60);
+    return `${step.mode} ${distanceKm} km (${minutes} min)`;
   }
 }
 
 function RouteDetails(props: {route: Route}): JSX.Element {
-  const steps = props.route.steps;
-  const lis = steps.map((step, i) => (
-    <li key={i}>
-      {formatTime(step.departTimeSecs)} {describeStep(step)}
-    </li>
-  ));
+  const steps = props.route.summary;
+  const stepElements = steps.map((step, i) => <div key={i}>{describeStep(step)}</div>);
   return (
-    <ol>
-      {lis}
-      <li>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</li>
-    </ol>
+    <div className="route-details">
+      {stepElements}
+      <div>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</div>
+    </div>
   );
 }
