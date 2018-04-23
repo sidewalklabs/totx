@@ -124,6 +124,13 @@ export default class Root extends React.Component<ViewProps, State> {
           }
         }
       });
+      mapboxCanvas.addEventListener('mouseleave', e => {
+        if (wasHovering) {
+          wasHovering = false;
+          this.handleChoroplethLeave(map);
+        }
+      });
+
       this.props.handleAction({type: 'map-ready'});
     };
 
