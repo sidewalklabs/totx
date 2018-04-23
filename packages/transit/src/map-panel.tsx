@@ -55,17 +55,59 @@ const getStyleFn = memoizeLast(makeStyleFn);
  * This component muxes between the data store and the generic Google Maps component.
  */
 export default class Root extends React.Component<ViewProps, State> {
-  private onLoad: () => void;
+  private onLoad: (map: mapboxgl.Map) => any;
   private onError: (error: Error) => void;
 
   constructor(props: ViewProps) {
     super(props);
-    this.onLoad = () => this.props.handleAction({type: 'map-ready'});
+    this.onLoad = map => {
+      const mapboxCanvas = map.getCanvas();
+      let wasHovering = false;
+      mapboxCanvas.addEventListener('mousemove', e => {
+        const {clientX, clientY} = e;
+        const pt = [clientX, clientY];
+        const features = map.queryRenderedFeatures(pt);
+
+        let marker = false;
+
+        const markerPoint = map.project([this.props.origin.lng, this.props.origin.lat]);
+        const dPx2 = Math.pow(markerPoint.x - pt[0], 2) + Math.pow(markerPoint.y - pt[1], 2);
+        if (dPx2 < 30 * 30) {
+          marker = true;
+        }
+
+        let hoverFeature: typeof features[0];
+        for (const feature of features) {
+          // NB: the geo_id check is a hack
+          if (feature.properties && feature.properties.geo_id) {
+            hoverFeature = feature;
+          }
+        }
+
+        if (marker) {
+          if (wasHovering) {
+            this.handleChoroplethLeave(map);
+            wasHovering = false;
+          }
+        } else if (hoverFeature) {
+          const lngLat = map.unproject(pt);
+          this.handleChoroplethHover(hoverFeature, lngLat, map);
+          wasHovering = true;
+        } else {
+          if (wasHovering) {
+            this.handleChoroplethLeave(map);
+            wasHovering = false;
+          }
+        }
+      });
+      this.props.handleAction({type: 'map-ready'});
+    };
+
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
-    this.handleFeatureHover = this.handleFeatureHover.bind(this);
-    this.handleFeatureLeave = this.handleFeatureLeave.bind(this);
+    this.handleChoroplethHover = this.handleChoroplethHover.bind(this);
+    this.handleChoroplethLeave = this.handleChoroplethLeave.bind(this);
 
     this.state = {
       hover: null,
@@ -134,8 +176,8 @@ export default class Root extends React.Component<ViewProps, State> {
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
-        onMouseHover={this.handleFeatureHover}
-        onMouseLeave={this.handleFeatureLeave}
+        onChoroplethHover={this.handleChoroplethHover}
+        onChoroplethLeave={this.handleChoroplethLeave}
         onError={this.onError}>
         <MapboxMarker
           position={this.props.origin}
@@ -151,7 +193,7 @@ export default class Root extends React.Component<ViewProps, State> {
     );
   }
 
-  handleFeatureHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
+  handleChoroplethHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
     const id = feature.properties.geo_id;
     const secs = this.props.times[id] || 0;
     const minutes = Math.floor(secs / 60);
@@ -170,7 +212,7 @@ export default class Root extends React.Component<ViewProps, State> {
     map.getCanvas().style.cursor = 'pointer';
   }
 
-  handleFeatureLeave(map: mapboxgl.Map) {
+  handleChoroplethLeave(map: mapboxgl.Map) {
     this.setState({
       hover: null,
     });

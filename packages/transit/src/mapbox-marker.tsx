@@ -33,6 +33,7 @@ export class MapboxMarker extends React.Component<MarkerProps, {}> {
           coordinates={[position.lng, position.lat]}
           draggable={draggable}
           onDragEnd={this.onDragEnd}
+          properties={{marker: true}}
         />
       </Layer>
     );

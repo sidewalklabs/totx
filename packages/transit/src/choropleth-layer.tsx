@@ -60,9 +60,6 @@ export class ChoroplethLayer extends React.Component<Props, State> {
       <GeoJSONLayer
         id="choropleth"
         data={this.state.styledFeatures}
-        fillOnMouseEnter={this.onMouseMove}
-        fillOnMouseLeave={this.onMouseLeave}
-        fillOnMouseMove={this.onMouseMove}
         fillPaint={FILL_PAINT}
         fillLayout={{visibility}}
         before={before}
