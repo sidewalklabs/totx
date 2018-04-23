@@ -10,8 +10,10 @@ export interface MarkerProps {
   icon: string; // Symbol name in Mapbox style.
   iconAnchor?: string; // e.g. 'center' or 'bottom'.
 
+  onDragStart?: () => any;
+
   /** Fired when the user drops the marker in a new location. */
-  onDragEnd?: (newPosition: LatLng) => void;
+  onDragEnd?: (newPosition: LatLng) => any;
 }
 
 export class MapboxMarker extends React.Component<MarkerProps, {}> {
@@ -19,6 +21,7 @@ export class MapboxMarker extends React.Component<MarkerProps, {}> {
     super(props);
 
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.onDragStart = this.onDragStart.bind(this);
   }
 
   render() {
@@ -32,11 +35,18 @@ export class MapboxMarker extends React.Component<MarkerProps, {}> {
         <Feature
           coordinates={[position.lng, position.lat]}
           draggable={draggable}
+          onDragStart={this.onDragStart}
           onDragEnd={this.onDragEnd}
           properties={{marker: true}}
         />
       </Layer>
     );
+  }
+
+  onDragStart(e: any) {
+    if (this.props.onDragStart) {
+      this.props.onDragStart();
+    }
   }
 
   onDragEnd(e: any) {

@@ -16,6 +16,7 @@ type ViewProps = DataStoreState & {
 };
 
 interface State {
+  isDraggingMarker: boolean;
   hover: {
     coordinates: [number, number]; // lng, lat
     minutes: number;
@@ -93,6 +94,8 @@ export default class Root extends React.Component<ViewProps, State> {
       const mapboxCanvas = map.getCanvas();
       let wasHovering = false;
       mapboxCanvas.addEventListener('mousemove', e => {
+        if (this.state.isDraggingMarker) return;
+
         const {clientX, clientY} = e;
         const pt = [clientX, clientY];
 
@@ -136,12 +139,14 @@ export default class Root extends React.Component<ViewProps, State> {
 
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
+    this.startDrag = this.startDrag.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
     this.handleChoroplethHover = this.handleChoroplethHover.bind(this);
     this.handleChoroplethLeave = this.handleChoroplethLeave.bind(this);
 
     this.state = {
       hover: null,
+      isDraggingMarker: false,
     };
   }
 
@@ -164,6 +169,7 @@ export default class Root extends React.Component<ViewProps, State> {
           position={this.props.origin2}
           draggable={true}
           icon="blue-marker"
+          onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(true, loc)}
         />
       );
@@ -177,6 +183,7 @@ export default class Root extends React.Component<ViewProps, State> {
           draggable={true}
           icon="measle"
           iconAnchor="center"
+          onDragStart={this.startDrag}
           onDragEnd={this.handleDestinationMove}
         />
       );
@@ -207,13 +214,12 @@ export default class Root extends React.Component<ViewProps, State> {
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
-        onChoroplethHover={this.handleChoroplethHover}
-        onChoroplethLeave={this.handleChoroplethLeave}
         onError={this.onError}>
         <MapboxMarker
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
+          onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(false, loc)}
         />
         {secondMarker}
@@ -251,6 +257,9 @@ export default class Root extends React.Component<ViewProps, State> {
   }
 
   handleMarkerMove(isSecondary: boolean, latLng: LatLng) {
+    this.setState({
+      isDraggingMarker: false,
+    });
     this.props.handleAction({
       type: 'set-origin',
       isSecondary,
@@ -260,6 +269,9 @@ export default class Root extends React.Component<ViewProps, State> {
 
   handleDestinationMove(latLng: LatLng) {
     const {lat, lng} = latLng;
+    this.setState({
+      isDraggingMarker: false,
+    });
     this.props.handleAction({
       type: 'set-destination',
       lat,
@@ -272,6 +284,13 @@ export default class Root extends React.Component<ViewProps, State> {
       type: 'set-destination',
       lat: point.lat,
       lng: point.lng,
+    });
+  }
+
+  startDrag() {
+    this.setState({
+      isDraggingMarker: true,
+      hover: null,
     });
   }
 
