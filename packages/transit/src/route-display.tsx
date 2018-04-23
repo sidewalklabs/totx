@@ -12,8 +12,6 @@ interface RouteDisplayProps {
   onClearDestination: () => any;
 }
 
-interface RouteDisplayState {}
-
 function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
   return step.mode in TransitModes;
 }
@@ -21,7 +19,7 @@ function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
 /**
  * A component for displaying a route in a compact form, e.g. "walk -> L -> 4 -> walk".
  */
-export default class RouteDisplay extends React.Component<RouteDisplayProps, RouteDisplayState> {
+export default class RouteDisplay extends React.Component<RouteDisplayProps, {}> {
   constructor(props: RouteDisplayProps) {
     super(props);
     this.state = {showExpanded: false};
@@ -122,10 +120,10 @@ function describeStep(step: SummaryStep): string {
 
 function RouteDetails(props: {route: Route}): JSX.Element {
   const steps = props.route.summary;
-  const stepEls = steps.map((step, i) => <div key={i}>{describeStep(step)}</div>);
+  const stepElements = steps.map((step, i) => <div key={i}>{describeStep(step)}</div>);
   return (
     <div className="route-details">
-      {stepEls}
+      {stepElements}
       <div>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</div>
     </div>
   );
