@@ -62,7 +62,7 @@ jobs:
                         "spec": {
                           "containers": [
                                 {
-                                    "name": "transit-ttx",
+                                    "name": "ttx",
                                     "image": "us.gcr.io/nyc-tlc-1225/transit-ttx:'$(cat /tmp/tag)'"
                                 }
                             ]
