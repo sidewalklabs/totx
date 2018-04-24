@@ -1,3 +1,4 @@
+import {Feature as GeoJSONFeature, LineString} from 'geojson';
 import * as React from 'react';
 import {GeoJSONLayer} from 'react-mapbox-gl';
 
@@ -15,6 +16,25 @@ interface State {
   /** Same as props.geojson, but with fillColor set */
   walkFeatures: FeatureCollection;
   transitFeatures: FeatureCollection;
+}
+
+function coalesceFeatures(geojson: FeatureCollection): FeatureCollection {
+  const features: Array<GeoJSONFeature<LineString>> = geojson.features as any;
+
+  const outFeatures = [features[0]];
+  for (let i = 1; i < features.length; i++) {
+    const lastF = outFeatures[outFeatures.length - 1];
+    const f = features[i];
+    if (f.properties.mode === lastF.properties.mode) {
+      // Coalesce
+      lastF.geometry.coordinates.push(f.geometry.coordinates[1]);
+    } else {
+      // new feature
+      outFeatures.push(f);
+    }
+  }
+
+  return {type: 'FeatureCollection', features: outFeatures};
 }
 
 // Styles for steps and stops on a point-to-point route.
@@ -113,7 +133,7 @@ function filterFeatureCollection(
 }
 
 function propsToState(props: Props): State {
-  const features = makeStyledFeatures(props.geojson);
+  const features = makeStyledFeatures(coalesceFeatures(props.geojson));
   return {
     walkFeatures: filterFeatureCollection(features, f => f.properties.isWalk),
     transitFeatures: filterFeatureCollection(features, f => !f.properties.isWalk),
