@@ -31,7 +31,7 @@ export default function Scenarios(props: ScenariosProps): JSX.Element {
   const nextStory = () => props.onSetStory(STORY_NAMES[index + 1]);
   const prevStory = () => props.onSetStory(STORY_NAMES[index - 1]);
   const clearStory = () => props.onSetStory(null);
-  const hide = {visibility: 'hidden'};
+  const hide: React.CSSProperties = {visibility: 'hidden'};
 
   return (
     <div className="scenarios">
