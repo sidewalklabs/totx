@@ -52,7 +52,10 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
 
 const getStyleFn = memoizeLast(makeStyleFn);
 
-const MARKER_SIZES = {
+// These constants define rectangles around origin and destination markers over which
+// the hover interaction shouldn't happen. This allows the user to drag the markers.
+// See comment in addMapCanvasEventListeners(), below.
+const MARKER_SIZES_PX = {
   origin: {
     minDx: -25,
     maxDx: 25,
@@ -72,7 +75,7 @@ interface PointXY {
   y: number;
 }
 
-function isDeltaInRange(delta: PointXY, range: typeof MARKER_SIZES.origin) {
+function isDeltaInRange(delta: PointXY, range: typeof MARKER_SIZES_PX.origin) {
   return (
     delta.x >= range.minDx &&
     delta.x <= range.maxDx &&
@@ -265,10 +268,10 @@ export default class Root extends React.Component<ViewProps, State> {
   isMouseOverMarker(point: PointXY, map: mapboxgl.Map) {
     const {origin, origin2, destination} = this.props;
     return (
-      isDeltaInRange(this.getDxDy(point, origin, map), MARKER_SIZES.origin) ||
-      (origin2 && isDeltaInRange(this.getDxDy(point, origin2, map), MARKER_SIZES.origin)) ||
+      isDeltaInRange(this.getDxDy(point, origin, map), MARKER_SIZES_PX.origin) ||
+      (origin2 && isDeltaInRange(this.getDxDy(point, origin2, map), MARKER_SIZES_PX.origin)) ||
       (destination &&
-        isDeltaInRange(this.getDxDy(point, destination, map), MARKER_SIZES.destination))
+        isDeltaInRange(this.getDxDy(point, destination, map), MARKER_SIZES_PX.destination))
     );
   }
 
