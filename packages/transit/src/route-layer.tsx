@@ -3,6 +3,7 @@ import {GeoJSONLayer} from 'react-mapbox-gl';
 
 import {shallowEqual, Feature, FeatureCollection} from '../../utils';
 import Colors from './colors';
+import {mixColors} from './utils';
 
 export interface Props {
   geojson: FeatureCollection;
@@ -48,7 +49,7 @@ function routeStyle(feature: Feature) {
     lineDash: isWalk ? [2, 4] : null, // Walks are dotted: 2px on, 4px off.
     strokeOutlineColor: isWalk ? null : Colors.whiteTransparent,
     strokeColor: properties['stroke'] || 'black',
-    strokeColorDark: darken(properties['stroke'] || 'black'),
+    strokeColorDark: mixColors(properties['stroke'] || 'black', '#000000'),
   };
 }
 
@@ -62,6 +63,7 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
         properties: {
           ...f.properties,
           lineColor: style.strokeColor || 'black',
+          lineColorDark: style.strokeColorDark || 'black',
           lineWidth: style.lineWidth || 2,
           isWalk: !('tripId' in f.properties),
         },
@@ -83,7 +85,7 @@ const LINE_PAINT_TRANSIT: mapboxgl.LinePaint = {
 };
 
 const LINE_PAINT_TRANSIT_CASING: mapboxgl.LinePaint = {
-  'line-color': ['get', 'lineColor'],
+  'line-color': ['get', 'lineColorDark'],
   'line-width': 1,
   'line-gap-width': 4,
 };

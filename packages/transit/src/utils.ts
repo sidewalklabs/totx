@@ -22,3 +22,32 @@ export function withoutDefaults<T>(obj: T, defaults: T): Partial<T> {
   }
   return out;
 }
+
+export function parseColor(color: string) {
+  if (!color.match(/^#[a-f0-9]{6}/i)) {
+    throw new Error(`Expected hex color string, got ${color}`);
+  }
+
+  return {
+    r: parseInt(color.slice(1, 3), 16),
+    g: parseInt(color.slice(3, 5), 16),
+    b: parseInt(color.slice(5, 7), 16),
+  };
+}
+
+function zeropad(x: string) {
+  return x.length === 1 ? '0' + x : x;
+}
+
+/** Average two hex colors */
+export function mixColors(colorA: string, colorB: string): string {
+  const a = parseColor(colorA);
+  const b = parseColor(colorB);
+
+  return (
+    '#' +
+    zeropad(((a.r + b.r) >> 1).toString(16)) +
+    zeropad(((a.g + b.g) >> 1).toString(16)) +
+    zeropad(((a.b + b.b) >> 1).toString(16))
+  );
+}
