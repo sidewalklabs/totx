@@ -89,6 +89,9 @@ function paramsToProfileRequest(
       req.fromTime = departTime;
       req.toTime = departTime + 2 * SECONDS_PER_HOUR;
     }
+    if (options.max_walking_time_min) {
+      req.maxWalkTime = options.max_walking_time_min;
+    }
     req.wheelchair = wheelchair;
   }
 

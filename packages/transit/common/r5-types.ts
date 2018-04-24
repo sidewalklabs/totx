@@ -18,6 +18,7 @@ export interface ProfileRequest {
   directModes?: string; // comma-separated list of LegModes
   transitModes?: string; // comma-separated list of TransitModes
   verbose?: boolean;
+  maxWalkTime?: number; // max minutes walked on way to transit
 }
 
 export interface AnalysisTask extends ProfileRequest {

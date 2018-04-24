@@ -44,10 +44,10 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
         <SettingsRow
           {...obj}
-          field="max_walking_distance_km"
-          component={controls.MaxWalkingDistance}
-          label="Max. walking distance"
-          onSetValue={set('max_walking_distance_km', Number)}
+          field="max_walking_time_min"
+          component={controls.MaxWalkingTime}
+          label="Max. walking time"
+          onSetValue={set('max_walking_time_min', Number)}
         />
 
         <SettingsRow
@@ -68,11 +68,12 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
         <SettingsRow
           {...obj}
-          field="require_wheelchair"
-          component={controls.WheelchairChooser}
-          label="Wheelchair accessible"
-          onSetValue={set('require_wheelchair', x => x === 'true')}
+          field="travel_mode"
+          component={controls.TravelMode}
+          label="Travel mode"
+          onSetValue={set('travel_mode', String)}
         />
+
       </div>
     );
   }

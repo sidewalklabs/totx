@@ -71,20 +71,20 @@ interface LatLngObject {
   lng: number;
 }
 
-// (This matches the interface in router/options.ts.)
+// This used to match the interface in router/options.ts.
 export interface QueryOptions {
   departure_time: string;
-  max_walking_distance_km: number;
-  walking_speed_kph: number;
-  max_waiting_time_secs: number;
-  transfer_penalty_secs: number;
-  max_number_of_transfers: number;
+  max_walking_time_min: number;
+  walking_speed_kph: number; // unconnected to R5
+  max_waiting_time_secs: number; // unconnected to R5
+  transfer_penalty_secs: number; // unimplemented in R5
+  max_number_of_transfers: number; // unimplemented in R5
   travel_mode: string;
-  bus_multiplier: number;
-  rail_multiplier: number;
-  exclude_routes: string[];
-  exclude_stops: string[];
-  require_wheelchair: boolean;
+  bus_multiplier: number; // unimplemented in R5
+  rail_multiplier: number; // unimplemented in R5
+  exclude_routes: string[]; // unimplemented in R5
+  exclude_stops: string[]; // unimplemented in R5
+  require_wheelchair: boolean; // use travel_mode:WHEELCHAIR instead
 }
 
 /** A JSON-serialized version of this object appears in the URL hash. */
@@ -110,7 +110,7 @@ const INITIAL_VIEW: CenterZoomLevel = {
 
 export const DEFAULT_OPTIONS: QueryOptions = {
   departure_time: '08:00:00',
-  max_walking_distance_km: 0.8, // 0.5 miles
+  max_walking_time_min: 30,
   walking_speed_kph: 4.8, // 3 mph
   max_waiting_time_secs: 1800, // 30 minutes
   transfer_penalty_secs: 300, // 5 minues

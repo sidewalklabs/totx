@@ -22,15 +22,15 @@ export const WrappedSelect: React.StatelessComponent<SelectProps> = props => (
   </select>
 );
 
-export const MaxWalkingDistance: React.StatelessComponent<SelectProps> = props => (
+export const MaxWalkingTime: React.StatelessComponent<SelectProps> = props => (
   <WrappedSelect {...props}>
-    <option value="0.4">0.25 miles</option>
-    <option value="0.8">0.5 miles</option>
-    <option value="1.2">0.75 miles</option>
-    <option value="1.6">1.0 miles</option>
-    <option value="2.4">1.5 miles</option>
-    <option value="3.2">2.0 miles</option>
-    <option value="4">2.5 miles</option>
+    <option value="5">5 mins</option>
+    <option value="10">10 mins</option>
+    <option value="15">15 mins</option>
+    <option value="20">20 mins</option>
+    <option value="30">30 mins</option>
+    <option value="40">40 mins</option>
+    <option value="50">50 mins</option>
   </WrappedSelect>
 );
 
