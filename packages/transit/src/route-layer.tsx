@@ -12,7 +12,8 @@ export interface Props {
 
 interface State {
   /** Same as props.geojson, but with fillColor set */
-  styledFeatures: FeatureCollection;
+  walkFeatures: FeatureCollection;
+  transitFeatures: FeatureCollection;
 }
 
 // Styles for steps and stops on a point-to-point route.
@@ -47,6 +48,7 @@ function routeStyle(feature: Feature) {
     lineDash: isWalk ? [2, 4] : null, // Walks are dotted: 2px on, 4px off.
     strokeOutlineColor: isWalk ? null : Colors.whiteTransparent,
     strokeColor: properties['stroke'] || 'black',
+    strokeColorDark: darken(properties['stroke'] || 'black'),
   };
 }
 
@@ -61,43 +63,95 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
           ...f.properties,
           lineColor: style.strokeColor || 'black',
           lineWidth: style.lineWidth || 2,
+          isWalk: !('tripId' in f.properties),
         },
       };
     }),
   };
 }
 
-const LINE_PAINT: mapboxgl.LinePaint = {
+// Line style properties:
+// - line-color
+// - line-width
+// - line-gap-width: Draws a line casing outside of a line's actual path. Value indicates the width of the inner gap.
+// - line-dasharray: Specifies the lengths of the alternating dashes and gaps that form the dash pattern. The lengths are later scaled by the line width. To convert a dash length to pixels, multiply the length by the current line width.
+
+const LINE_PAINT_TRANSIT: mapboxgl.LinePaint = {
   'line-color': ['get', 'lineColor'],
-  'line-width': ['get', 'lineWidth'],
-  // 'line-gap-width': 2,  TODO(danvk): use this property
-  // 'line-dasharray':  doesn't support data-driven styling yet.
+  'line-width': 4,
+  'line-opacity': 0.5,
 };
+
+const LINE_PAINT_TRANSIT_CASING: mapboxgl.LinePaint = {
+  'line-color': ['get', 'lineColor'],
+  'line-width': 1,
+  'line-gap-width': 4,
+};
+
+const LINE_PAINT_WALK: mapboxgl.LinePaint = {
+  'line-color': '#000000',
+  'line-width': 3,
+  'line-dasharray': [1, 1],
+};
+
+// Split into four layers:
+// - walks
+// - bicycle rides
+// - transit steps
+// - transit step outlines
+
+function filterFeatureCollection(
+  features: FeatureCollection,
+  predicate: (f: Feature) => boolean,
+): FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: features.features.filter(predicate),
+  };
+}
+
+function propsToState(props: Props): State {
+  const features = makeStyledFeatures(props.geojson);
+  return {
+    walkFeatures: filterFeatureCollection(features, f => f.properties.isWalk),
+    transitFeatures: filterFeatureCollection(features, f => !f.properties.isWalk),
+  };
+}
 
 export class RouteLayer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      styledFeatures: makeStyledFeatures(props.geojson),
-    };
+    this.state = propsToState(props);
   }
 
   render() {
     const {before, visibility} = this.props;
     return (
-      <GeoJSONLayer
-        data={this.state.styledFeatures}
-        linePaint={LINE_PAINT}
-        lineLayout={{visibility}}
-        before={before}
-      />
+      <>
+        <GeoJSONLayer
+          data={this.state.walkFeatures}
+          linePaint={LINE_PAINT_WALK}
+          lineLayout={{visibility}}
+          before={before}
+        />
+        <GeoJSONLayer
+          data={this.state.transitFeatures}
+          linePaint={LINE_PAINT_TRANSIT}
+          lineLayout={{visibility}}
+          before={before}
+        />
+        <GeoJSONLayer
+          data={this.state.transitFeatures}
+          linePaint={LINE_PAINT_TRANSIT_CASING}
+          lineLayout={{visibility}}
+          before={before}
+        />
+      </>
     );
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return (
-      !shallowEqual(this.props, nextProps) || nextState.styledFeatures !== this.state.styledFeatures
-    );
+    return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
   }
 
   componentWillReceiveProps(nextProps: Props) {
@@ -105,8 +159,6 @@ export class RouteLayer extends React.Component<Props, State> {
       return;
     }
 
-    this.setState({
-      styledFeatures: makeStyledFeatures(nextProps.geojson),
-    });
+    this.setState(propsToState(nextProps));
   }
 }

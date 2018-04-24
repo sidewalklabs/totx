@@ -303,7 +303,9 @@ function createStore() {
   }
 
   function setDestination(action: actions.SetDestination) {
-    destination = new LatLng(action.lat, action.lng);
+    const {lat, lng} = action;
+    console.log(`https://www.google.com/maps/dir/${origin.lat},${origin.lng}/${lat},${lng}`);
+    destination = new LatLng(lat, lng);
     fetchRoutes();
     addressCache.get(destination).then(stateChanged, stateChanged);
     stateChanged();
