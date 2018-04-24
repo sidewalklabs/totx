@@ -6,16 +6,17 @@ import {scaleThreshold} from 'd3-scale';
 
 export const SINGLE_COLORS = [
   'rgba(  0, 137, 248, 1.0)',
-  'rgba(  9, 145, 255, 0.8)',
-  'rgba(  9, 145, 255, 0.6)',
-  'rgba(  9, 145, 255, 0.4)',
-  'rgba(  9, 145, 255, 0.2)',
+  'rgba(  9, 145, 255, 0.8333)',
+  'rgba(  9, 145, 255, 0.6667)',
+  'rgba(  9, 145, 255, 0.5)',
+  'rgba(  9, 145, 255, 0.3333)',
+  'rgba(  9, 145, 255, 0.1667)',
   'rgba(  9, 145, 255, 0.0)',
 ];
 
 export const SINGLE = scaleThreshold<number, string>()
   // Commute times in minutes
-  .domain([10, 20, 30, 40, 50, 60].map(x => x * 60))
+  .domain([8.5, 17, 26, 34, 43, 51, 60].map(x => x * 60))
   .range(SINGLE_COLORS);
 
 const DIFFERENCE_DOMAIN = [
