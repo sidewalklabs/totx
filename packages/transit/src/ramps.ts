@@ -5,13 +5,13 @@
 import {scaleThreshold} from 'd3-scale';
 
 export const SINGLE_COLORS = [
-  'rgba(  0, 137, 248, 1.0)',
+  'rgba(  0, 137, 248, 1.0)',  // dark blue
   'rgba(  9, 145, 255, 0.8333)',
   'rgba(  9, 145, 255, 0.6667)',
   'rgba(  9, 145, 255, 0.5)',
   'rgba(  9, 145, 255, 0.3333)',
-  'rgba(  9, 145, 255, 0.1667)',
-  'rgba(  9, 145, 255, 0.0)',
+  'rgba(  9, 145, 255, 0.1667)',  // light blue
+  'rgba(  9, 145, 255, 0.0)',  // fully transparent
 ];
 
 export const SINGLE = scaleThreshold<number, string>()
