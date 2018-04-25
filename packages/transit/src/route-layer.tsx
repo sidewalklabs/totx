@@ -61,13 +61,13 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
 const LINE_PAINT_TRANSIT: mapboxgl.LinePaint = {
   'line-color': ['get', 'lineColor'], // '#0089F8'
   'line-width': 3,
-  'line-opacity': 0.5,
 };
 
 const LINE_PAINT_TRANSIT_CASING: mapboxgl.LinePaint = {
   'line-color': ['get', 'lineOutlineColor'], // '#002440',
   'line-width': 1,
   'line-gap-width': 3,
+  'line-opacity': 0.75,
 };
 
 const LINE_PAINT_WALK: mapboxgl.LinePaint = {
