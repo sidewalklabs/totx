@@ -24,7 +24,7 @@ spec:
       containers:
       - name: ttx-web
         image: us.gcr.io/nyc-tlc-1225/ttx-web
-        command: [ "yarn", "develop", "--", "transit", "router-url", "http://ttx-router" ]
+        command: [ "yarn", "develop", "transit", "--router-url", "http://ttx-router" ]
         ports:
         - containerPort: 1337
         livenessProbe:
