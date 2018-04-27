@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 
-import {withoutDefaults} from '../src/utils';
+import {mixColors, parseColor, withoutDefaults} from '../src/utils';
 
 describe('utils', () => {
   it('should withoutDefaults', () => {
@@ -22,5 +22,23 @@ describe('utils', () => {
         },
       ),
     ).to.deep.equal({b: 'foo'});
+  });
+
+  it('should parse colors', () => {
+    expect(parseColor('#123456')).to.deep.equal({
+      r: 0x12,
+      g: 0x34,
+      b: 0x56,
+    });
+    expect(parseColor('#ff7Dcc')).to.deep.equal({
+      r: 0xff,
+      g: 0x7d,
+      b: 0xcc,
+    });
+  });
+
+  it('should blend colors', () => {
+    expect(mixColors('#ffffff', '#000000')).to.equal('#7f7f7f');
+    expect(mixColors('#12aacc', '#000000')).to.equal('#095566');
   });
 });

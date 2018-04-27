@@ -5,20 +5,18 @@
 import {scaleThreshold} from 'd3-scale';
 
 export const SINGLE_COLORS = [
-  'rgba(  0,  83, 120, 0.6)', // blue-green
-  'rgba(  0, 106, 134, 0.6)',
-  'rgba(  0, 129, 148, 0.6)',
-  'rgba( 33, 153, 155, 0.6)',
-  'rgba( 66, 176, 161, 0.6)',
-  'rgba(110, 197, 162, 0.6)',
-  'rgba(154, 217, 163, 0.6)',
-  'rgba(201, 236, 167, 0.6)',
-  'rgba(247, 255, 171, 0.6)', // yellow
+  'rgba(  0, 137, 248, 1.0)', // dark blue
+  'rgba(  9, 145, 255, 0.8333)',
+  'rgba(  9, 145, 255, 0.6667)',
+  'rgba(  9, 145, 255, 0.5)',
+  'rgba(  9, 145, 255, 0.3333)',
+  'rgba(  9, 145, 255, 0.1667)', // light blue
+  'rgba(  9, 145, 255, 0.0)', // fully transparent
 ];
 
 export const SINGLE = scaleThreshold<number, string>()
   // Commute times in minutes
-  .domain([5, 10, 15, 20, 25, 30, 45, 60].map(x => x * 60))
+  .domain([8.5, 17, 26, 34, 43, 51, 60].map(x => x * 60))
   .range(SINGLE_COLORS);
 
 const DIFFERENCE_DOMAIN = [

@@ -16,6 +16,7 @@ type ViewProps = DataStoreState & {
 };
 
 interface State {
+  isDraggingMarker: boolean;
   hover: {
     coordinates: [number, number]; // lng, lat
     minutes: number;
@@ -51,24 +52,64 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
 
 const getStyleFn = memoizeLast(makeStyleFn);
 
+// These constants define rectangles around origin and destination markers over which
+// the hover interaction shouldn't happen. This allows the user to drag the markers.
+// See comment in addMapCanvasEventListeners(), below.
+const MARKER_SIZES_PX = {
+  origin: {
+    minDx: -25,
+    maxDx: 25,
+    minDy: -15,
+    maxDy: 45,
+  },
+  destination: {
+    minDx: -20,
+    maxDx: 20,
+    minDy: -20,
+    maxDy: 20,
+  },
+};
+
+interface PointXY {
+  x: number;
+  y: number;
+}
+
+function isDeltaInRange(delta: PointXY, range: typeof MARKER_SIZES_PX.origin) {
+  return (
+    delta.x >= range.minDx &&
+    delta.x <= range.maxDx &&
+    delta.y >= range.minDy &&
+    delta.y <= range.maxDy
+  );
+}
+
 /**
  * This component muxes between the data store and the generic Google Maps component.
  */
 export default class Root extends React.Component<ViewProps, State> {
-  private onLoad: () => void;
+  private onLoad: (map: mapboxgl.Map) => any;
   private onError: (error: Error) => void;
 
   constructor(props: ViewProps) {
     super(props);
-    this.onLoad = () => this.props.handleAction({type: 'map-ready'});
+    this.onLoad = map => {
+      // This eliminates a flicker as you drag markers around.
+      // See https://github.com/alex3165/react-mapbox-gl/issues/580
+      (map as any)._fadeDuration = 0;
+
+      this.addMapCanvasEventListeners(map);
+      this.props.handleAction({type: 'map-ready'});
+    };
+
     this.onError = error => this.props.handleAction({type: 'report-error', error});
     this.onClick = this.onClick.bind(this);
+    this.startDrag = this.startDrag.bind(this);
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
-    this.handleFeatureHover = this.handleFeatureHover.bind(this);
-    this.handleFeatureLeave = this.handleFeatureLeave.bind(this);
 
     this.state = {
       hover: null,
+      isDraggingMarker: false,
     };
   }
 
@@ -91,6 +132,7 @@ export default class Root extends React.Component<ViewProps, State> {
           position={this.props.origin2}
           draggable={true}
           icon="blue-marker"
+          onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(true, loc)}
         />
       );
@@ -104,6 +146,7 @@ export default class Root extends React.Component<ViewProps, State> {
           draggable={true}
           icon="measle"
           iconAnchor="center"
+          onDragStart={this.startDrag}
           onDragEnd={this.handleDestinationMove}
         />
       );
@@ -134,13 +177,12 @@ export default class Root extends React.Component<ViewProps, State> {
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
-        onMouseHover={this.handleFeatureHover}
-        onMouseLeave={this.handleFeatureLeave}
         onError={this.onError}>
         <MapboxMarker
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
+          onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(false, loc)}
         />
         {secondMarker}
@@ -151,7 +193,7 @@ export default class Root extends React.Component<ViewProps, State> {
     );
   }
 
-  handleFeatureHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
+  handleChoroplethHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
     const id = feature.properties.geo_id;
     const secs = this.props.times[id] || 0;
     const minutes = Math.floor(secs / 60);
@@ -170,7 +212,7 @@ export default class Root extends React.Component<ViewProps, State> {
     map.getCanvas().style.cursor = 'pointer';
   }
 
-  handleFeatureLeave(map: mapboxgl.Map) {
+  handleChoroplethLeave(map: mapboxgl.Map) {
     this.setState({
       hover: null,
     });
@@ -178,6 +220,9 @@ export default class Root extends React.Component<ViewProps, State> {
   }
 
   handleMarkerMove(isSecondary: boolean, latLng: LatLng) {
+    this.setState({
+      isDraggingMarker: false,
+    });
     this.props.handleAction({
       type: 'set-origin',
       isSecondary,
@@ -187,6 +232,9 @@ export default class Root extends React.Component<ViewProps, State> {
 
   handleDestinationMove(latLng: LatLng) {
     const {lat, lng} = latLng;
+    this.setState({
+      isDraggingMarker: false,
+    });
     this.props.handleAction({
       type: 'set-destination',
       lat,
@@ -199,6 +247,82 @@ export default class Root extends React.Component<ViewProps, State> {
       type: 'set-destination',
       lat: point.lat,
       lng: point.lng,
+    });
+  }
+
+  startDrag() {
+    this.setState({
+      isDraggingMarker: true,
+      hover: null,
+    });
+  }
+
+  getDxDy(point: PointXY, marker: LatLng, map: mapboxgl.Map): PointXY {
+    const markerPoint = map.project([marker.lng, marker.lat]);
+    const dx = markerPoint.x - point.x;
+    const dy = markerPoint.y - point.y;
+    return {x: dx, y: dy};
+  }
+
+  // Determine whether the mouse is over any of the markers on the map.
+  isMouseOverMarker(point: PointXY, map: mapboxgl.Map) {
+    const {origin, origin2, destination} = this.props;
+    return (
+      isDeltaInRange(this.getDxDy(point, origin, map), MARKER_SIZES_PX.origin) ||
+      (origin2 && isDeltaInRange(this.getDxDy(point, origin2, map), MARKER_SIZES_PX.origin)) ||
+      (destination &&
+        isDeltaInRange(this.getDxDy(point, destination, map), MARKER_SIZES_PX.destination))
+    );
+  }
+
+  addMapCanvasEventListeners(map: mapboxgl.Map) {
+    const mapboxCanvas = map.getCanvas();
+    let wasHovering = false;
+
+    // We want to synthesize hover events, but only when the mouse is over the
+    // choropleth, rather than over a draggable marker. We do this by registering
+    // events on the map's <canvas> element (rather than on the mapbox Map) because of
+    // https://github.com/alex3165/react-mapbox-gl/issues/579
+    mapboxCanvas.addEventListener('mousemove', e => {
+      if (this.state.isDraggingMarker) return;
+
+      const {clientX, clientY} = e;
+      const pt = [clientX, clientY];
+
+      const overMarker = this.isMouseOverMarker({x: pt[0], y: pt[1]}, map);
+      if (overMarker) {
+        if (wasHovering) {
+          this.handleChoroplethLeave(map);
+          wasHovering = false;
+        }
+        return;
+      }
+
+      const features = map.queryRenderedFeatures(pt);
+      let hoverFeature: typeof features[0];
+      for (const feature of features) {
+        if (feature.properties && feature.properties.geo_id) {
+          hoverFeature = feature;
+        }
+      }
+
+      if (hoverFeature) {
+        const lngLat = map.unproject(pt);
+        this.handleChoroplethHover(hoverFeature, lngLat, map);
+        wasHovering = true;
+      } else {
+        if (wasHovering) {
+          this.handleChoroplethLeave(map);
+          wasHovering = false;
+        }
+      }
+    });
+
+    mapboxCanvas.addEventListener('mouseleave', e => {
+      if (wasHovering) {
+        wasHovering = false;
+        this.handleChoroplethLeave(map);
+      }
     });
   }
 }

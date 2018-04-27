@@ -12,11 +12,16 @@ export interface Props {
   geojson: FeatureCollection;
   styleFn: (f: Feature) => string;
   routes: FeatureCollection[];
-  onLoad?: () => void;
+  onLoad?: (map: mapboxgl.Map) => void;
   onError: (error: Error) => void;
   onClick?: (point: LatLng) => void;
-  onMouseHover?: (feature: Feature, lngLat: LngLat, map: mapboxgl.Map) => any;
-  onMouseLeave?: (map: mapboxgl.Map) => any;
+
+  // Fired when the user moves the mouse over a feature in the choropleth.
+  onChoroplethHover?: (feature: Feature, lngLat: LngLat, map: mapboxgl.Map) => any;
+
+  // Fired when the mouse leaves the choropleth, e.g. because it's over water or a marker.
+  onChoroplethLeave?: (map: mapboxgl.Map) => any;
+
   children?: any; // TODO(danvk): refine
 }
 
@@ -54,15 +59,10 @@ export class Map extends React.Component<Props, State> {
 
   render() {
     const {center, zoom} = this.state;
-    const {geojson, routes, styleFn, onMouseHover, onMouseLeave} = this.props;
+    const {geojson, routes, styleFn} = this.props;
 
     const routesEls = routes.map((routeGeojson, i) => (
-      <RouteLayer
-        geojson={routeGeojson}
-        visibility={'visible'}
-        before={'poi-small'}
-        key={`route${i}`}
-      />
+      <RouteLayer geojson={routeGeojson} visibility={'visible'} key={`route${i}`} />
     ));
 
     return (
@@ -79,8 +79,6 @@ export class Map extends React.Component<Props, State> {
           styleFn={styleFn}
           visibility="visible"
           before="poi-small"
-          onMouseHover={onMouseHover}
-          onMouseLeave={onMouseLeave}
         />
         {routesEls}
         {this.props.children}
