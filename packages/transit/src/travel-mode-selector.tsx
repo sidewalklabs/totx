@@ -42,14 +42,14 @@ interface TileProps {
   mode: string;
   selectedMode: string;
   isSecondary?: boolean;
-  onClick: (mode: string, isSecondary: boolean) => any;
+  onChange: (mode: string, isSecondary: boolean) => any;
 }
 
 function ModeTile(props: TileProps): JSX.Element {
   const mode = MODES[props.mode];
   const color = props.mode !== props.selectedMode ? 'grey' : props.isSecondary ? 'green' : 'blue';
   return (
-    <div className="mode" onClick={() => props.onClick(props.mode, props.isSecondary)}>
+    <div className="mode" onClick={() => props.onChange(props.mode, props.isSecondary)}>
       <div>
         <div className="spacer" />
         {mode.icons.map((icon, i) => <div key={i} className={`mode-icon mode-${icon}_${color}`} />)}
@@ -59,34 +59,43 @@ function ModeTile(props: TileProps): JSX.Element {
   );
 }
 
+interface SingleProps {
+  className: string;
+  selectedMode: string;
+  isSecondary?: boolean;
+  onChange: (mode: string, isSecondary: boolean) => any;
+}
+
+function TravelModeCarousel(props: SingleProps): JSX.Element {
+  return (
+    <Slider className={props.className} dots={false} variableWidth={true} infinite={false}>
+      <ModeTile mode="WALK" {...props} />
+      <ModeTile mode="TRANSIT" {...props} />
+      <ModeTile mode="BICYCLE_RENT" {...props} />
+      <ModeTile mode="BICYCLE" {...props} />
+      <ModeTile mode="BICYCLE_RENT+TRANSIT" {...props} />
+      <ModeTile mode="WHEELCHAIR" {...props} />
+    </Slider>
+  );
+}
+
 export default class TravelModeSelector extends React.Component<Props, {}> {
   render() {
     const {mode, travelMode, travelMode2, onClear, onChange} = this.props;
-    const tileProps1 = {onClick: onChange, selectedMode: travelMode};
-    const tileProps2 = {onClick: onChange, selectedMode: travelMode2, isSecondary: true};
 
     return (
       <>
-        <Slider className="mode-choice" dots={false} variableWidth={true} infinite={false}>
-          <ModeTile mode="WALK" {...tileProps1} />
-          <ModeTile mode="TRANSIT" {...tileProps1} />
-          <ModeTile mode="BICYCLE_RENT" {...tileProps1} />
-          <ModeTile mode="BICYCLE" {...tileProps1} />
-          <ModeTile mode="BICYCLE_RENT+TRANSIT" {...tileProps1} />
-          <ModeTile mode="WHEELCHAIR" {...tileProps1} />
-        </Slider>
+        <TravelModeCarousel className="mode-choice" onChange={onChange} selectedMode={travelMode} />
         {mode === 'compare-settings' ? (
-          <div className="mode-choice mode-choice2">
+          <>
             <div className="compare-mode-close" onClick={onClear} />
-            <div className="row">
-              <ModeTile mode="WALK" {...tileProps2} />
-              <ModeTile mode="TRANSIT" {...tileProps2} />
-              <ModeTile mode="BICYCLE_RENT" {...tileProps2} />
-              <ModeTile mode="BICYCLE" {...tileProps2} />
-              <ModeTile mode="BICYCLE_RENT+TRANSIT" {...tileProps2} />
-              <ModeTile mode="WHEELCHAIR" {...tileProps2} />
-            </div>
-          </div>
+            <TravelModeCarousel
+              className="mode-choice mode-choice2"
+              onChange={onChange}
+              selectedMode={travelMode2}
+              isSecondary={true}
+            />
+          </>
         ) : null}
       </>
     );
