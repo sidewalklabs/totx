@@ -11,6 +11,50 @@ export interface Props {
   onChange: (newMode: string, isSecondary: boolean) => any;
 }
 
+const MODES: {[mode: string]: {icons: string[]; label: string}} = {
+  WALK: {
+    icons: ['walk'],
+    label: 'Walk Only',
+  },
+  TRANSIT: {
+    icons: ['transit'],
+    label: 'Transit',
+  },
+  BICYCLE_RENT: {
+    icons: ['bikeshare'],
+    label: 'Bikeshare',
+  },
+  BICYCLE: {
+    icons: ['bike'],
+    label: 'Bike',
+  },
+  'BICYCLE_RENT+TRANSIT': {
+    icons: ['transit', 'bikeshare'],
+    label: 'Transit + Bikeshare',
+  },
+  WHEELCHAIR: {
+    icons: ['wc'],
+    label: 'Wheelchair',
+  },
+};
+
+interface TileProps {
+  mode: string;
+  selectedMode: string;
+  isSecondary?: boolean;
+}
+
+function ModeTile(props: TileProps): JSX.Element {
+  const mode = MODES[props.mode];
+  const color = props.mode !== props.selectedMode ? 'grey' : props.isSecondary ? 'green' : 'blue';
+  return (
+    <div className="mode">
+      <div>{mode.icons.map(icon => <div className={`mode-icon mode-${icon}_${color}`} />)}</div>
+      <div className="label">{mode.label}</div>
+    </div>
+  );
+}
+
 // <TravelMode value={travelMode} onChange={newMode => onChange(newMode, false)} />
 
 export default class TravelModeSelector extends React.Component<Props, {}> {
@@ -19,19 +63,12 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
     return (
       <div className="mode-choice">
         <div className="row">
-          <div className="mode">
-            <div>
-              <div className="mode-icon mode-bike_blue" />
-            </div>
-            <div className="label">Bike</div>
-          </div>
-          <div className="mode">
-            <div>
-              <div className="mode-icon mode-transit_blue" />
-              <div className="mode-icon mode-bikeshare_blue" />
-            </div>
-            <div className="label">Transit + Bikeshare</div>
-          </div>
+          <ModeTile mode="WALK" selectedMode={mode} />
+          <ModeTile mode="TRANSIT" selectedMode={mode} />
+          <ModeTile mode="BICYCLE_RENT" selectedMode={mode} />
+          <ModeTile mode="BICYCLE" selectedMode={mode} />
+          <ModeTile mode="BICYCLE_RENT+TRANSIT" selectedMode={mode} />
+          <ModeTile mode="WHEELCHAIR" selectedMode={mode} />
         </div>
         {mode === 'compare-settings' ? (
           <div className="row">
