@@ -486,7 +486,7 @@ span.commute-time {
 
 .mode-choice {
   background: white;
-  padding: 20px;
+  padding: 15px;
   overflow-x: auto;
 }
 
@@ -701,6 +701,8 @@ span.commute-time {
   width: 11px;
   height: 19px;
   background-size: 11px 19px;
+  float: right;
+  margin-top: -32px;
 }
 
 .prev-arrow {
@@ -709,4 +711,6 @@ span.commute-time {
   height: 19px;
   background-size: 11px 19px;
   transform: scaleX(-1);
+  float: left;
+  margin-top: 9px;
 }

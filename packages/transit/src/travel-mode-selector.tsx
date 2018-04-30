@@ -60,6 +60,7 @@ function ModeTile(props: TileProps): JSX.Element {
 }
 
 function PrevArrow(props: any): JSX.Element {
+  console.log(props);
   return <div className="prev-arrow" onClick={props.onClick} />;
 }
 function NextArrow(props: any): JSX.Element {
