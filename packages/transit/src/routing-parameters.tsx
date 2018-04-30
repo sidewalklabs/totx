@@ -68,6 +68,14 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
         <SettingsRow
           {...obj}
+          field="bike_speed_kph"
+          component={controls.BikeSpeed}
+          label="Bike speed"
+          onSetValue={set('bike_speed_kph', Number)}
+        />
+
+        <SettingsRow
+          {...obj}
           field="require_wheelchair"
           component={controls.WheelchairChooser}
           label="Wheelchair accessible"

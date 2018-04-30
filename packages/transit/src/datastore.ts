@@ -114,7 +114,7 @@ export const DEFAULT_OPTIONS: QueryOptions = {
   max_walking_distance_km: 0.8, // 0.5 miles
   walking_speed_kph: 4.8, // 3 mph
   max_waiting_time_secs: 1800, // 30 minutes
-  bike_speed_kph: 5.5, // 5.5 m/s, 20 km/hr
+  bike_speed_kph: 14.4, // 4 m/s
   transfer_penalty_secs: 300, // 5 minutes
   max_number_of_transfers: 1,
   travel_mode: 'TRANSIT',
