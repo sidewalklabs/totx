@@ -58,14 +58,42 @@ function ModeTile(props: TileProps): JSX.Element {
   );
 }
 
-export default class TravelModeSelector extends React.Component<Props, {}> {
+function PrevArrow(props: any): JSX.Element {
+  return <div className="prev-arrow" onClick={props.onClick} />;
+}
+function NextArrow(props: any): JSX.Element {
+  return <div className="next-arrow" onClick={props.onClick} />;
+}
+
+export default class TravelModeSelector extends React.Component<Props, {sliderIndex: number}> {
+  slider1: Slider;
+  slider2: Slider;
+
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      sliderIndex: 0,
+    };
+  }
+
   render() {
     const {mode, travelMode, travelMode2, onClear, onChange} = this.props;
     const tileProps1 = {onClick: onChange, selectedMode: travelMode};
     const tileProps2 = {onClick: onChange, selectedMode: travelMode2, isSecondary: true};
+
     return (
       <>
-        <Slider dots={false} variableWidth={true} infinite={false}>
+        <Slider
+          ref={s => (this.slider1 = s)}
+          dots={false}
+          variableWidth={true}
+          infinite={false}
+          slidesToScroll={3}
+          afterChange={sliderIndex => {
+            this.setState({sliderIndex});
+          }}
+          prevArrow={this.state.sliderIndex > 0 ? <PrevArrow /> : <br />}
+          nextArrow={<NextArrow />}>
           <ModeTile mode="WALK" {...tileProps1} />
           <ModeTile mode="TRANSIT" {...tileProps1} />
           <ModeTile mode="BICYCLE_RENT" {...tileProps1} />
