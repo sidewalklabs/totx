@@ -489,7 +489,7 @@ span.commute-time {
   padding: 15px;
 }
 .mode-choice2 {
-  border-top: 1px solid #CCCCCC;
+  border-top: 1px solid #cccccc;
 }
 
 .nav-bottom {
@@ -523,7 +523,7 @@ span.commute-time {
 
 /** Sprites for travel mode */
 
-.mode-icon  {
+.mode-icon {
   display: inline-block;
   background: url('/travel-mode.png');
   background-size: 195px 160px;
@@ -655,19 +655,19 @@ span.commute-time {
   text-align: center;
   padding-right: 10px;
   margin-right: 10px;
-  border-right: 1px solid #CCCCCC;
+  border-right: 1px solid #cccccc;
   display: table;
   cursor: pointer;
 }
 
 .label.blue {
-  color: #3C89F0;
+  color: #3c89f0;
 }
 .label.grey {
   color: #989898;
 }
 .label.green {
-  color: #51A933;
+  color: #51a933;
 }
 
 .slick-slider .label {
