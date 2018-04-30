@@ -513,144 +513,139 @@ span.commute-time {
   right: 7px;
 }
 
+.mode-choice .row {
+  display: flex;
+}
+
 /** Sprites for travel mode */
+
+.mode-icon  {
+  display: inline-block;
+  background: url('/travel-mode.png');
+  background-size: 195px 160px;
+}
 
 .mode-bike_blue {
   width: 35px;
   height: 19px;
-  background: url('/travel-mode.png') -53px -36px;
-  background-size: 195px 160px;
+  background-position: -53px -36px;
 }
 
 .mode-bike_green {
   width: 35px;
   height: 19px;
-  background: url('/travel-mode.png') -50px -67px;
-  background-size: 195px 160px;
+  background-position: -50px -67px;
 }
 
 .mode-bike_grey {
   width: 35px;
   height: 19px;
-  background: url('/travel-mode.png') -5px -67px;
-  background-size: 195px 160px;
+  background-position: -5px -67px;
 }
 
 .mode-bike_icon_white {
   width: 28px;
   height: 15px;
-  background: url('/travel-mode.png') -136px -5px;
-  background-size: 195px 160px;
+  background-position: -136px -5px;
 }
 
 .mode-bikeshare_green {
   width: 38px;
   height: 21px;
-  background: url('/travel-mode.png') -5px -5px;
-  background-size: 195px 160px;
+  background-position: -5px -5px;
 }
 
 .mode-bikeshare_grey {
   width: 38px;
   height: 21px;
-  background: url('/travel-mode.png') -53px -5px;
-  background-size: 195px 160px;
+  background-position: -53px -5px;
 }
 
 .mode-bikeshare_blue {
   width: 38px;
   height: 21px;
-  background: url('/travel-mode.png') -5px -36px;
-  background-size: 195px 160px;
+  background-position: -5px -36px;
 }
 
 .mode-bikeshare_icon_white {
   width: 26px;
   height: 14px;
-  background: url('/travel-mode.png') -136px -30px;
-  background-size: 195px 160px;
+  background-position: -136px -30px;
 }
 
-.mode-bus_blue {
+.mode-transit_blue {
   width: 19px;
   height: 25px;
-  background: url('/travel-mode.png') -98px -96px;
-  background-size: 195px 160px;
+  background-position: -98px -96px;
 }
 
-.mode-bus_green {
+.mode-transit_green {
   width: 19px;
   height: 25px;
-  background: url('/travel-mode.png') -40px -96px;
-  background-size: 195px 160px;
+  background-position: -40px -96px;
 }
 
-.mode-bus_grey {
+.mode-transit_grey {
   width: 19px;
   height: 25px;
-  background: url('/travel-mode.png') -69px -96px;
-  background-size: 195px 160px;
+  background-position: -69px -96px;
 }
 
-.mode-bus_icon_white {
+.mode-transit_icon_white {
   width: 16px;
   height: 19px;
-  background: url('/travel-mode.png') -174px -5px;
-  background-size: 195px 160px;
+  background-position: -174px -5px;
 }
 
 .mode-walk_blue {
   width: 15px;
   height: 24px;
-  background: url('/travel-mode.png') -136px -54px;
-  background-size: 195px 160px;
+  background-position: -136px -54px;
 }
 
 .mode-walk_green {
   width: 15px;
   height: 24px;
-  background: url('/travel-mode.png') -136px -88px;
-  background-size: 195px 160px;
+  background-position: -136px -88px;
 }
 
 .mode-walk_icon_white {
   width: 12px;
   height: 17px;
-  background: url('/travel-mode.png') -174px -34px;
-  background-size: 195px 160px;
+  background-position: -174px -34px;
 }
 
 .mode-walk_grey {
   width: 15px;
   height: 24px;
-  background: url('/travel-mode.png') -5px -131px;
-  background-size: 195px 160px;
+  background-position: -5px -131px;
 }
 
 .mode-wc_blue {
   width: 25px;
   height: 25px;
-  background: url('/travel-mode.png') -5px -96px;
-  background-size: 195px 160px;
+  background-position: -5px -96px;
 }
 
 .mode-wc_green {
   width: 25px;
   height: 25px;
-  background: url('/travel-mode.png') -101px -40px;
-  background-size: 195px 160px;
+  background-position: -101px -40px;
 }
 
 .mode-wc_grey {
   width: 25px;
   height: 25px;
-  background: url('/travel-mode.png') -101px -5px;
-  background-size: 195px 160px;
+  background-position: -101px -5px;
 }
 
 .mode-wc_icon_white {
   width: 17px;
   height: 18px;
-  background: url('/travel-mode.png') -30px -131px;
-  background-size: 195px 160px;
+  background-position: -30px -131px;
+}
+
+
+.mode {
+  text-align: center;
 }
