@@ -94,9 +94,7 @@ export default class TravelModeSelector extends React.Component<Props, {sliderIn
           slidesToScroll={3}
           afterChange={sliderIndex => {
             this.setState({sliderIndex});
-          }}
-          prevArrow={this.state.sliderIndex > 0 ? <PrevArrow /> : <br />}
-          nextArrow={<NextArrow />}>
+          }}>
           <ModeTile mode="WALK" {...tileProps1} />
           <ModeTile mode="TRANSIT" {...tileProps1} />
           <ModeTile mode="BICYCLE_RENT" {...tileProps1} />

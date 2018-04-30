@@ -696,21 +696,36 @@ span.commute-time {
   margin-top: -20px;
 }
 
-.next-arrow {
-  background: url('/nextarrow.png');
-  width: 11px;
+button.slick-next {
+  background: url(/nextarrow.png), white;
   height: 19px;
   background-size: 11px 19px;
   float: right;
   margin-top: -32px;
+  font-size: 0;
+  border: 0;
+  background-repeat: no-repeat;
+  z-index: 1;
 }
 
-.prev-arrow {
+button.slick-prev {
   background: url('/nextarrow.png');
+  /* linear-gradient(to right, rgba(0,0,0,0), rgba(255, 255, 255,1.0));*/
   width: 11px;
   height: 19px;
   background-size: 11px 19px;
   transform: scaleX(-1);
   float: left;
   margin-top: 9px;
+  font-size: 0;
+  border: 0;
+  background-repeat: no-repeat;
+}
+
+button.slick-disabled {
+  visibility: hidden;
+}
+
+.slick-list {
+  margin-right: 20px;
 }
