@@ -467,6 +467,7 @@ span.commute-time {
 .label {
   font-size: 11px;
   font-weight: 600;
+  /* text-transform: uppercase; */
 }
 
 .route-length-title {
@@ -487,6 +488,7 @@ span.commute-time {
 .mode-choice {
   background: white;
   padding: 20px;
+  overflow-x: auto;
 }
 
 .nav-bottom {
@@ -648,4 +650,17 @@ span.commute-time {
 
 .mode {
   text-align: center;
+  padding-right: 10px;
+  margin-right: 10px;
+  /* min-width: 65px; */
+  border-right: 1px solid #CCCCCC;
+  display: table;
+  /* vertical-align: bottom; */
+}
+
+.mode-choice .label {text-transform: uppercase;font-size: 9px;min-width: 50px;white-space: pre;}
+
+.mode > div:first-child {
+  height: 25px;
+  margin-bottom: 5px;
 }

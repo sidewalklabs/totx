@@ -49,7 +49,9 @@ function ModeTile(props: TileProps): JSX.Element {
   const color = props.mode !== props.selectedMode ? 'grey' : props.isSecondary ? 'green' : 'blue';
   return (
     <div className="mode">
-      <div>{mode.icons.map(icon => <div className={`mode-icon mode-${icon}_${color}`} />)}</div>
+      <div>
+        {mode.icons.map((icon, i) => <div key={i} className={`mode-icon mode-${icon}_${color}`} />)}
+      </div>
       <div className="label">{mode.label}</div>
     </div>
   );
@@ -63,12 +65,12 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
     return (
       <div className="mode-choice">
         <div className="row">
-          <ModeTile mode="WALK" selectedMode={mode} />
-          <ModeTile mode="TRANSIT" selectedMode={mode} />
-          <ModeTile mode="BICYCLE_RENT" selectedMode={mode} />
-          <ModeTile mode="BICYCLE" selectedMode={mode} />
-          <ModeTile mode="BICYCLE_RENT+TRANSIT" selectedMode={mode} />
-          <ModeTile mode="WHEELCHAIR" selectedMode={mode} />
+          <ModeTile mode="WALK" selectedMode={travelMode} />
+          <ModeTile mode="TRANSIT" selectedMode={travelMode} />
+          <ModeTile mode="BICYCLE_RENT" selectedMode={travelMode} />
+          <ModeTile mode="BICYCLE" selectedMode={travelMode} />
+          <ModeTile mode="BICYCLE_RENT+TRANSIT" selectedMode={travelMode} />
+          <ModeTile mode="WHEELCHAIR" selectedMode={travelMode} />
         </div>
         {mode === 'compare-settings' ? (
           <div className="row">
