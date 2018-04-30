@@ -68,7 +68,12 @@ interface SingleProps {
 
 function TravelModeCarousel(props: SingleProps): JSX.Element {
   return (
-    <Slider className={props.className} dots={false} variableWidth={true} infinite={false}>
+    <Slider
+      className={props.className}
+      dots={false}
+      swipeToSlide={true}
+      variableWidth={true}
+      infinite={false}>
       <ModeTile mode="WALK" {...props} />
       <ModeTile mode="TRANSIT" {...props} />
       <ModeTile mode="BICYCLE_RENT" {...props} />
