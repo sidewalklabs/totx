@@ -30,7 +30,7 @@ class Root extends React.Component<{}, State> {
     const handleAction = store.dispatch.bind(store);
 
     const {state} = this;
-    const {mode, routes} = state;
+    const {mode, routes, originAddress} = state;
     const clearDestination = () => store.dispatch({type: 'clear-destination'});
 
     return (
@@ -82,9 +82,24 @@ class Root extends React.Component<{}, State> {
           />
 
           <div className="nav-bottom">
-            <div className="origin-destination">
-              <img src="blue-marker.svg" width={19} height={27} /> {this.state.originAddress}
-              <div>TODO: AP-199</div>
+            <div>
+              <form
+                className="origin-destination"
+                onSubmit={e =>
+                  store.dispatch({type: 'search-for-user-entered-address', address: originAddress})
+                }>
+                <img src="blue-marker.svg" width={19} height={27} />
+                <div className="input-box-addon">
+                  <input
+                    className="origin-destination-search-box"
+                    value={originAddress || ''}
+                    onChange={e =>
+                      store.dispatch({type: 'set-user-entered-address', address: e.target.value})
+                    }
+                  />
+                  <img src="search-grey.png" width={15} height={15} />
+                </div>
+              </form>
             </div>
             <hr />
             <RoutingParameters

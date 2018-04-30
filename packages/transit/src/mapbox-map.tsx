@@ -4,6 +4,7 @@ import ReactMapboxGl, {ZoomControl} from 'react-mapbox-gl';
 
 import {Feature, FeatureCollection} from '../../utils';
 import {ChoroplethLayer} from './choropleth-layer';
+import createStore from './datastore';
 import {CenterZoomLevel, LatLng} from './latlng';
 import {RouteLayer} from './route-layer';
 
@@ -34,6 +35,8 @@ interface State {
   center: [number, number];
   zoom: [number];
 }
+
+const store = createStore();
 
 // TODO(danvk): load this via an environment variable.
 const MapboxGL = ReactMapboxGl({
@@ -108,6 +111,14 @@ export class Map extends React.Component<Props, State> {
     this.setState({
       center: [lng, lat],
       zoom: [zoom],
+    });
+  }
+
+  componentDidMount() {
+    store.subscribe(() => {
+      const {lat, lng} = store.getState().view.center;
+      this.setState({center: [lng, lat]});
+      this.forceUpdate();
     });
   }
 }
