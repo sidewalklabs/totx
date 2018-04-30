@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Slider from 'react-slick';
 
 import * as actions from './action';
 
@@ -64,18 +65,14 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
     const tileProps2 = {onClick: onChange, selectedMode: travelMode2, isSecondary: true};
     return (
       <>
-        <div className="mode-choice">
-          <div className="row">
-            <div className="prev-arrow" />
-            <ModeTile mode="WALK" {...tileProps1} />
-            <ModeTile mode="TRANSIT" {...tileProps1} />
-            <ModeTile mode="BICYCLE_RENT" {...tileProps1} />
-            <div className="next-arrow" />
-            <ModeTile mode="BICYCLE" {...tileProps1} />
-            <ModeTile mode="BICYCLE_RENT+TRANSIT" {...tileProps1} />
-            <ModeTile mode="WHEELCHAIR" {...tileProps1} />
-          </div>
-        </div>
+        <Slider dots={false} variableWidth={true} infinite={false}>
+          <ModeTile mode="WALK" {...tileProps1} />
+          <ModeTile mode="TRANSIT" {...tileProps1} />
+          <ModeTile mode="BICYCLE_RENT" {...tileProps1} />
+          <ModeTile mode="BICYCLE" {...tileProps1} />
+          <ModeTile mode="BICYCLE_RENT+TRANSIT" {...tileProps1} />
+          <ModeTile mode="WHEELCHAIR" {...tileProps1} />
+        </Slider>
         {mode === 'compare-settings' ? (
           <div className="mode-choice mode-choice2">
             <div className="compare-mode-close" onClick={onClear} />
