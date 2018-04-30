@@ -103,6 +103,18 @@ export interface UrlParams {
 
 const INTRO_STORY = Stories['intro'];
 
+const GTO = {
+  south: 43.0,
+  west: -79.978031,
+  east: -79.179731,
+  north: 44.383158,
+};
+
+const GTO_BOUNDS = new google.maps.LatLngBounds(
+  new google.maps.LatLng(GTO.south, GTO.west),
+  new google.maps.LatLng(GTO.north, GTO.east),
+);
+
 const INITIAL_VIEW: CenterZoomLevel = {
   center: new LatLng(INTRO_STORY.center.lat, INTRO_STORY.center.lng),
   zoomLevel: INTRO_STORY.zoomLevel,
@@ -186,8 +198,38 @@ function formatAddress(result: google.maps.GeocoderResult) {
   let line2 = `${borough || city}, ${state}`;
   if (neighborhood) line2 = `${neighborhood}, ${line2}`;
 
-  const address = (num ? `${num} ${route}` : route || '') + `\n${line2}`;
+  const address = (num ? `${num} ${route}` : route || '') + ` \n${line2}`;
   return address;
+}
+
+async function geocode(
+  geocoder: google.maps.Geocoder,
+  address: string,
+): Promise<google.maps.GeocoderResult | null> {
+  return new Promise<google.maps.GeocoderResult>((resolve, reject) => {
+    geocoder.geocode({address, bounds: GTO_BOUNDS}, (results, status: any) => {
+      if (status !== 'OK') {
+        reject(status);
+      } else {
+        const withinBounds = _.find(results, checkBounds);
+        if (withinBounds === undefined) {
+          reject(new Error(`No matching locations found for: ${address}`));
+        } else {
+          resolve(withinBounds);
+        }
+      }
+    });
+  });
+}
+
+function checkBounds(geocode_result: google.maps.GeocoderResult) {
+  const {location} = geocode_result.geometry;
+  return (
+    location.lng() > GTO.west &&
+    location.lng() < GTO.east &&
+    location.lat() > GTO.south &&
+    location.lat() < GTO.north
+  );
 }
 
 async function reverseGeocode(geocoder: google.maps.Geocoder, location: LatLng): Promise<string> {
@@ -229,6 +271,11 @@ function createStore() {
   const commuteTimesCache = new Cache({
     fetch: fetchCommuteTimes,
     stringify: (key: CommuteTimesKey) => key.origin.toString() + ' ' + JSON.stringify(key.options),
+  });
+
+  const geocodeCache = new Cache({
+    fetch: (key: string) => geocode(geocoder, key),
+    stringify: (key: string) => key,
   });
 
   const routesCache = new Cache({
@@ -274,7 +321,9 @@ function createStore() {
       case 'set-story':
         handleSetStory(action);
         break;
-
+      case 'search-for-user-entered-address':
+        handleSearchForUserEnteredAddress(action);
+        break;
       default:
         console.error('Unhandled action', action);
     }
@@ -447,6 +496,23 @@ function createStore() {
     }
 
     stateChanged();
+  }
+
+  async function handleSearchForUserEnteredAddress(action: actions.SearchForUserEnteredAddress) {
+    try {
+      const geocodeResults = await geocodeCache.get(action.address);
+      const {location} = geocodeResults.geometry;
+      const lat = location.lat();
+      const lng = location.lng();
+      const latLng = new LatLng(lat, lng);
+      view = {
+        center: latLng,
+        zoomLevel: view.zoomLevel || INITIAL_VIEW.zoomLevel,
+      };
+      handleAction({type: 'set-origin', origin: latLng});
+    } catch (err) {
+      handleAction({type: 'report-error', error: err});
+    }
   }
 
   function handleSetOrigin(action: actions.SetOrigin) {

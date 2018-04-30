@@ -7,7 +7,7 @@ import {makeObject, memoizeLast, Feature, FeatureCollection} from '../../utils';
 import Action from './action';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
-import {LatLng} from './latlng';
+import {CenterZoomLevel, LatLng} from './latlng';
 import {Map} from './mapbox-map';
 import {MapboxMarker} from './mapbox-marker';
 import * as ramps from './ramps';
@@ -18,6 +18,7 @@ type ViewProps = DataStoreState & {
 
 interface State {
   isDraggingMarker: boolean;
+  view: CenterZoomLevel;
   hover: {
     coordinates: [number, number]; // lng, lat
     minutes: string;
@@ -117,6 +118,7 @@ export default class Root extends React.Component<ViewProps, State> {
     this.handleDestinationMove = this.handleDestinationMove.bind(this);
 
     this.state = {
+      view: props.view,
       hover: null,
       isDraggingMarker: false,
     };
@@ -130,6 +132,7 @@ export default class Root extends React.Component<ViewProps, State> {
         routes.push(route.geojson);
       }
     }
+    const {view} = this.props;
 
     // Compare origins mode has A/B pins. Other modes have a single, blank pin.
     let firstMarkerImage = 'blue-marker';
@@ -184,7 +187,7 @@ export default class Root extends React.Component<ViewProps, State> {
 
     return (
       <Map
-        view={this.props.view}
+        view={view}
         fillColors={getFillColorsFn(this.props)}
         defaultFillColor={Colors.clear}
         routes={routes}
