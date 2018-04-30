@@ -27,7 +27,7 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
             <TravelMode value={travelMode2} onChange={newMode => onChange(newMode, true)} />
           </div>
         ) : null}
-        Mode choice slider: AP-197
+        <div className="bg-bike_blue" />
       </div>
     );
   }

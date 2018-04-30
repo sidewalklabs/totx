@@ -512,3 +512,126 @@ span.commute-time {
   top: -19px;
   right: 7px;
 }
+
+/** Sprites for travel mode */
+
+.bg-bike_blue {
+  width: 35px;
+  height: 19px;
+  background: url('/travel-mode.png') -53px -36px;
+  background-size: 195px 160px;
+}
+
+.bg-bike_green {
+  width: 70px;
+  height: 38px;
+  background: url('/travel-mode.png') -100px -134px;
+}
+
+.bg-bike_grey {
+  width: 70px;
+  height: 38px;
+  background: url('/travel-mode.png') -10px -134px;
+}
+
+.bg-bike_icon_white {
+  width: 56px;
+  height: 30px;
+  background: url('/travel-mode.png') -272px -10px;
+}
+
+.bg-bikeshare_green {
+  width: 76px;
+  height: 42px;
+  background: url('/travel-mode.png') -10px -10px;
+}
+
+.bg-bikeshare_grey {
+  width: 76px;
+  height: 42px;
+  background: url('/travel-mode.png') -106px -10px;
+}
+
+.bg-bikeshare_blue {
+  width: 76px;
+  height: 42px;
+  background: url('/travel-mode.png') -10px -72px;
+}
+
+.bg-bikeshare_icon_white {
+  width: 52px;
+  height: 28px;
+  background: url('/travel-mode.png') -272px -60px;
+}
+
+.bg-bus_blue {
+  width: 38px;
+  height: 50px;
+  background: url('/travel-mode.png') -196px -192px;
+}
+
+.bg-bus_green {
+  width: 38px;
+  height: 50px;
+  background: url('/travel-mode.png') -80px -192px;
+}
+
+.bg-bus_grey {
+  width: 38px;
+  height: 50px;
+  background: url('/travel-mode.png') -138px -192px;
+}
+
+.bg-bus_icon_white {
+  width: 32px;
+  height: 38px;
+  background: url('/travel-mode.png') -348px -10px;
+}
+
+.bg-walk_blue {
+  width: 30px;
+  height: 48px;
+  background: url('/travel-mode.png') -272px -108px;
+}
+
+.bg-walk_green {
+  width: 30px;
+  height: 48px;
+  background: url('/travel-mode.png') -272px -176px;
+}
+
+.bg-walk_icon_white {
+  width: 24px;
+  height: 34px;
+  background: url('/travel-mode.png') -348px -68px;
+}
+
+.bg-walk_grey {
+  width: 30px;
+  height: 48px;
+  background: url('/travel-mode.png') -10px -262px;
+}
+
+.bg-wc_blue {
+  width: 50px;
+  height: 50px;
+  background: url('/travel-mode.png') -10px -192px;
+}
+
+.bg-wc_green {
+  width: 50px;
+  height: 50px;
+  background: url('/travel-mode.png') -202px -80px;
+}
+
+.bg-wc_grey {
+  width: 50px;
+  height: 50px;
+  background: url('/travel-mode.png') -202px -10px;
+}
+
+.bg-wc_icon_white {
+  width: 34px;
+  height: 36px;
+  background: url('/travel-mode.png') -60px -262px;
+}
