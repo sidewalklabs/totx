@@ -70,9 +70,7 @@ function paramsToProfileRequest(
   const req: ProfileRequest = {
     fromLat: origin.lat,
     fromLon: origin.lng,
-    date: '2017-10-16', // This is a date for which all GTFS feeds in use are valid.
-    // When we add multimodal availability like bike-to-transit, access and egress modes will
-    // become options as well.
+    date: '2018-05-07', // This is a date for which all GTFS feeds in use are valid.
     accessModes: accessModes.join(),
     egressModes: egressModes.join(),
     transitModes: transitModes.join(),
