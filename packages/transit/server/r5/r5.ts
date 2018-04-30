@@ -76,7 +76,7 @@ function paramsToProfileRequest(
     transitModes: transitModes.join(),
     directModes: directModes.join(),
     verbose: true,
-    wheelchair: wheelchair,
+    wheelchair,
   };
   // Handle optional parameters.
   if (destination) {
