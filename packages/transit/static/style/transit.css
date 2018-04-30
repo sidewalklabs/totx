@@ -456,6 +456,8 @@ span.commute-time {
   background: #002440;
   color: white;
   padding: 15px 25px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .route-clear {
