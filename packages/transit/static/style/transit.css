@@ -458,8 +458,7 @@ span.commute-time {
   padding: 15px 25px;
 }
 
-.route-clear,
-.comparison-clear {
+.route-clear {
   float: right;
   cursor: pointer;
 }
@@ -647,20 +646,59 @@ span.commute-time {
   background-position: -30px -131px;
 }
 
-
 .mode {
   text-align: center;
   padding-right: 10px;
   margin-right: 10px;
-  /* min-width: 65px; */
   border-right: 1px solid #CCCCCC;
   display: table;
-  /* vertical-align: bottom; */
+  cursor: pointer;
 }
 
-.mode-choice .label {text-transform: uppercase;font-size: 9px;min-width: 50px;white-space: pre;}
+.label.blue {
+  color: #3C89F0;
+}
+.label.grey {
+  color: #989898;
+}
+.label.green {
+  color: #51A933;
+}
+
+.mode-choice .label {
+  text-transform: uppercase;
+  font-size: 9px;
+  min-width: 50px;
+  white-space: pre;
+}
 
 .mode > div:first-child {
   height: 25px;
   margin-bottom: 5px;
+}
+
+.compare-mode-close {
+  background: url('/ex-grey.png');
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  float: right;
+  cursor: pointer;
+  margin-right: -20px;
+  margin-top: -20px;
+}
+
+.next-arrow {
+  background: url('/nextarrow.png');
+  width: 11px;
+  height: 19px;
+  background-size: 11px 19px;
+}
+
+.prev-arrow {
+  background: url('/nextarrow.png');
+  width: 11px;
+  height: 19px;
+  background-size: 11px 19px;
+  transform: scaleX(-1);
 }
