@@ -512,6 +512,7 @@ span.commute-time {
   background: url('/plus.svg');
   top: -19px;
   right: 7px;
+  z-index: 1;
 }
 
 .mode-choice .row {
