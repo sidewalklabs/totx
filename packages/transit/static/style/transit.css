@@ -524,6 +524,7 @@ span.commute-time {
   display: inline-block;
   background: url('/travel-mode.png');
   background-size: 195px 160px;
+  /* vertical-align: bottom; */
 }
 
 .mode-bike_blue {
@@ -542,6 +543,7 @@ span.commute-time {
   width: 35px;
   height: 19px;
   background-position: -5px -67px;
+  /* margin-top: 6px; */
 }
 
 .mode-bike_icon_white {
@@ -665,7 +667,7 @@ span.commute-time {
   color: #51A933;
 }
 
-.mode-choice .label {
+.slick-slider .label {
   text-transform: uppercase;
   font-size: 9px;
   min-width: 50px;
@@ -675,6 +677,12 @@ span.commute-time {
 .mode > div:first-child {
   height: 25px;
   margin-bottom: 5px;
+  /* vertical-align: bottom; */
+}
+
+.mode .spacer {
+  height: 25px;
+  display: inline-block;
 }
 
 .compare-mode-close {
