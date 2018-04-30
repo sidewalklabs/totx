@@ -487,7 +487,9 @@ span.commute-time {
 .mode-choice {
   background: white;
   padding: 15px;
-  /* overflow-x: auto; */
+}
+.mode-choice2 {
+  border-top: 1px solid #CCCCCC;
 }
 
 .nav-bottom {
