@@ -34,6 +34,16 @@ export const MaxWalkingDistance: React.StatelessComponent<SelectProps> = props =
   </WrappedSelect>
 );
 
+export const BikeSpeed: React.StatelessComponent<SelectProps> = props => (
+  <WrappedSelect {...props}>
+    <option value="8">8 kph</option>
+    <option value="10">10 kph</option>
+    <option value="20">20 kph</option>
+    <option value="30">30 kph</option>
+    <option value="40">40 kph</option>
+  </WrappedSelect>
+);
+
 export const MaxTransfers: React.StatelessComponent<SelectProps> = props => (
   <WrappedSelect {...props}>
     <option value="0">Exclude</option>

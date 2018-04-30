@@ -76,7 +76,9 @@ function paramsToProfileRequest(
     transitModes: transitModes.join(),
     directModes: directModes.join(),
     verbose: true,
+    wheelchair: wheelchair,
   };
+  // Handle optional parameters.
   if (destination) {
     req.toLat = destination.lat;
     req.toLon = destination.lng;
@@ -87,7 +89,9 @@ function paramsToProfileRequest(
       req.fromTime = departTime;
       req.toTime = departTime + 2 * SECONDS_PER_HOUR;
     }
-    req.wheelchair = wheelchair;
+    if (options.bike_speed_kph) {
+      req.bikeSpeed = options.bike_speed_kph * 1000 / 60;
+    }
   }
 
   return req;
