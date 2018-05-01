@@ -123,6 +123,7 @@ function RouteDetails(props: {route: Route}): JSX.Element {
   const stepElements = steps.map((step, i) => <div key={i}>{describeStep(step)}</div>);
   return (
     <div className="route-details">
+      <div>{formatTime(props.route.departureSecs)} Depart origin.</div>
       {stepElements}
       <div>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</div>
     </div>

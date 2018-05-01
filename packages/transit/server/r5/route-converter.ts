@@ -13,6 +13,7 @@ import {Route, Step, SummaryStep} from '../route';
 import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_MINUTE = 60;
 
 /** High-level summary of the route, e.g. Walk -> Bus -> Walk */
 interface SummarizedRoute {
@@ -29,8 +30,8 @@ export function profileOptionToRoute(
   const {features, steps, summary} = summarizeOption(option);
 
   const itinerary = option.itinerary[0];
-  const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR;
-  const arriveTimeSecs = itinerary.endTime.hour * SECONDS_PER_HOUR;
+  const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR + itinerary.startTime.minute * SECONDS_PER_MINUTE;
+  const arriveTimeSecs = itinerary.endTime.hour * SECONDS_PER_HOUR + itinerary.endTime.minute * SECONDS_PER_MINUTE;
   const travelTimeSecs = itinerary.duration;
 
   return {
