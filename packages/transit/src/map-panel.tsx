@@ -152,7 +152,7 @@ export default class Root extends React.Component<ViewProps, State> {
         <MapboxMarker
           position={this.props.destination}
           draggable={true}
-          icon="measle"
+          icon="destination-marker"
           iconAnchor="center"
           onDragStart={this.startDrag}
           onDragEnd={this.handleDestinationMove}
@@ -175,7 +175,9 @@ export default class Root extends React.Component<ViewProps, State> {
       const [lng, lat] = hover.coordinates;
       const position = new LatLng(lat, lng);
       if (!hover.isDestinationHover) {
-        ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
+        ghostMarker = (
+          <MapboxMarker position={position} icon="destination-marker" iconAnchor="center" />
+        );
       }
     }
 
