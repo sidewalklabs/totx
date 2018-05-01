@@ -1,7 +1,7 @@
 /** Types for Routes */
 
 import {FeatureCollection} from '../../utils';
-import {LegMode, TransitModes, ZonedDateTime} from '../common/r5-types';
+import {LegMode, TransitModes} from '../common/r5-types';
 
 export interface Stop extends Location {
   stopName?: string;
