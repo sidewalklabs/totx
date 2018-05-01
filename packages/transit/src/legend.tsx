@@ -1,11 +1,14 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 
+import {LegMode, TransitModes} from '../common/r5-types';
 import {Mode} from './action';
 import {ORIGIN_COMPARISON_COLORS, SETTINGS_COMPARISON_COLORS, SINGLE_COLORS} from './ramps';
 
 interface LegendProps {
   mode: Mode;
+  travelMode: string;
+  travelMode2: string;
 }
 
 export default function Legend(props: LegendProps) {
@@ -59,8 +62,8 @@ export default function Legend(props: LegendProps) {
         <GeneralLegend
           {...props}
           swatches={SETTINGS_COMPARISON_COLORS}
-          labelTopLeft="More accessible with original settings"
-          labelTopRight="More accessible with alternate settings"
+          labelTopLeft="More accessible via "
+          labelTopRight="More accessible via "
           labelBottomLeft={
             <span>
               by 25+<br />min
@@ -78,6 +81,8 @@ export default function Legend(props: LegendProps) {
 
 interface GeneralLegendProps {
   mode: Mode;
+  travelMode: string;
+  travelMode2: string;
   labelTopLeft: string | JSX.Element;
   labelTopMiddle?: string | JSX.Element;
   labelTopRight?: string | JSX.Element;
@@ -94,9 +99,17 @@ function GeneralLegend(props: GeneralLegendProps) {
   return (
     <div className={className}>
       <div className="label label-top">
-        <div className="left">{props.labelTopLeft}</div>
+        <div className="left">
+          {props.labelTopLeft}
+          {props.mode === 'compare-settings' ? modeToDisplay(props.travelMode) : ''}
+        </div>
         {props.labelTopMiddle ? <div className="middle">{props.labelTopMiddle}</div> : null}
-        {props.labelTopRight ? <div className="right">{props.labelTopRight}</div> : null}
+        {props.labelTopRight ? (
+          <div className="right">
+            {props.labelTopRight}
+            {props.mode === 'compare-settings' ? modeToDisplay(props.travelMode2) : ''}
+          </div>
+        ) : null}
       </div>
       <div className="swatches">{swatches}</div>
       <div className="label label-bottom">
@@ -105,4 +118,27 @@ function GeneralLegend(props: GeneralLegendProps) {
       </div>
     </div>
   );
+}
+
+function modeToDisplay(travelMode: string) {
+  switch (travelMode) {
+    case LegMode.WALK:
+      return 'Walking';
+    case LegMode.BICYCLE:
+      return 'Bicycle';
+    case LegMode.BICYCLE_RENT:
+      return 'Bikeshare';
+    case LegMode.CAR:
+      return 'Car';
+    case LegMode.CAR_PARK:
+      return 'Park and Ride';
+    case TransitModes.TRANSIT:
+      return 'Transit';
+    case 'WHEELCHAIR':
+      return 'Wheelchair';
+    case 'BICYCLE_RENT+TRANSIT':
+      return 'Bikeshare + Transit';
+    default:
+      return '';
+  }
 }
