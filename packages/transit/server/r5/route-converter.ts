@@ -38,6 +38,7 @@ export function profileOptionToRoute(
   const departureSecs = dateTimeToSeconds(itinerary.startTime);
   const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
   const travelTimeSecs = itinerary.duration;
+  const distanceKm = itinerary.distance / 1000 / 1000; // convert mm to km
 
   return {
     origin: {
@@ -53,7 +54,7 @@ export function profileOptionToRoute(
     departureSecs,
     arriveTimeSecs,
     travelTimeSecs,
-    walkingDistanceKm: 0, // fill this in
+    distanceKm,
     steps,
     summary,
     geojson: {
@@ -107,7 +108,7 @@ function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
     properties: {
       mode: e.mode,
       streetName: e.streetName,
-      distance_m: e.distance,
+      distanceKm: e.distanceMm * 1000 * 1000,
       edgeId: e.edgeId,
       stroke: modeToLineStyle(e.mode),
     },
@@ -150,7 +151,7 @@ function stepFromStreetEdgeInfo(e: StreetEdgeInfo): Step {
     arriveTimeSecs: 0, // TODO: we don't know how long it takes to walk down one street segment here.
     travelTimeSecs: 0, // TODO: we don't know how long it takes to walk down one street segment here.
     description: e.absoluteDirection + ' on ' + e.streetName,
-    distanceKm: e.distance / 1000 / 1000, // convert mm to km
+    distanceKm: e.distanceMm / 1000 / 1000, // convert mm to km
   };
 }
 
@@ -172,7 +173,6 @@ function stepFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Step {
     departTimeSecs: 0, // TODO convert from LocalDateTime[] to seconds
     arriveTimeSecs: 0, // TODO convert from LocalDateTime[] to seconds
     travelTimeSecs: 0, // TODO convert diff between departTimeSecs and arriveTimeSecs
-    distanceKm: 0, // TODO add this info
     description: '',
     routeId: e.routeID,
   };
