@@ -93,7 +93,11 @@ class Root extends React.Component<{}, State> {
               onChange={this.setOptions}
             />
             <hr />
-            <Legend mode={this.state.mode} travelMode={this.state.options.travel_mode} travelMode2={this.state.options2.travel_mode}/>
+            <Legend
+              mode={this.state.mode}
+              travelMode={this.state.options.travel_mode}
+              travelMode2={this.state.options2.travel_mode}
+            />
           </div>
         </div>
 
