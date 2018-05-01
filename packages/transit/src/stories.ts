@@ -8,7 +8,8 @@ import {UrlParams} from './datastore';
 const ONLY_SUBWAY = {bus_multiplier: -1, rail_multiplier: 1};
 const NO_PREFERENCE = {bus_multiplier: 1, rail_multiplier: 1};
 
-const DOWNTOWN_POINT = {lat: 43.645634764614265, lng: -79.37028614807127};
+// The downtown point is 307 Lakeshore Blvd.
+const DOWNTOWN_POINT = {lat: 43.64630322966252, lng: -79.36180530094046};
 const MOORE_PARK_POINT = {lat: 43.691008142491825, lng: -79.38422128757793};
 const PALMERSTON_POINT = {lat: 43.661393986924175, lng: -79.41512767576654};
 
