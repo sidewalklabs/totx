@@ -194,6 +194,7 @@ export default class Root extends React.Component<ViewProps, State> {
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
+          id="origin"
           onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(false, loc)}
         />
