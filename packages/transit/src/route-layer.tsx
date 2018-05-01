@@ -21,7 +21,10 @@ interface State {
 // Mapbox renders routes better if they're single LineString features, so we coalesce.
 // TODO: get r5 to return LineStrings directly?
 function coalesceFeatures(geojson: FeatureCollection): FeatureCollection {
-  const features: Array<GeoJSONFeature<LineString>> = geojson.features as any;
+  // Perform a deep copy to prevent appending to a modified geojson.
+  const features: Array<GeoJSONFeature<LineString>> = JSON.parse(
+    JSON.stringify(geojson.features),
+  ) as any;
 
   const outFeatures = [features[0]];
   for (let i = 1; i < features.length; i++) {
