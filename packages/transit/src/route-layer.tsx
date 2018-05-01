@@ -5,7 +5,8 @@ import {GeoJSONLayer} from 'react-mapbox-gl';
 import {shallowEqual, Feature, FeatureCollection} from '../../utils';
 import {mixColors} from './utils';
 
-const BICYCLE_STROKE = '#002440';
+const BICYCLE_STROKE = '#0089F8';
+const BICYCLE_OUTLINE = '#002440';
 
 export interface Props {
   geojson: FeatureCollection;
@@ -50,13 +51,14 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
     features: geojson.features.map(f => {
       const {properties} = f;
       const isBicycle = properties.mode === 'BICYCLE';
-      const stroke = isBicycle ? BICYCLE_STROKE : properties.stroke || '#000000';
+      const lineColor = isBicycle ? BICYCLE_STROKE : properties.stroke || '#000000';
+      const lineOutlineColor = isBicycle ? BICYCLE_OUTLINE : mixColors(lineColor, '#000000');
       return {
         ...f,
         properties: {
           ...f.properties,
-          lineColor: stroke,
-          lineOutlineColor: mixColors(stroke, '#000000'),
+          lineColor,
+          lineOutlineColor,
           isWalk: !('tripId' in f.properties) && !isBicycle,
         },
       };
