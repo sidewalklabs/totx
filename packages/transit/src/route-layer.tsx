@@ -52,7 +52,7 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
       const {properties} = f;
       const stroke = properties.stroke === '#null' ? '#000000' : properties.stroke;
       const isBicycle = properties.mode === 'BICYCLE';
-      const lineColor = isBicycle ? BICYCLE_STROKE : stroke || '#000000';
+      const lineColor = isBicycle ? BICYCLE_STROKE : stroke;
       const lineOutlineColor = isBicycle ? BICYCLE_OUTLINE : mixColors(lineColor, '#000000');
       return {
         ...f,
