@@ -24,7 +24,7 @@ interface SummarizedRoute {
 }
 
 export function dateTimeToSeconds(dateTime: ZonedDateTime) {
-  return dateTime.hour * SECONDS_PER_HOUR + dateTime.minute * SECONDS_PER_MINUTE;
+  return dateTime.hour * SECONDS_PER_HOUR + dateTime.minute * SECONDS_PER_MINUTE + dateTime.second;
 }
 
 export function profileOptionToRoute(
