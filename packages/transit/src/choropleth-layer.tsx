@@ -34,6 +34,7 @@ function makeStyleExpression(
   expr.push(defaultColor);
   return {
     'fill-color': expr,
+    'fill-outline-color': 'rgba(0,0,0,0)',
   };
 }
 
