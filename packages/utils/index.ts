@@ -2,51 +2,6 @@ import * as _ from 'underscore';
 
 import 'whatwg-fetch';
 
-// TODO(danieljy): Consolidate the following additional ajax functions with the one above or
-// move them out of this package. The are more more onemap specific, but have been used outside of
-// the onemap package too.
-
-/**
- * Fix a relative path to be appropriate for the current URL.
- * We use relative paths to allow onemap to be served from a subdirectory; we assume all paths for
- * XHRs are relative to the onemap root. This function adds a leading '../' if necessary based on
- * locationPath (which should be set to the current window.location.pathname).
- * TODO(danieljy): This is onemap specific logic, that shouldn't live in this utils file.
- */
-export function fixRelativePath(path: string, locationPath: string): string {
-  if (!path.length || path.charAt(0) === '/') {
-    return path;
-  } else if (locationPath.match(/view\/[0-9]+$/)) {
-    // View URLs are one level deep.
-    return '../' + path;
-  } else {
-    return path;
-  }
-}
-
-/**
- * Issue an XHR and return a promise for the JSON that it returns.
- * Enforces a relative path (requires acces to window) and allows
- * you to specify the method used.
- *
- * NOTE(danieljy): Consider using fetchJSON above, and/or modifying it to suit your needs, as it's
- * more flexible. It also supports firebase auth.
- */
-export async function ajaxPromise<T>(path: string, method?: string): Promise<T> {
-  method = method || 'GET';
-  const request = new Request(fixRelativePath(path, window.location.pathname), {
-    credentials: 'same-origin', // Include cookies, e.g. for oauth.
-    method,
-  });
-  const response = await fetch(request);
-  if (!response.ok) {
-    // Note: this assumes that bad responses still return JSON data.
-    const data = await response.json();
-    return Promise.reject(data);
-  }
-  return response.json();
-}
-
 /**
  * Issue a GET request with a JSON-encoded object in the query string.
  * Does not enforce relative path and allows passing a json payload.
