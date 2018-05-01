@@ -165,7 +165,7 @@ export default class Root extends React.Component<ViewProps, State> {
     const {hover} = this.state;
     if (hover) {
       popup = (
-        <Popup coordinates={hover.coordinates}>
+        <Popup coordinates={hover.coordinates} offset={[0, -10]}>
           {hover.minutes2 ? (
             <div className={'secondary ' + this.props.mode}>{hover.minutes2}</div>
           ) : null}
