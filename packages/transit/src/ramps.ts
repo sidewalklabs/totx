@@ -56,19 +56,19 @@ export const ORIGIN_COMPARISON = scaleThreshold<number, string>()
   .range(ORIGIN_COMPARISON_COLORS);
 
 export const SETTINGS_COMPARISON_COLORS = [
-  'rgba(  0,  83, 120, 0.6)', // blue
-  'rgba( 63, 108, 140, 0.6)',
-  'rgba(102, 135, 161, 0.6)',
-  'rgba(138, 162, 182, 0.6)',
-  'rgba(174, 190, 204, 0.6)',
-  'rgba(211, 219, 226, 0.6)',
-  'rgba(255, 255, 255, 0.6)', // white (equal times)
-  'rgba(255, 198, 196, 0.6)',
-  'rgba(242, 156, 163, 0.6)',
-  'rgba(218, 116, 137, 0.6)',
-  'rgba(185,  80, 115, 0.6)',
-  'rgba(147,  52,  93, 0.6)',
-  'rgba(103,  32,  68, 0.6)', // purple
+  'rgba(  0, 137, 248, 0.8333)', // dark blue
+  'rgba(  9, 145, 255, 0.8333)',
+  'rgba(  9, 145, 255, 0.6667)',
+  'rgba(  9, 145, 255, 0.5)', // half blue
+  'rgba( 90, 174, 230, 0.5)',
+  'rgba(171, 204, 205, 0.5)',
+  'rgba(252, 234, 180, 0.5)', // yellow
+  'rgba(168, 222, 124, 0.5)',
+  'rgba( 84, 210,  68, 0.5)',
+  'rgba(  0, 199, 13, 0.5)', // half green
+  'rgba(  0, 199, 13, 0.6667)',
+  'rgba(  0, 199, 13, 0.8333)',
+  'rgba(  0, 173, 11, 0.8333)', // green
 ];
 
 export const SETTINGS_COMPARISON = scaleThreshold<number, string>()
