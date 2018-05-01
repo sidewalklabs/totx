@@ -38,8 +38,8 @@ export const BikeSpeed: React.StatelessComponent<SelectProps> = props => (
   <WrappedSelect {...props}>
     <option value="10">10 km/h (Lots of traffic)</option>
     <option value="14.4">14.4 km/h (Average commute speed)</option>
-    <option value="25">25 km/h (Faster than average)</option>
-    <option value="35">35 km/h (Racing bike!)</option>
+    <option value="20">20 km/h (Faster than average)</option>
+    <option value="30">30 km/h (Racing bike!)</option>
   </WrappedSelect>
 );
 
