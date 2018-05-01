@@ -110,7 +110,7 @@ function formatTime(secs: number) {
 
 function describeStep(step: SummaryStep): string {
   if (isTransitStep(step)) {
-    return `Take ${step.mode} ${step.shortName}`;
+    return `Take ${step.mode} ${step.shortName} at ${formatTime(step.startTimeSecs)}`;
   } else {
     const distanceKm = (step.distance / 1e6).toFixed(1);
     const minutes = Math.round(step.duration / 60);

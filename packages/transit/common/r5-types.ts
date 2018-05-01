@@ -56,9 +56,9 @@ export enum TransitModes {
 }
 
 export interface ProfileOption {
-  transit: TransitSegment[]; // Make these more specific
-  access: StreetSegment[]; // Make these more specific
-  egress: StreetSegment[]; // Make these more specific
+  transit: TransitSegment[];
+  access: StreetSegment[];
+  egress: StreetSegment[];
   itinerary: Array<{
     waitingTime: number; // secs
     walkTime: number; // secs
@@ -73,7 +73,7 @@ export interface ProfileOption {
   summary: string;
 }
 
-interface ZonedDateTime {
+export interface ZonedDateTime {
   year: number;
   month: string;
   dayOfMonth: number;
