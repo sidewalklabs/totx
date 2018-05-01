@@ -219,9 +219,8 @@ export default class Root extends React.Component<ViewProps, State> {
 
   handleDestinationHover() {
     const {destination, routes} = this.props;
-    const minutes = routes && routes.length ? Math.floor(routes[0].travelTimeSecs / 60) : 0;
-    const minutes2 =
-      routes && routes.length > 1 ? Math.floor(routes[1].travelTimeSecs / 60) : undefined;
+    const minutes = routes && routes[0] ? Math.floor(routes[0].travelTimeSecs / 60) : 0;
+    const minutes2 = routes && routes[1] ? Math.floor(routes[1].travelTimeSecs / 60) : undefined;
     this.setState({
       hover: {
         coordinates: [destination.lng, destination.lat],
