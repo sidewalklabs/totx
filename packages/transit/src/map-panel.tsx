@@ -21,11 +21,14 @@ interface State {
     coordinates: [number, number]; // lng, lat
     minutes: number;
     minutes2?: number;
+    isDestinationHover?: boolean;
   } | null;
 }
 
-function isDefined(x: number) {
-  return x !== null && x !== undefined;
+const THREE_HOURS_SECS = 3 * 60 * 60;
+
+function isValidCommute(x: number) {
+  return x !== null && x !== undefined && x <= THREE_HOURS_SECS;
 }
 
 function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
@@ -34,17 +37,17 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
     return (feature: any) => {
       const id = feature.properties['geo_id'];
       const secs = times[id];
-      return isDefined(secs) ? ramps.SINGLE(secs) : Colors.clear;
+      return isValidCommute(secs) ? ramps.SINGLE(secs) : Colors.clear;
     };
   }
 
-  const secsOrBig = (secs: number) => (!isDefined(secs) ? 10000 : secs);
+  const secsOrBig = (secs: number) => (!isValidCommute(secs) ? 10000 : secs);
   const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
   return (feature: any) => {
     const id = feature.properties['geo_id'];
     const secs1 = times[id];
     const secs2 = times2[id];
-    return isDefined(secs1) || isDefined(secs2)
+    return isValidCommute(secs1) || isValidCommute(secs2)
       ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
       : Colors.clear;
   };
@@ -166,7 +169,9 @@ export default class Root extends React.Component<ViewProps, State> {
       );
       const [lng, lat] = hover.coordinates;
       const position = new LatLng(lat, lng);
-      ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
+      if (!hover.isDestinationHover) {
+        ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
+      }
     }
 
     return (
@@ -210,6 +215,20 @@ export default class Root extends React.Component<ViewProps, State> {
       },
     });
     map.getCanvas().style.cursor = 'pointer';
+  }
+
+  handleDestinationHover() {
+    const {destination, routes} = this.props;
+    const minutes = routes && routes[0] ? Math.floor(routes[0].travelTimeSecs / 60) : 0;
+    const minutes2 = routes && routes[1] ? Math.floor(routes[1].travelTimeSecs / 60) : undefined;
+    this.setState({
+      hover: {
+        coordinates: [destination.lng, destination.lat],
+        minutes,
+        minutes2,
+        isDestinationHover: true,
+      },
+    });
   }
 
   handleChoroplethLeave(map: mapboxgl.Map) {
@@ -267,12 +286,19 @@ export default class Root extends React.Component<ViewProps, State> {
   // Determine whether the mouse is over any of the markers on the map.
   isMouseOverMarker(point: PointXY, map: mapboxgl.Map) {
     const {origin, origin2, destination} = this.props;
-    return (
-      isDeltaInRange(this.getDxDy(point, origin, map), MARKER_SIZES_PX.origin) ||
-      (origin2 && isDeltaInRange(this.getDxDy(point, origin2, map), MARKER_SIZES_PX.origin)) ||
-      (destination &&
-        isDeltaInRange(this.getDxDy(point, destination, map), MARKER_SIZES_PX.destination))
-    );
+    if (isDeltaInRange(this.getDxDy(point, origin, map), MARKER_SIZES_PX.origin)) {
+      return 'origin1';
+    }
+    if (origin2 && isDeltaInRange(this.getDxDy(point, origin2, map), MARKER_SIZES_PX.origin)) {
+      return 'origin2';
+    }
+    if (
+      destination &&
+      isDeltaInRange(this.getDxDy(point, destination, map), MARKER_SIZES_PX.destination)
+    ) {
+      return 'destination';
+    }
+    return null;
   }
 
   addMapCanvasEventListeners(map: mapboxgl.Map) {
@@ -291,6 +317,9 @@ export default class Root extends React.Component<ViewProps, State> {
 
       const overMarker = this.isMouseOverMarker({x: pt[0], y: pt[1]}, map);
       if (overMarker) {
+        if (overMarker === 'destination') {
+          this.handleDestinationHover();
+        }
         if (wasHovering) {
           this.handleChoroplethLeave(map);
           wasHovering = false;
