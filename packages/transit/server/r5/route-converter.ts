@@ -30,8 +30,10 @@ export function profileOptionToRoute(
   const {features, steps, summary} = summarizeOption(option);
 
   const itinerary = option.itinerary[0];
-  const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR + itinerary.startTime.minute * SECONDS_PER_MINUTE;
-  const arriveTimeSecs = itinerary.endTime.hour * SECONDS_PER_HOUR + itinerary.endTime.minute * SECONDS_PER_MINUTE;
+  const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR +
+    itinerary.startTime.minute * SECONDS_PER_MINUTE;
+  const arriveTimeSecs = itinerary.endTime.hour * SECONDS_PER_HOUR +
+    itinerary.endTime.minute * SECONDS_PER_MINUTE;
   const travelTimeSecs = itinerary.duration;
 
   return {
