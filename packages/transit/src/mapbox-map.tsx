@@ -62,7 +62,7 @@ export class Map extends React.Component<Props, State> {
     const {geojson, routes, styleFn} = this.props;
 
     const routesEls = routes.map((routeGeojson, i) => (
-      <RouteLayer geojson={routeGeojson} visibility={'visible'} key={`route${i}`} />
+      <RouteLayer before="origin" geojson={routeGeojson} visibility={'visible'} key={`route${i}`} />
     ));
 
     return (

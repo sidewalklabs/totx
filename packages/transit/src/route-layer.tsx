@@ -5,6 +5,9 @@ import {GeoJSONLayer} from 'react-mapbox-gl';
 import {shallowEqual, Feature, FeatureCollection} from '../../utils';
 import {mixColors} from './utils';
 
+const BICYCLE_STROKE = '#0089F8';
+const BICYCLE_OUTLINE = '#002440';
+
 export interface Props {
   geojson: FeatureCollection;
   visibility: 'visible' | 'none';
@@ -14,7 +17,7 @@ export interface Props {
 interface State {
   /** Same as props.geojson, but with fillColor set */
   walkFeatures: FeatureCollection;
-  transitFeatures: FeatureCollection;
+  otherFeatures: FeatureCollection;
 }
 
 // r5 returns route GeoJSON with separate two-point line features for each step.
@@ -48,13 +51,16 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
     features: geojson.features.map(f => {
       const {properties} = f;
       const stroke = properties.stroke === '#null' ? '#000000' : properties.stroke;
+      const isBicycle = properties.mode === 'BICYCLE';
+      const lineColor = isBicycle ? BICYCLE_STROKE : stroke || '#000000';
+      const lineOutlineColor = isBicycle ? BICYCLE_OUTLINE : mixColors(lineColor, '#000000');
       return {
         ...f,
         properties: {
           ...f.properties,
-          lineColor: stroke,
-          lineOutlineColor: mixColors(stroke, '#000000'),
-          isWalk: !('tripId' in f.properties),
+          lineColor,
+          lineOutlineColor,
+          isWalk: !('tripId' in f.properties) && !isBicycle,
         },
       };
     }),
@@ -79,8 +85,6 @@ const LINE_PAINT_WALK: mapboxgl.LinePaint = {
   'line-dasharray': [1, 1],
 };
 
-// TODO: bicycle route styling
-
 // Split a feature collection into two: one that satisfies the predicate and one that doesn't.
 function splitFeatureCollection(
   featureCollection: FeatureCollection,
@@ -104,13 +108,10 @@ function splitFeatureCollection(
 
 function propsToState(props: Props): State {
   const features = makeStyledFeatures(coalesceFeatures(props.geojson));
-  const [walkFeatures, transitFeatures] = splitFeatureCollection(
-    features,
-    f => f.properties.isWalk,
-  );
+  const [walkFeatures, otherFeatures] = splitFeatureCollection(features, f => f.properties.isWalk);
   return {
     walkFeatures,
-    transitFeatures,
+    otherFeatures,
   };
 }
 
@@ -131,13 +132,13 @@ export class RouteLayer extends React.Component<Props, State> {
           before={before}
         />
         <GeoJSONLayer
-          data={this.state.transitFeatures}
+          data={this.state.otherFeatures}
           linePaint={LINE_PAINT_TRANSIT}
           lineLayout={{visibility}}
           before={before}
         />
         <GeoJSONLayer
-          data={this.state.transitFeatures}
+          data={this.state.otherFeatures}
           linePaint={LINE_PAINT_TRANSIT_CASING}
           lineLayout={{visibility}}
           before={before}
