@@ -25,10 +25,10 @@ interface State {
   } | null;
 }
 
-const TWO_HOURS_SECS = 2 * 60 * 60;
+const THREE_HOURS_SECS = 3 * 60 * 60;
 
 function isValidCommute(x: number) {
-  return x !== null && x !== undefined && x <= TWO_HOURS_SECS;
+  return x !== null && x !== undefined && x <= THREE_HOURS_SECS;
 }
 
 function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
