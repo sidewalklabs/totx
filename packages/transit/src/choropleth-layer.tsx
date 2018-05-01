@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 import {Layer, Source} from 'react-mapbox-gl';
+import * as _ from 'underscore';
 import {shallowEqual} from '../../utils';
-import _ = require('underscore');
 
 export interface Props {
   idProperty: string;
