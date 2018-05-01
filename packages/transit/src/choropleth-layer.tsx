@@ -33,12 +33,14 @@ function makeStyleExpression(
   }
   expr.push(defaultColor);
   return {
+    // This would be nice... but it triggers a mapbox error
+    // 'fill-outline-color': 'rgba(0, 0, 0, 0.0)',
     'fill-color': expr,
-    'fill-outline-color': 'rgba(0,0,0,0)',
   };
 }
 
-const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.3mfcwxy5'};
+// const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.3mfcwxy5'};
+const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.5qc32y97'};
 
 export class ChoroplethLayer extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -71,18 +73,19 @@ export class ChoroplethLayer extends React.Component<Props, State> {
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
-    return (
+    const out =
       !shallowEqual(this.props, nextProps) ||
-      nextState.styleExpression !== this.state.styleExpression
-    );
+      nextState.styleExpression !== this.state.styleExpression;
+    // console.log('shoudlComp', out);
+    return out;
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    const {idProperty, fillColors, defaultFillColor} = this.props;
+    const {idProperty, fillColors, defaultFillColor} = nextProps;
     if (
-      fillColors === nextProps.fillColors &&
-      defaultFillColor === nextProps.defaultFillColor &&
-      idProperty === nextProps.idProperty
+      fillColors === this.props.fillColors &&
+      defaultFillColor === this.props.defaultFillColor &&
+      idProperty === this.props.idProperty
     ) {
       return;
     }
