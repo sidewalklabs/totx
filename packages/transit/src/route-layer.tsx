@@ -47,7 +47,7 @@ function makeStyledFeatures(geojson: FeatureCollection): FeatureCollection {
     type: 'FeatureCollection',
     features: geojson.features.map(f => {
       const {properties} = f;
-      const stroke = properties.stroke || '#000000';
+      const stroke = properties.stroke === '#null' ? '#000000' : properties.stroke;
       return {
         ...f,
         properties: {
