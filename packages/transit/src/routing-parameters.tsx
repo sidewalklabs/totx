@@ -10,9 +10,6 @@ interface Props extends State {
   handleAction(action: Action): any;
 }
 
-const modePrefValue = (options: QueryOptions) =>
-  options.rail_multiplier + ',' + options.bus_multiplier;
-
 export default class RoutingParameters extends React.Component<Props, {}> {
   constructor(props: Props) {
     super(props);
@@ -60,26 +57,10 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
         <SettingsRow
           {...obj}
-          toValue={modePrefValue}
-          component={controls.ModePreference}
-          label="Mode preference"
-          onSetValue={this.setModePref}
-        />
-
-        <SettingsRow
-          {...obj}
           field="bike_speed_kph"
           component={controls.BikeSpeed}
           label="Bike speed"
           onSetValue={set('bike_speed_kph', Number)}
-        />
-
-        <SettingsRow
-          {...obj}
-          field="require_wheelchair"
-          component={controls.WheelchairChooser}
-          label="Wheelchair accessible"
-          onSetValue={set('require_wheelchair', x => x === 'true')}
         />
       </div>
     );

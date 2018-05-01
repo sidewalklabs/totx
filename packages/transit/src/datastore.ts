@@ -435,6 +435,15 @@ function createStore() {
     if (action.mode === mode) return; // no-op
     mode = action.mode;
 
+    // If we've switched to compare settings mode, make sure the two settings are different.
+    if (mode === 'compare-settings' && options.travel_mode === options2.travel_mode) {
+      if (options.travel_mode === 'TRANSIT') {
+        options2.travel_mode = 'BICYCLE';
+      } else {
+        options2.travel_mode = 'TRANSIT';
+      }
+    }
+
     getCommuteTimePromises()
       .then(stateChanged)
       .catch(stateChanged);
@@ -442,10 +451,6 @@ function createStore() {
     // If there's a second origin, we need to fetch its address.
     if (mode === 'compare-origin') {
       addressCache.get(origin2).then(stateChanged, stateChanged);
-    }
-    // If you switch from single to compare-settings, start with identical settings.
-    if (mode === 'compare-settings') {
-      options2 = {...options};
     }
 
     const secondaryParams = getSecondaryParams();
