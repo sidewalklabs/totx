@@ -154,3 +154,11 @@ export function memoizeLast<T, U>(fn: (args: T) => U): ((args: T) => U) {
     return lastResult;
   };
 }
+
+export function makeObject<T>(keys: string[], valueFn: (key: string) => T): {[key: string]: T} {
+  const out: {[key: string]: T} = {};
+  for (const k of keys) {
+    out[k] = valueFn(k);
+  }
+  return out;
+}

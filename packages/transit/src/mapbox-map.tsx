@@ -9,8 +9,8 @@ import {RouteLayer} from './route-layer';
 
 export interface Props {
   view: CenterZoomLevel;
-  geojson: FeatureCollection;
-  styleFn: (f: Feature) => string;
+  fillColors: {[geoId: string]: string};
+  defaultFillColor: string;
   routes: FeatureCollection[];
   onLoad?: (map: mapboxgl.Map) => void;
   onError: (error: Error) => void;
@@ -59,7 +59,7 @@ export class Map extends React.Component<Props, State> {
 
   render() {
     const {center, zoom} = this.state;
-    const {geojson, routes, styleFn} = this.props;
+    const {routes, fillColors, defaultFillColor} = this.props;
 
     const routesEls = routes.map((routeGeojson, i) => (
       <RouteLayer before="origin" geojson={routeGeojson} visibility={'visible'} key={`route${i}`} />
@@ -75,8 +75,9 @@ export class Map extends React.Component<Props, State> {
         onZoomEnd={this.onZoomEnd}
         onClick={this.onClick}>
         <ChoroplethLayer
-          geojson={geojson}
-          styleFn={styleFn}
+          idProperty="geo_id"
+          fillColors={fillColors}
+          defaultFillColor={defaultFillColor}
           visibility="visible"
           before="poi-small"
         />

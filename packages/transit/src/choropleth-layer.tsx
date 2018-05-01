@@ -1,84 +1,93 @@
 import * as React from 'react';
 
-import {GeoJSONLayer} from 'react-mapbox-gl';
-import {shallowEqual, Feature, FeatureCollection} from '../../utils';
-
-type StyleFn = (feature: Feature) => string;
-
-/**
- * GeoJSON layer with a style function.
- * TODO(danvk): move over to data joins to avoid reserializing geometries.
- */
+import {Layer, Source} from 'react-mapbox-gl';
+import {shallowEqual} from '../../utils';
+import _ = require('underscore');
 
 export interface Props {
-  geojson: FeatureCollection;
-  /** The style function returns the fill color for each feature */
-  styleFn: StyleFn;
+  idProperty: string;
+  fillColors: {[geoId: string]: string};
+  defaultFillColor: string;
+
   visibility: 'visible' | 'none';
   before?: string;
 }
 
 interface State {
   /** Same as props.geojson, but with fillColor set */
-  styledFeatures: FeatureCollection;
+  styleExpression: any;
 }
 
-function makeStyledFeatures(geojson: FeatureCollection, styleFn: StyleFn): FeatureCollection {
+function makeStyleExpression(
+  idProperty: string,
+  fillColors: {[geoId: string]: string},
+  defaultColor: string,
+) {
+  if (_.isEmpty(fillColors)) {
+    return {'fill-color': defaultColor}; // Mapbox GL outputs an error without this special case.
+  }
+
+  const expr: any[] = ['match', ['get', idProperty]];
+  for (const geoId in fillColors) {
+    expr.push(geoId, fillColors[geoId]);
+  }
+  expr.push(defaultColor);
   return {
-    type: 'FeatureCollection',
-    features: geojson.features.map(f => ({
-      ...f,
-      properties: {
-        ...f.properties,
-        fillColor: styleFn(f),
-      },
-    })),
+    'fill-color': expr,
   };
 }
 
-const FILL_PAINT: mapboxgl.FillPaint = {
-  'fill-color': ['get', 'fillColor'],
-};
+const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.3mfcwxy5'};
 
 export class ChoroplethLayer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      styledFeatures: props.geojson
-        ? makeStyledFeatures(props.geojson, props.styleFn)
-        : {
-            type: 'FeatureCollection',
-            features: [],
-          },
+      styleExpression: makeStyleExpression(
+        props.idProperty,
+        props.fillColors,
+        props.defaultFillColor,
+      ),
     };
   }
 
   render() {
     const {before, visibility} = this.props;
     return (
-      <GeoJSONLayer
-        id="choropleth"
-        data={this.state.styledFeatures}
-        fillPaint={FILL_PAINT}
-        fillLayout={{visibility}}
-        before={before}
-      />
+      <>
+        <Source id="das-tile" tileJsonSource={TILE_SOURCE} />
+        <Layer
+          id="choropleth"
+          type="fill"
+          sourceId="das-tile"
+          sourceLayer="torontoslim"
+          paint={this.state.styleExpression}
+          layout={{visibility}}
+          before={before}
+        />
+      </>
     );
   }
 
   shouldComponentUpdate(nextProps: Props, nextState: State) {
     return (
-      !shallowEqual(this.props, nextProps) || nextState.styledFeatures !== this.state.styledFeatures
+      !shallowEqual(this.props, nextProps) ||
+      nextState.styleExpression !== this.state.styleExpression
     );
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    if (this.props.geojson === nextProps.geojson && this.props.styleFn === nextProps.styleFn) {
+    const {idProperty, fillColors, defaultFillColor} = this.props;
+    if (
+      fillColors === nextProps.fillColors &&
+      defaultFillColor === nextProps.defaultFillColor &&
+      idProperty === nextProps.idProperty
+    ) {
       return;
     }
 
     this.setState({
-      styledFeatures: makeStyledFeatures(nextProps.geojson, nextProps.styleFn),
+      styleExpression: makeStyleExpression(idProperty, fillColors, defaultFillColor),
     });
   }
 }
