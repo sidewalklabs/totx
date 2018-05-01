@@ -690,15 +690,23 @@ span.commute-time {
   display: inline-block;
 }
 
+.compare-mode-close-wrapper {
+  position: relative;
+}
+
 .compare-mode-close {
   background: url('/ex-grey.png');
   width: 18px;
   height: 18px;
   background-size: 18px 18px;
-  float: right;
+  /* float: right; */
   cursor: pointer;
-  margin-right: -20px;
-  margin-top: -20px;
+  /* margin-right: -20px; */
+  /* margin-top: -20px; */
+  z-index: 1;
+  position: absolute;
+  right: 0px;
+  top: 2px;
 }
 
 button.slick-next {
