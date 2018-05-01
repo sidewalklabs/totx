@@ -54,6 +54,14 @@ export default class RoutingParameters extends React.Component<Props, {}> {
           label="Transfers"
           onSetValue={set('max_number_of_transfers', Number)}
         />
+
+        <SettingsRow
+          {...obj}
+          field="bike_speed_kph"
+          component={controls.BikeSpeed}
+          label="Bike speed"
+          onSetValue={set('bike_speed_kph', Number)}
+        />
       </div>
     );
   }

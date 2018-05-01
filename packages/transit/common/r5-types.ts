@@ -17,6 +17,7 @@ export interface ProfileRequest {
   egressModes?: string; // comma-separated list of LegModes
   directModes?: string; // comma-separated list of LegModes
   transitModes?: string; // comma-separated list of TransitModes
+  bikeSpeed?: number; // speed of biking in meters per second
   verbose?: boolean;
 }
 

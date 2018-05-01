@@ -76,6 +76,7 @@ export interface QueryOptions {
   departure_time: string;
   max_walking_distance_km: number;
   walking_speed_kph: number;
+  bike_speed_kph: number;
   max_waiting_time_secs: number;
   transfer_penalty_secs: number;
   max_number_of_transfers: number;
@@ -113,7 +114,8 @@ export const DEFAULT_OPTIONS: QueryOptions = {
   max_walking_distance_km: 0.8, // 0.5 miles
   walking_speed_kph: 4.8, // 3 mph
   max_waiting_time_secs: 1800, // 30 minutes
-  transfer_penalty_secs: 300, // 5 minues
+  bike_speed_kph: 14.4, // 4 m/s
+  transfer_penalty_secs: 300, // 5 minutes
   max_number_of_transfers: 1,
   travel_mode: 'TRANSIT',
   bus_multiplier: -1, // no buses by default (performance optimization)
