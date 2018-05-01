@@ -110,7 +110,7 @@ function formatTime(secs: number) {
 
 function describeStep(step: SummaryStep): string {
   if (isTransitStep(step)) {
-    return `Take ${step.mode} ${step.shortName}`;
+    return `Take ${step.mode} ${step.shortName} at ${formatTime(step.startTimeSecs)}`;
   } else {
     const distanceKm = (step.distance / 1e6).toFixed(1);
     const minutes = Math.round(step.duration / 60);
@@ -123,6 +123,7 @@ function RouteDetails(props: {route: Route}): JSX.Element {
   const stepElements = steps.map((step, i) => <div key={i}>{describeStep(step)}</div>);
   return (
     <div className="route-details">
+      <div>{formatTime(props.route.departureSecs)} Depart origin.</div>
       {stepElements}
       <div>{formatTime(props.route.arriveTimeSecs)} Arrive at destination.</div>
     </div>

@@ -7,18 +7,24 @@ import {
   StreetEdgeInfo,
   TransitEdgeInfo,
   TransitModes,
+  ZonedDateTime,
 } from '../../common/r5-types';
 import {Route, Step, SummaryStep} from '../route';
 
 import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_MINUTE = 60;
 
 /** High-level summary of the route, e.g. Walk -> Bus -> Walk */
 interface SummarizedRoute {
   features: Feature[];
   steps: Step[];
   summary: SummaryStep[];
+}
+
+export function dateTimeToSeconds(dateTime: ZonedDateTime) {
+  return dateTime.hour * SECONDS_PER_HOUR + dateTime.minute * SECONDS_PER_MINUTE + dateTime.second;
 }
 
 export function profileOptionToRoute(
@@ -29,8 +35,8 @@ export function profileOptionToRoute(
   const {features, steps, summary} = summarizeOption(option);
 
   const itinerary = option.itinerary[0];
-  const departureSecs = itinerary.startTime.hour * SECONDS_PER_HOUR;
-  const arriveTimeSecs = itinerary.endTime.hour * SECONDS_PER_HOUR;
+  const departureSecs = dateTimeToSeconds(itinerary.startTime);
+  const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
   const travelTimeSecs = itinerary.duration;
 
   return {
@@ -68,12 +74,13 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
 
   if (option.transit) {
     for (const s of option.transit) {
+      const startTimeSecs = dateTimeToSeconds(s.transitEdges[0].fromDepartureTime[0]);
       for (const e of s.transitEdges) {
         features.push(featureFromTransitEdgeInfo(e, s.mode));
         steps.push(stepFromTransitEdgeInfo(e, s.mode));
       }
       const {shortName, agencyName} = s.routes[0];
-      summary.push({mode: s.mode, shortName, agencyName});
+      summary.push({mode: s.mode, shortName, agencyName, startTimeSecs});
 
       const {middle} = s;
       if (middle) {

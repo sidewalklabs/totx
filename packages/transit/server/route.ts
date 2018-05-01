@@ -41,6 +41,7 @@ export interface TransitSummaryStep {
   mode: TransitModes;
   agencyName: string;
   shortName: string;
+  startTimeSecs: number;
 }
 
 export type SummaryStep = StreetSummaryStep | TransitSummaryStep;
