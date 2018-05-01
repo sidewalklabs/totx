@@ -19,8 +19,8 @@ interface State {
   isDraggingMarker: boolean;
   hover: {
     coordinates: [number, number]; // lng, lat
-    minutes: number;
-    minutes2?: number;
+    minutes: string;
+    minutes2?: string;
     isDestinationHover?: boolean;
   } | null;
 }
@@ -54,6 +54,11 @@ function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
 }
 
 const getStyleFn = memoizeLast(makeStyleFn);
+
+/** Format seconds as a number of minutes for display. */
+function formatSecs(secs: number) {
+  return isValidCommute(secs) ? Math.floor(secs / 60) + ' min' : 'n/a';
+}
 
 // These constants define rectangles around origin and destination markers over which
 // the hover interaction shouldn't happen. This allows the user to drag the markers.
@@ -162,9 +167,9 @@ export default class Root extends React.Component<ViewProps, State> {
       popup = (
         <Popup coordinates={hover.coordinates}>
           {hover.minutes2 ? (
-            <div className={'secondary ' + this.props.mode}>{hover.minutes2} min</div>
+            <div className={'secondary ' + this.props.mode}>{hover.minutes2}</div>
           ) : null}
-          <div className="primary">{hover.minutes} min</div>
+          <div className="primary">{hover.minutes}</div>
         </Popup>
       );
       const [lng, lat] = hover.coordinates;
@@ -201,17 +206,15 @@ export default class Root extends React.Component<ViewProps, State> {
   handleChoroplethHover(feature: Feature, lngLat: LngLat, map: mapboxgl.Map) {
     const id = feature.properties.geo_id;
     const secs = this.props.times[id] || 0;
-    const minutes = Math.floor(secs / 60);
-    let minutes2;
+    let secs2;
     if (this.props.mode !== 'single') {
-      const secs2 = this.props.times2[id];
-      minutes2 = Math.floor(secs2 / 60);
+      secs2 = this.props.times2[id];
     }
     this.setState({
       hover: {
         coordinates: [lngLat.lng, lngLat.lat],
-        minutes,
-        minutes2,
+        minutes: formatSecs(secs),
+        minutes2: secs2 && formatSecs(secs2),
       },
     });
     map.getCanvas().style.cursor = 'pointer';
@@ -219,13 +222,13 @@ export default class Root extends React.Component<ViewProps, State> {
 
   handleDestinationHover() {
     const {destination, routes} = this.props;
-    const minutes = routes && routes[0] ? Math.floor(routes[0].travelTimeSecs / 60) : 0;
-    const minutes2 = routes && routes[1] ? Math.floor(routes[1].travelTimeSecs / 60) : undefined;
+    const secs = routes && routes[0] && routes[0].travelTimeSecs;
+    const secs2 = routes && routes[1] && routes[1].travelTimeSecs;
     this.setState({
       hover: {
         coordinates: [destination.lng, destination.lat],
-        minutes,
-        minutes2,
+        minutes: formatSecs(secs),
+        minutes2: secs2 && formatSecs(secs2),
         isDestinationHover: true,
       },
     });

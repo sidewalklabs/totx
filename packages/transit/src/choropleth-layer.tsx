@@ -44,7 +44,12 @@ export class ChoroplethLayer extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      styledFeatures: makeStyledFeatures(props.geojson, props.styleFn),
+      styledFeatures: props.geojson
+        ? makeStyledFeatures(props.geojson, props.styleFn)
+        : {
+            type: 'FeatureCollection',
+            features: [],
+          },
     };
   }
 
