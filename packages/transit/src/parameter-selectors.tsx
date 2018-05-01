@@ -42,28 +42,6 @@ export const MaxTransfers: React.StatelessComponent<SelectProps> = props => (
   </WrappedSelect>
 );
 
-export const TravelMode: React.StatelessComponent<SelectProps> = props => (
-  <WrappedSelect {...props}>
-    <option value="TRANSIT">Transit</option>
-    <option value="BICYCLE_RENT">Bike Share</option>
-    <option value="WHEELCHAIR">Wheelchair</option>
-    <option value="BICYCLE_RENT+TRANSIT">Bike Share + Transit</option>
-    <option value="BICYCLE">Bicycle</option>
-    <option value="WALK">Walk</option>
-  </WrappedSelect>
-);
-
-export const ModePreference: React.StatelessComponent<SelectProps> = props => (
-  <WrappedSelect {...props}>
-    {/* The values are (rail_multiplier, bus_multiplier); -1 = don't use. */}
-    <option value="1,-1">Only use subway</option>
-    <option value="1,1.5">Prefer subway</option>
-    <option value="1,1">No preference</option>
-    <option value="1.5,1">Prefer bus</option>
-    <option value="-1,1">Only use bus</option>
-  </WrappedSelect>
-);
-
 const zeropad = (x: number) => (x < 10 ? '0' : '') + x;
 const NOON = 12 * 60;
 
@@ -86,11 +64,4 @@ const TIME_OPTIONS = _.range(0, 1440, 30).map(minutes => {
 
 export const TimeChooser: React.StatelessComponent<SelectProps> = props => (
   <WrappedSelect {...props}>{TIME_OPTIONS}</WrappedSelect>
-);
-
-export const WheelchairChooser: React.StatelessComponent<SelectProps> = props => (
-  <WrappedSelect {...props}>
-    <option value="false">Not required</option>
-    <option value="true">Required</option>
-  </WrappedSelect>
 );

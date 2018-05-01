@@ -456,10 +456,11 @@ span.commute-time {
   background: #002440;
   color: white;
   padding: 15px 25px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.route-clear,
-.comparison-clear {
+.route-clear {
   float: right;
   cursor: pointer;
 }
@@ -467,6 +468,7 @@ span.commute-time {
 .label {
   font-size: 11px;
   font-weight: 600;
+  /* text-transform: uppercase; */
 }
 
 .route-length-title {
@@ -486,7 +488,10 @@ span.commute-time {
 
 .mode-choice {
   background: white;
-  padding: 20px;
+  padding: 15px;
+}
+.mode-choice2 {
+  border-top: 1px solid #cccccc;
 }
 
 .nav-bottom {
@@ -511,4 +516,221 @@ span.commute-time {
   background: url('/plus.svg');
   top: -19px;
   right: 7px;
+  z-index: 1;
+}
+
+.mode-choice .row {
+  display: flex;
+}
+
+/** Sprites for travel mode */
+
+.mode-icon {
+  display: inline-block;
+  background: url('/travel-mode.png');
+  background-size: 195px 160px;
+  /* vertical-align: bottom; */
+}
+
+.mode-bike_blue {
+  width: 35px;
+  height: 19px;
+  background-position: -53px -36px;
+}
+
+.mode-bike_green {
+  width: 35px;
+  height: 19px;
+  background-position: -50px -67px;
+}
+
+.mode-bike_grey {
+  width: 35px;
+  height: 19px;
+  background-position: -5px -67px;
+  /* margin-top: 6px; */
+}
+
+.mode-bike_icon_white {
+  width: 28px;
+  height: 15px;
+  background-position: -136px -5px;
+}
+
+.mode-bikeshare_green {
+  width: 38px;
+  height: 21px;
+  background-position: -5px -5px;
+}
+
+.mode-bikeshare_grey {
+  width: 38px;
+  height: 21px;
+  background-position: -53px -5px;
+}
+
+.mode-bikeshare_blue {
+  width: 38px;
+  height: 21px;
+  background-position: -5px -36px;
+}
+
+.mode-bikeshare_icon_white {
+  width: 26px;
+  height: 14px;
+  background-position: -136px -30px;
+}
+
+.mode-transit_blue {
+  width: 19px;
+  height: 25px;
+  background-position: -98px -96px;
+}
+
+.mode-transit_green {
+  width: 19px;
+  height: 25px;
+  background-position: -40px -96px;
+}
+
+.mode-transit_grey {
+  width: 19px;
+  height: 25px;
+  background-position: -69px -96px;
+}
+
+.mode-transit_icon_white {
+  width: 16px;
+  height: 19px;
+  background-position: -174px -5px;
+}
+
+.mode-walk_blue {
+  width: 15px;
+  height: 24px;
+  background-position: -136px -54px;
+}
+
+.mode-walk_green {
+  width: 15px;
+  height: 24px;
+  background-position: -136px -88px;
+}
+
+.mode-walk_icon_white {
+  width: 12px;
+  height: 17px;
+  background-position: -174px -34px;
+}
+
+.mode-walk_grey {
+  width: 15px;
+  height: 24px;
+  background-position: -5px -131px;
+}
+
+.mode-wc_blue {
+  width: 25px;
+  height: 25px;
+  background-position: -5px -96px;
+}
+
+.mode-wc_green {
+  width: 25px;
+  height: 25px;
+  background-position: -101px -40px;
+}
+
+.mode-wc_grey {
+  width: 25px;
+  height: 25px;
+  background-position: -101px -5px;
+}
+
+.mode-wc_icon_white {
+  width: 17px;
+  height: 18px;
+  background-position: -30px -131px;
+}
+
+.mode {
+  text-align: center;
+  padding-right: 10px;
+  margin-right: 10px;
+  border-right: 1px solid #cccccc;
+  display: table;
+  cursor: pointer;
+}
+
+.label.blue {
+  color: #3c89f0;
+}
+.label.grey {
+  color: #989898;
+}
+.label.green {
+  color: #51a933;
+}
+
+.slick-slider .label {
+  text-transform: uppercase;
+  font-size: 9px;
+  min-width: 50px;
+  white-space: pre;
+}
+
+.mode > div:first-child {
+  height: 25px;
+  margin-bottom: 5px;
+  /* vertical-align: bottom; */
+}
+
+.mode .spacer {
+  height: 25px;
+  display: inline-block;
+}
+
+.compare-mode-close {
+  background: url('/ex-grey.png');
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  float: right;
+  cursor: pointer;
+  margin-right: -20px;
+  margin-top: -20px;
+}
+
+button.slick-next {
+  background: url(/nextarrow.png), white;
+  height: 19px;
+  background-size: 11px 19px;
+  float: right;
+  margin-top: -32px;
+  font-size: 0;
+  border: 0;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+button.slick-prev {
+  background: url('/nextarrow.png');
+  /* linear-gradient(to right, rgba(0,0,0,0), rgba(255, 255, 255,1.0));*/
+  width: 11px;
+  height: 19px;
+  background-size: 11px 19px;
+  transform: scaleX(-1);
+  float: left;
+  margin-top: 9px;
+  font-size: 0;
+  border: 0;
+  background-repeat: no-repeat;
+}
+
+button.slick-disabled {
+  visibility: hidden;
+}
+
+.slick-list {
+  margin-right: 20px;
 }
