@@ -93,7 +93,9 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
         <TravelModeCarousel className="mode-choice" onChange={onChange} selectedMode={travelMode} />
         {mode === 'compare-settings' ? (
           <>
-            <div className="compare-mode-close" onClick={onClear} />
+            <div className="compare-mode-close-wrapper">
+              <div className="compare-mode-close" onClick={onClear} />
+            </div>
             <TravelModeCarousel
               className="mode-choice mode-choice2"
               onChange={onChange}

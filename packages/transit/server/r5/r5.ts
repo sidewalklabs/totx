@@ -125,7 +125,7 @@ function interpretTravelMode(mode: string): R5ModeData {
       return {
         transitModes: _.values(TransitModes),
         accessModes: [LegMode.BICYCLE_RENT],
-        egressModes: [LegMode.WALK], // TODO: change this to BICYCLE_RENT when it becomes possible to bikeshare egress from transit (on r5 side)
+        egressModes: [LegMode.BICYCLE_RENT],
         directModes: [LegMode.BICYCLE_RENT],
         wheelchair: false,
       };
