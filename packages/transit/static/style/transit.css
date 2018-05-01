@@ -265,7 +265,7 @@ span.close-button:hover {
 .swatch {
   display: inline-block;
   height: 16px;
-  flex: 1 0 20px;
+  flex: 1 0 16px;
 }
 
 .label-top,
