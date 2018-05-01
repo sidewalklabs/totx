@@ -152,7 +152,7 @@ export default class Root extends React.Component<ViewProps, State> {
         <MapboxMarker
           position={this.props.destination}
           draggable={true}
-          icon="measle"
+          icon="destination-marker"
           iconAnchor="center"
           onDragStart={this.startDrag}
           onDragEnd={this.handleDestinationMove}
@@ -165,7 +165,7 @@ export default class Root extends React.Component<ViewProps, State> {
     const {hover} = this.state;
     if (hover) {
       popup = (
-        <Popup coordinates={hover.coordinates}>
+        <Popup coordinates={hover.coordinates} offset={[0, -10]}>
           {hover.minutes2 ? (
             <div className={'secondary ' + this.props.mode}>{hover.minutes2}</div>
           ) : null}
@@ -175,7 +175,9 @@ export default class Root extends React.Component<ViewProps, State> {
       const [lng, lat] = hover.coordinates;
       const position = new LatLng(lat, lng);
       if (!hover.isDestinationHover) {
-        ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
+        ghostMarker = (
+          <MapboxMarker position={position} icon="destination-marker" iconAnchor="center" />
+        );
       }
     }
 
@@ -192,6 +194,7 @@ export default class Root extends React.Component<ViewProps, State> {
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
+          id="origin"
           onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(false, loc)}
         />
