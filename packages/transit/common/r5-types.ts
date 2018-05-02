@@ -62,7 +62,8 @@ export interface ProfileOption {
   itinerary: Array<{
     waitingTime: number; // secs
     walkTime: number; // secs
-    distance: number; // mm
+    distance: number; // mm total distance of all nontransit segments
+    transitDistance: number; // mm total distance of all transit segments
     transfers: number; // number of transfers
     duration: number; // secs
     transitTime: number; // secs
