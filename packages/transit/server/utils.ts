@@ -12,8 +12,6 @@ export async function requestPromise<T>(
       } else {
         resolve(body);
       }
-    }).on('response', res => {
-      res.headers['Cache-Control'] = 'public, max-age=86400';
     });
   });
 }
