@@ -50,3 +50,4 @@ Then run
 ## 5. Check it's working:
 `kubectl get pods`
 You should see the new timestamp for the deployment you just updated.
+

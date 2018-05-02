@@ -322,7 +322,6 @@ span.close-button:hover {
 }
 
 .route {
-  cursor: pointer;
   background-color: #f2f4f6;
 }
 
@@ -392,7 +391,7 @@ span.commute-time {
 }
 
 .mapboxgl-popup .secondary.compare-settings {
-  background-color: rgb(103, 32, 68);
+  background-color: rgb(0, 173, 11);
 }
 
 .mapboxgl-popup .secondary.compare-origin {
@@ -682,7 +681,6 @@ span.commute-time {
 .mode > div:first-child {
   height: 25px;
   margin-bottom: 5px;
-  /* vertical-align: bottom; */
 }
 
 .mode .spacer {
@@ -738,4 +736,19 @@ button.slick-disabled {
 
 .slick-list {
   margin-right: 20px;
+}
+
+.route.route-secondary {
+  background: #004024;
+}
+
+.route-secondary .route-length-title.label {
+  display: none;
+}
+
+.sidewalk-logo {
+  position: absolute;
+  bottom: 7px;
+  left: 105px;
+  text-align: center;
 }

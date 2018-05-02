@@ -2,7 +2,8 @@ import {LngLat} from 'mapbox-gl';
 import * as React from 'react';
 import {Popup} from 'react-mapbox-gl';
 
-import {memoizeLast, Feature, FeatureCollection} from '../../utils';
+import _ = require('underscore');
+import {makeObject, memoizeLast, Feature, FeatureCollection} from '../../utils';
 import Action from './action';
 import Colors from './colors';
 import {State as DataStoreState} from './datastore';
@@ -31,29 +32,29 @@ function isValidCommute(x: number) {
   return x !== null && x !== undefined && x <= THREE_HOURS_SECS;
 }
 
-function makeStyleFn(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
+function getFillColors(args: Pick<ViewProps, 'mode' | 'times' | 'times2'>) {
   const {mode, times, times2} = args;
-  if (mode === 'single') {
-    return (feature: any) => {
-      const id = feature.properties['geo_id'];
-      const secs = times[id];
-      return isValidCommute(secs) ? ramps.SINGLE(secs) : Colors.clear;
-    };
-  }
 
-  const secsOrBig = (secs: number) => (!isValidCommute(secs) ? 10000 : secs);
-  const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
-  return (feature: any) => {
-    const id = feature.properties['geo_id'];
-    const secs1 = times[id];
-    const secs2 = times2[id];
-    return isValidCommute(secs1) || isValidCommute(secs2)
-      ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
-      : Colors.clear;
-  };
+  if (mode === 'single') {
+    return _.mapObject(
+      times,
+      (secs, id) => (isValidCommute(secs) ? ramps.SINGLE(secs) : Colors.clear),
+    );
+  } else {
+    const secsOrBig = (secs: number) => (!isValidCommute(secs) ? 10000 : secs);
+    const ramp = mode === 'compare-origin' ? ramps.ORIGIN_COMPARISON : ramps.SETTINGS_COMPARISON;
+
+    return makeObject(_.union(Object.keys(times), Object.keys(times2)), id => {
+      const secs1 = times[id];
+      const secs2 = times2[id];
+      return isValidCommute(secs1) || isValidCommute(secs2)
+        ? ramp(secsOrBig(secs1) - secsOrBig(secs2))
+        : Colors.clear;
+    });
+  }
 }
 
-const getStyleFn = memoizeLast(makeStyleFn);
+const getFillColorsFn = memoizeLast(getFillColors);
 
 /** Format seconds as a number of minutes for display. */
 function formatSecs(secs: number) {
@@ -152,7 +153,7 @@ export default class Root extends React.Component<ViewProps, State> {
         <MapboxMarker
           position={this.props.destination}
           draggable={true}
-          icon="measle"
+          icon="destination-marker"
           iconAnchor="center"
           onDragStart={this.startDrag}
           onDragEnd={this.handleDestinationMove}
@@ -165,7 +166,7 @@ export default class Root extends React.Component<ViewProps, State> {
     const {hover} = this.state;
     if (hover) {
       popup = (
-        <Popup coordinates={hover.coordinates}>
+        <Popup coordinates={hover.coordinates} offset={[0, -10]}>
           {hover.minutes2 ? (
             <div className={'secondary ' + this.props.mode}>{hover.minutes2}</div>
           ) : null}
@@ -175,15 +176,17 @@ export default class Root extends React.Component<ViewProps, State> {
       const [lng, lat] = hover.coordinates;
       const position = new LatLng(lat, lng);
       if (!hover.isDestinationHover) {
-        ghostMarker = <MapboxMarker position={position} icon="measle" iconAnchor="center" />;
+        ghostMarker = (
+          <MapboxMarker position={position} icon="destination-marker" iconAnchor="center" />
+        );
       }
     }
 
     return (
       <Map
         view={this.props.view}
-        geojson={this.props.geojson}
-        styleFn={getStyleFn(this.props)}
+        fillColors={getFillColorsFn(this.props)}
+        defaultFillColor={Colors.clear}
         routes={routes}
         onLoad={this.onLoad}
         onClick={this.onClick}
@@ -192,6 +195,7 @@ export default class Root extends React.Component<ViewProps, State> {
           position={this.props.origin}
           draggable={true}
           icon={firstMarkerImage}
+          id="origin"
           onDragStart={this.startDrag}
           onDragEnd={loc => this.handleMarkerMove(false, loc)}
         />
