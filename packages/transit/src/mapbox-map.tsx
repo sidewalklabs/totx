@@ -70,7 +70,7 @@ export class Map extends React.Component<Props, State> {
         center={center}
         zoom={zoom}
         containerStyle={{flex: '1'}}
-        style={'mapbox://styles/danvk/cjg3tbb346bbk2sps9pzy6f99'}
+        style={'mapbox://styles/sidewalk-users/cjgpn0tle002m2rsbush2ckbj'}
         onStyleLoad={this.props.onLoad}
         onZoomEnd={this.onZoomEnd}
         onClick={this.onClick}>
