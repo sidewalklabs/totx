@@ -33,13 +33,14 @@ function makeStyleExpression(
   }
   expr.push(defaultColor);
   return {
-    // This would be nice... but it triggers a mapbox error
-    // 'fill-outline-color': 'rgba(0, 0, 0, 0.0)',
     'fill-color': expr,
+    // This would be nice... but it triggers a mapbox error
+    // TODO(danvk): turn this on when Mapbox GL JS 0.45 is released.
+    // See https://stackoverflow.com/a/49679216/388951
+    // 'fill-outline-color': 'rgba(0, 0, 0, 0.0)',
   };
 }
 
-// const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.3mfcwxy5'};
 const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.5qc32y97'};
 
 export class ChoroplethLayer extends React.Component<Props, State> {
@@ -76,7 +77,6 @@ export class ChoroplethLayer extends React.Component<Props, State> {
     const out =
       !shallowEqual(this.props, nextProps) ||
       nextState.styleExpression !== this.state.styleExpression;
-    // console.log('shoudlComp', out);
     return out;
   }
 
