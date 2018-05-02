@@ -30,7 +30,7 @@ class Root extends React.Component<{}, State> {
     const handleAction = store.dispatch.bind(store);
 
     const {state} = this;
-    const {mode, routes} = state;
+    const {routes} = state;
     const clearDestination = () => store.dispatch({type: 'clear-destination'});
     const isRouteComparison = !!(routes[0] && routes[1]);
 
