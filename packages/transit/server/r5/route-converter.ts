@@ -125,7 +125,7 @@ function featureFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Fea
       toStopID: e.toStopID,
       edgeId: e.id,
       routeId: e.routeID,
-      stroke: '#' + e.routeColor,
+      stroke: e.routeColor && e.routeColor.match(/^[a-f0-9]{6}/i) ? '#' + e.routeColor : '#000000',
       tripId: e.routeID, // This needs to be nonzero for routeColor to be shown but the actual value doesn't matter.
     },
   };
