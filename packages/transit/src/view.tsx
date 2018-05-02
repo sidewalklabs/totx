@@ -92,24 +92,23 @@ class Root extends React.Component<{}, State> {
           />
 
           <div className="nav-bottom">
-            <div>
-              <form
-                className="origin-destination"
-                onSubmit={e => {
-                  this.geocodeSearchboxInput(address);
-                }}>
-                <img src="blue-marker.svg" width={19} height={27} />
-                <div className="input-box-addon">
-                  <input
-                    ref={this.searchboxTextRef}
-                    className="origin-destination-search-box"
-                    value={address || ''}
-                    onChange={e => this.setSearchBoxInput(e.target.value)}
-                  />
-                  <img src="search-grey.png" width={15} height={15} />
-                </div>
-              </form>
-            </div>
+            <form
+              className="origin-destination"
+              onSubmit={e => {
+                this.geocodeSearchboxInput(address);
+                e.preventDefault();
+              }}>
+              <img src="blue-marker.svg" width={19} height={27} />
+              <div className="input-box-addon">
+                <input
+                  ref={this.searchboxTextRef}
+                  className="origin-destination-search-box"
+                  value={address || ''}
+                  onChange={e => this.setSearchBoxInput(e.target.value)}
+                />
+                <img src="search-grey.png" width={15} height={15} />
+              </div>
+            </form>
             <hr />
             <RoutingParameters
               {...this.state}
