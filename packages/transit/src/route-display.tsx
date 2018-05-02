@@ -7,7 +7,8 @@ import {Route} from './datastore';
 interface RouteDisplayProps {
   route: Route;
   className: string;
-  onClearDestination: () => any;
+  isComparison: boolean;
+  onClearDestination?: () => any;
 }
 
 function isTransitStep(step: SummaryStep): step is TransitSummaryStep {
@@ -25,7 +26,7 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
   }
 
   render() {
-    const {className, route} = this.props;
+    const {className, isComparison, route, onClearDestination} = this.props;
     if (!route) {
       return <span className={className}>Not accessible with current settings</span>;
     }
@@ -34,16 +35,18 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
     const distance = Math.round(route.distanceKm * 100) / 100;
     return (
       <div className={className}>
-        <div className="route-clear" onClick={this.handleClear}>
-          ×
-        </div>
+        {onClearDestination ? (
+          <div className="route-clear" onClick={this.handleClear}>
+            ×
+          </div>
+        ) : null}
         <div className="route-length">
           <span className="route-length-title label">Route Length</span>
           <span className="route-length-time">{minutes} min</span>
           <span className="route-length-distance">{distance} km</span>
         </div>
 
-        {route ? <RouteDetails route={route} /> : null}
+        {route && !isComparison ? <RouteDetails route={route} /> : null}
       </div>
     );
   }
