@@ -11,9 +11,15 @@ COPY yarn.lock /usr/src/app/yarn.lock
 
 COPY . /usr/src/app
 
-RUN yarn
+RUN yarn install --production
+
+# Tell node and webpack that this is a production setting.
+# This will enable caching and produce minified JS.
+ENV NODE_ENV production
+
+RUN yarn webpack
 RUN ./packages/transit/compress-all.sh
 
 EXPOSE 1337
 
-ENTRYPOINT ["yarn", "develop", "--", "transit", "router-url", "http://localhost:8080" ]
+CMD ["yarn", "serve", "--router-url", "http://localhost:8080" ]
