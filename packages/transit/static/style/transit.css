@@ -772,6 +772,7 @@ button.slick-disabled {
   .mdl-card {
     min-height: 0;
   }
+  .label-bottom br {
+    display: none;  /* make the legend a bit shorter */
+  }
 }
-
-
