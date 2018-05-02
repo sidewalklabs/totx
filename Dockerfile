@@ -12,6 +12,7 @@ COPY yarn.lock /usr/src/app/yarn.lock
 COPY . /usr/src/app
 
 RUN yarn
+RUN ./packages/transit/compress-all.sh
 
 EXPOSE 1337
 
