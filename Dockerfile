@@ -18,7 +18,7 @@ RUN yarn install --production
 ENV NODE_ENV production
 
 RUN yarn webpack
-RUN ./packages/transit/compress-all.sh
+RUN ./scripts/compress-all.sh
 
 EXPOSE 1337
 
