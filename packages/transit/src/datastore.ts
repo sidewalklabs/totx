@@ -1,8 +1,7 @@
 import * as Cookies from 'js-cookie';
-import * as topojson from 'topojson-client';
 import * as _ from 'underscore';
 
-import {ajaxPromise, FeatureCollection} from '../../utils';
+import {FeatureCollection} from '../../utils';
 import {LegMode, TransitModes} from '../common/r5-types';
 import Action, * as actions from './action';
 import {CenterZoomLevel, LatLng} from './latlng';
@@ -15,7 +14,6 @@ import {withoutDefaults} from './utils';
 
 /** This is the state exported by this store via store.getState(). */
 export interface State {
-  geojson: FeatureCollection;
   destination: LatLng;
   destinationAddress: string;
   view: CenterZoomLevel;
@@ -125,16 +123,6 @@ export const DEFAULT_OPTIONS: QueryOptions = {
   require_wheelchair: false,
 };
 
-// This is the structure of cache.json
-// It stores the contents of the address, route and commute times caches to reduce network requests.
-// The keys and values match the k/v types for their respective caches, except for
-// commuteTimesCache. It uses a more compact representation. See dumpCache() for details.
-interface SavedCache {
-  addressCache: {[key: string]: string};
-  routesCache: {[key: string]: Route};
-  commuteTimesCache: {[key: string]: number[]};
-}
-
 interface CommuteTimes {
   [bgId: string]: number;
 }
@@ -219,9 +207,7 @@ const COOKIE_NAME = 'hide-scenario';
 function createStore() {
   // this is used to programmatically pan and zoom the map.
   let view: CenterZoomLevel = INITIAL_VIEW;
-  let geojson: FeatureCollection = null;
   let destination: LatLng = null;
-  let isLoadingGeoJSON: boolean = false;
   let error: string = null;
   let origin: LatLng = new LatLng(INTRO_STORY.origin.lat, INTRO_STORY.origin.lng);
   let options = {...DEFAULT_OPTIONS, ...INTRO_STORY.options};
@@ -236,7 +222,6 @@ function createStore() {
   let currentStory: string = null; // Cookies.get(COOKIE_NAME) ? null : 'intro';
 
   let gaEnabled = true; // track events with Google Analytics?
-  let initPromise: Promise<void> = null; // Promise to track when geometries and caches are loaded.
 
   const initialHash = window.location.hash;
 
@@ -336,10 +321,7 @@ function createStore() {
       return; // the hash wasn't JSON.
     }
 
-    initPromise.then(() => {
-      // We do this after initialization to make sure that the caches are filled.
-      setStateFromUrlParams(obj);
-    });
+    setStateFromUrlParams(obj);
   }
 
   function setStateFromUrlParams(obj: UrlParams) {
@@ -508,7 +490,6 @@ function createStore() {
 
   function areTherePendingRequests() {
     return (
-      isLoadingGeoJSON ||
       commuteTimesCache.numPendingFetches() > 0 ||
       routesCache.numPendingFetches() > 0 ||
       addressCache.numPendingFetches() > 0
@@ -530,72 +511,10 @@ function createStore() {
     return routes;
   }
 
-  function orderedFeatureIds() {
-    return geojson.features.map(f => f.properties.geo_id as string);
-  }
-
-  // This dumps the contents of all the caches into a copy/paste-friendly textarea.
-  // Navigate through the scenarios, then run dumpCache() in the console.
-  if (!process.env || process.env.NODE_ENV !== 'production') {
-    const dumpCache = () => {
-      const ids = orderedFeatureIds();
-      // The address and routes caches are reasonably small.
-      // The commute times are not, but they can be greatly shrunk by dropping the keys and
-      // rounding the commute times. It's important to round them _up_, so that the
-      // max_commute_time_secs option for route generation is still valid.
-      function simplifyCommuteTimes(v: CommuteTimes): number[] {
-        return ids.map(id => (v[id] === null ? null : Math.ceil(v[id])));
-      }
-
-      const out: SavedCache = {
-        addressCache: addressCache.dump(),
-        routesCache: routesCache.dump(),
-        commuteTimesCache: _.mapObject(commuteTimesCache.dump(), simplifyCommuteTimes),
-      };
-
-      const el = document.createElement('textarea');
-      el.style.position = 'absolute';
-      el.style.top = '0';
-      el.style.left = '0';
-      el.rows = 40;
-      el.cols = 80;
-      el.textContent = JSON.stringify(out);
-      document.body.appendChild(el);
-    };
-    (window as any)['dumpCache'] = dumpCache;
-  }
-
-  function restoreCaches(cacheJson: SavedCache) {
-    const ids = orderedFeatureIds();
-    const commuteTimes = _.mapObject(
-      cacheJson.commuteTimesCache,
-      times => _.object(ids, times) as CommuteTimes,
-    );
-
-    addressCache.load(cacheJson.addressCache);
-    routesCache.load(cacheJson.routesCache);
-    commuteTimesCache.load(commuteTimes);
-  }
-
   function initialize() {
-    isLoadingGeoJSON = true;
-    initPromise = Promise.all([
-      ajaxPromise<any>('toronto.topojson'),
-      ajaxPromise<any>('caches.json'),
-    ]).then(([torontoTopojson, cacheJson]) => {
-      isLoadingGeoJSON = false;
-      const torontoGeojson = topojson.feature(torontoTopojson, torontoTopojson.objects['-']);
-      torontoGeojson.features.forEach((feature: any) => {
-        feature.id = feature.properties.geo_id;
-      });
-      geojson = torontoGeojson;
-      restoreCaches(cacheJson);
-      stateChanged();
-
-      handleSetOrigin({
-        type: 'set-origin',
-        origin,
-      });
+    handleSetOrigin({
+      type: 'set-origin',
+      origin,
     });
   }
 
@@ -633,7 +552,6 @@ function createStore() {
   function getState(): State {
     const {times, times2} = getCommuteTimes();
     return {
-      geojson,
       destination,
       destinationAddress: destination && addressCache.getFromCache(destination),
       times,
