@@ -360,10 +360,6 @@ span.commute-time {
   margin-right: 8px;
 }
 
-.mobile-warning {
-  display: none;
-}
-
 #root,
 .view-map,
 .mapboxgl-map {
@@ -752,3 +748,30 @@ button.slick-disabled {
   left: 105px;
   text-align: center;
 }
+
+.mobile-only {
+  display: none;
+}
+
+/* Responsive UI for mobile */
+
+@media only screen and (max-width: 736px) {
+  .mobile-only {
+    display: inherit;
+  }
+  .hide-on-mobile {
+    display: none;
+  }
+  .route-details, .origin-destination, .routing-settings, .nav-bottom hr {
+    display: none;
+  }
+  .left-nav {
+    right: 25px;
+    width: auto;
+  }
+  .mdl-card {
+    min-height: 0;
+  }
+}
+
+
