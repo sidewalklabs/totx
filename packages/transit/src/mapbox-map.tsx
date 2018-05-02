@@ -38,7 +38,7 @@ interface State {
 // TODO(danvk): load this via an environment variable.
 const MapboxGL = ReactMapboxGl({
   accessToken:
-    'pk.eyJ1IjoiZGFudmsiLCJhIjoiY2lrZzJvNDR0MDBhNXR4a2xqNnlsbWx3ciJ9.myJhweYd_hrXClbKk8XLgQ',
+    'pk.eyJ1Ijoic2lkZXdhbGstdXNlcnMiLCJhIjoiY2pnbnRyeXcwMGt6NDJxcjF4dDdzMDZpOSJ9.f17n6qwPPrk4z8yAP_-C0Q',
 });
 
 function viewToState(view: CenterZoomLevel): State {
@@ -70,7 +70,7 @@ export class Map extends React.Component<Props, State> {
         center={center}
         zoom={zoom}
         containerStyle={{flex: '1'}}
-        style={'mapbox://styles/danvk/cjg3tbb346bbk2sps9pzy6f99'}
+        style={'mapbox://styles/sidewalk-users/cjgpn0tle002m2rsbush2ckbj'}
         onStyleLoad={this.props.onLoad}
         onZoomEnd={this.onZoomEnd}
         onClick={this.onClick}>

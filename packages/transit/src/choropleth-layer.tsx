@@ -41,7 +41,10 @@ function makeStyleExpression(
   };
 }
 
-const TILE_SOURCE: mapboxgl.VectorSource = {type: 'vector', url: 'mapbox://danvk.5qc32y97'};
+const TILE_SOURCE: mapboxgl.VectorSource = {
+  type: 'vector',
+  url: 'mapbox://sidewalk-users.5zdxqa9p',
+};
 
 export class ChoroplethLayer extends React.Component<Props, State> {
   constructor(props: Props) {
