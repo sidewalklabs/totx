@@ -38,7 +38,7 @@ export function profileOptionToRoute(
   const departureSecs = dateTimeToSeconds(itinerary.startTime);
   const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
   const travelTimeSecs = itinerary.duration;
-  const distanceKm = itinerary.distance / 1000 / 1000; // convert mm to km
+  const distanceKm = (itinerary.distance + itinerary.transitDistance) / 1000 / 1000; // convert mm to km
 
   return {
     origin: {
