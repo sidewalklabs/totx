@@ -6,9 +6,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      # Make sure there's always one instance of the transit server running.
-      maxUnavailable: 0
-  replicas: 1
+      maxUnavailable: 1
+  replicas: 3
   template:
     metadata:
       name: ttx-web
