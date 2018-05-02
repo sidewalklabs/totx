@@ -46,7 +46,7 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
     });
 
     const minutes = Math.floor(route.travelTimeSecs / 60);
-
+    const distanceKm = route.distanceKm.toFixed(2);
     return (
       <div className={className}>
         <div className="route-clear" onClick={this.handleClear}>
@@ -55,7 +55,7 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
         <div className="route-length">
           <span className="route-length-title label">Route Length</span>
           <span className="route-length-time">{minutes} min</span>
-          <span className="route-length-distance">1.9 km</span>
+          <span className="route-length-distance">{distanceKm} km</span>
         </div>
 
         {arrowSteps.length > 0 ? <div className="route-summary">{arrowSteps}</div> : null}

@@ -114,12 +114,13 @@ export interface TransitEdgeInfo {
   toStopID: number;
   routeID: string;
   routeColor: string;
+  distanceM: number; // in meters
   geometry: GeoJSON.LineString;
 }
 
 export interface StreetEdgeInfo {
   edgeId: string;
-  distance: number;
+  distanceMm: number; // in millimeters
   startTime: ZonedDateTime;
   endTime: ZonedDateTime;
   geometry: GeoJSON.LineString;

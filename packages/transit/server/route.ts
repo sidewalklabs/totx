@@ -53,7 +53,7 @@ export interface Route {
   departureSecs: number;
   arriveTimeSecs: number;
   travelTimeSecs: number;
-  walkingDistanceKm: number;
+  distanceKm: number;
   steps: Step[];
   geojson: FeatureCollection;
   summary: SummaryStep[];
