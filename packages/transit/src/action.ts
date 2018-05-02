@@ -32,6 +32,11 @@ export interface MapReady {
   type: 'map-ready';
 }
 
+export interface SearchForAddress {
+  type: 'search-for-address';
+  address: string;
+}
+
 export interface SetOrigin {
   type: 'set-origin';
   origin: LatLng;
@@ -52,6 +57,7 @@ export interface SetStory {
 type Action =
   | ClearDestination
   | MapReady
+  | SearchForAddress
   | SetDestination
   | SetMode
   | SetOptions
