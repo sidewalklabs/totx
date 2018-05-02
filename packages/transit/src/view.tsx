@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import 'whatwg-fetch'; // fetch() polyfill.
 
-import createStore, {QueryOptions, State} from './datastore';
+import createStore, {QueryOptions, State as DatastoreState} from './datastore';
 import Legend from './legend';
 import MapPanel from './map-panel';
 import NotificationBar from './notification-bar';
@@ -16,22 +16,31 @@ const FEEDBACK_LINK = 'mailto:ttx@sidewalklabs.com';
 const rootEl = document.getElementById('root');
 const store = createStore();
 
+interface State extends DatastoreState {
+  searchboxInput: string;
+}
+
 /** Root component for the transit accessibility visualization. */
 class Root extends React.Component<{}, State> {
+  searchboxTextRef: any = null;
+
   constructor(props: {}) {
     super(props);
-    this.state = store.getState();
+    this.state = {...store.getState(), searchboxInput: null};
     this.clearError = this.clearError.bind(this);
     this.setOptions = this.setOptions.bind(this);
     this.setTravelMode = this.setTravelMode.bind(this);
+    this.setSearchBoxInput = this.setSearchBoxInput.bind(this);
+    this.searchboxTextRef = React.createRef();
   }
 
   render(): JSX.Element {
     const handleAction = store.dispatch.bind(store);
 
     const {state} = this;
-    const {mode, routes} = state;
+    const {routes, originAddress} = state;
     const clearDestination = () => store.dispatch({type: 'clear-destination'});
+    const address = state.searchboxInput === null ? originAddress : state.searchboxInput;
     const isRouteComparison = !!(routes[0] && routes[1]);
 
     return (
@@ -42,7 +51,7 @@ class Root extends React.Component<{}, State> {
           clearError={this.clearError}
         />
         <MapPanel handleAction={handleAction} {...this.state} />
-        <div className="feedback-about">
+        <div className="feedback-about hide-on-mobile">
           <a className="mdl-shadow--4dp" href={ABOUT_URL}>
             About
           </a>
@@ -51,20 +60,11 @@ class Root extends React.Component<{}, State> {
           </a>
         </div>
         <div className="left-nav mdl-card mdl-shadow--8dp">
-          <div className="mdl-card__title">
+          <div className="mdl-card__title hide-on-mobile">
             <div className="TitleLogo-Super">Toronto Transit</div>
             <div className="TitleLogo">Explorer</div>
             <div className="Title-Subhead">Discovering ways to travel the city</div>
           </div>
-
-          {mode === 'single' ? (
-            <div className="compare-button-wrapper">
-              <div
-                className="compare-button"
-                onClick={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
-              />
-            </div>
-          ) : null}
 
           {routes[0] ? (
             <RouteDisplay
@@ -88,12 +88,27 @@ class Root extends React.Component<{}, State> {
             travelMode2={state.options2.travel_mode}
             onChange={this.setTravelMode}
             onClear={() => store.dispatch({type: 'set-mode', mode: 'single'})}
+            onCompare={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
           />
 
           <div className="nav-bottom">
-            <div className="origin-destination">
-              <img src="blue-marker.svg" width={19} height={27} /> {this.state.originAddress}
-              <div>TODO: AP-199</div>
+            <div>
+              <form
+                className="origin-destination"
+                onSubmit={e => {
+                  this.geocodeSearchboxInput(address);
+                }}>
+                <img src="blue-marker.svg" width={19} height={27} />
+                <div className="input-box-addon">
+                  <input
+                    ref={this.searchboxTextRef}
+                    className="origin-destination-search-box"
+                    value={address || ''}
+                    onChange={e => this.setSearchBoxInput(e.target.value)}
+                  />
+                  <img src="search-grey.png" width={15} height={15} />
+                </div>
+              </form>
             </div>
             <hr />
             <RoutingParameters
@@ -121,6 +136,15 @@ class Root extends React.Component<{}, State> {
         </a>
       </div>
     );
+  }
+
+  setSearchBoxInput(value: string) {
+    this.setState({searchboxInput: value});
+  }
+
+  geocodeSearchboxInput(address: string) {
+    store.dispatch({type: 'search-for-address', address});
+    this.setState({searchboxInput: null});
   }
 
   componentDidMount() {

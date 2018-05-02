@@ -38,7 +38,7 @@ export function profileOptionToRoute(
   const departureSecs = dateTimeToSeconds(itinerary.startTime);
   const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
   const travelTimeSecs = itinerary.duration;
-  const distanceKm = itinerary.distance / 1000 / 1000; // convert mm to km
+  const distanceKm = (itinerary.distance + itinerary.transitDistance) / 1000 / 1000; // convert mm to km
 
   return {
     origin: {
@@ -125,7 +125,7 @@ function featureFromTransitEdgeInfo(e: TransitEdgeInfo, mode: TransitModes): Fea
       toStopID: e.toStopID,
       edgeId: e.id,
       routeId: e.routeID,
-      stroke: '#' + e.routeColor,
+      stroke: e.routeColor && e.routeColor.match(/^[a-f0-9]{6}/i) ? '#' + e.routeColor : '#000077',
       tripId: e.routeID, // This needs to be nonzero for routeColor to be shown but the actual value doesn't matter.
     },
   };

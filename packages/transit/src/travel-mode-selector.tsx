@@ -8,6 +8,7 @@ export interface Props {
   travelMode: string;
   travelMode2: string;
   onClear: () => any;
+  onCompare: () => any;
   onChange: (newMode: string, isSecondary: boolean) => any;
 }
 
@@ -86,7 +87,7 @@ function TravelModeCarousel(props: SingleProps): JSX.Element {
 
 export default class TravelModeSelector extends React.Component<Props, {}> {
   render() {
-    const {mode, travelMode, travelMode2, onClear, onChange} = this.props;
+    const {mode, travelMode, travelMode2, onClear, onChange, onCompare} = this.props;
 
     return (
       <>
@@ -103,7 +104,11 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
               isSecondary={true}
             />
           </>
-        ) : null}
+        ) : (
+          <div className="compare-button-wrapper">
+            <div className="compare-button" onClick={onCompare} />
+          </div>
+        )}
       </>
     );
   }

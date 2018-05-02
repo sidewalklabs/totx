@@ -98,7 +98,9 @@ export class Map extends React.Component<Props, State> {
     const {view} = nextProps;
     if (view !== this.props.view) {
       // See comment for State interface.
-      this.setState(viewToState(view));
+      this.setState({
+        center: [view.center.lng, view.center.lat],
+      });
     }
   }
 

@@ -344,6 +344,45 @@ span.commute-time {
 .address {
   white-space: pre-line; /* addresses include a line break between the street address and city */
 }
+
+.origin-destination {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.origin-destination > img {
+  margin-right: 1em;
+}
+
+.input-box-addon {
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+.origin-destination-search-box {
+  padding-left: 8px;
+  background-color: #f8f8f8;
+  padding-right: 30px;
+  font-family: Montserrat;
+  font-size: 1 1px;
+  font-weight: 600;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: #c8c8c8;
+}
+
+.input-box-addon > img {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+}
+
 .origin-address {
   display: block; /* Fallback for non-webkit */
   display: -webkit-box;
@@ -355,13 +394,10 @@ span.commute-time {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .address img {
   float: left;
   margin-right: 8px;
-}
-
-.mobile-warning {
-  display: none;
 }
 
 #root,
@@ -751,4 +787,35 @@ button.slick-disabled {
   bottom: 7px;
   left: 105px;
   text-align: center;
+}
+
+.mobile-only {
+  display: none;
+}
+
+/* Responsive UI for mobile */
+
+@media only screen and (max-width: 736px) {
+  .mobile-only {
+    display: inherit;
+  }
+  .hide-on-mobile {
+    display: none;
+  }
+  .route-details,
+  .origin-destination,
+  .routing-settings,
+  .nav-bottom hr {
+    display: none;
+  }
+  .left-nav {
+    right: 25px;
+    width: auto;
+  }
+  .mdl-card {
+    min-height: 0;
+  }
+  .label-bottom br {
+    display: none; /* make the legend a bit shorter */
+  }
 }
