@@ -73,20 +73,13 @@ class Root extends React.Component<{}, State> {
             />
           ) : null}
 
-          {mode === 'single' ? (
-            <div className="compare-button-wrapper">
-              <div
-                className="compare-button"
-                onClick={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
-              />
-            </div>
-          ) : null}
           <TravelModeSelector
             mode={state.mode}
             travelMode={state.options.travel_mode}
             travelMode2={state.options2.travel_mode}
             onChange={this.setTravelMode}
             onClear={() => store.dispatch({type: 'set-mode', mode: 'single'})}
+            onCompare={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
           />
 
           <div className="nav-bottom">
