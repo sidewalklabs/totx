@@ -108,7 +108,7 @@ function featureFromStreetEdgeInfo(e: StreetEdgeInfo): Feature {
     properties: {
       mode: e.mode,
       streetName: e.streetName,
-      distanceKm: e.distanceMm * 1000 * 1000,
+      distanceKm: e.distanceMm / 1000 / 1000, // convert mm to km
       edgeId: e.edgeId,
       stroke: modeToLineStyle(e.mode),
     },
