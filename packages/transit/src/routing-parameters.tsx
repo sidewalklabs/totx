@@ -29,6 +29,10 @@ export default class RoutingParameters extends React.Component<Props, {}> {
 
     const obj = {mode: props.mode, options, options2};
 
+    const showBikeSpeed =
+      props.options.travel_mode.indexOf('BICYCLE') >= 0 ||
+      (props.mode === 'compare-settings' && props.options2.travel_mode.indexOf('BICYCLE') >= 0);
+
     return (
       <div className={classNames('routing-settings', props.mode)}>
         <SettingsRow
@@ -39,29 +43,15 @@ export default class RoutingParameters extends React.Component<Props, {}> {
           onSetValue={set('departure_time')}
         />
 
-        <SettingsRow
-          {...obj}
-          field="max_walking_distance_km"
-          component={controls.MaxWalkingDistance}
-          label="Max. walking distance"
-          onSetValue={set('max_walking_distance_km', Number)}
-        />
-
-        <SettingsRow
-          {...obj}
-          field="max_number_of_transfers"
-          component={controls.MaxTransfers}
-          label="Transfers"
-          onSetValue={set('max_number_of_transfers', Number)}
-        />
-
-        <SettingsRow
-          {...obj}
-          field="bike_speed_kph"
-          component={controls.BikeSpeed}
-          label="Bike speed"
-          onSetValue={set('bike_speed_kph', Number)}
-        />
+        {showBikeSpeed ? (
+          <SettingsRow
+            {...obj}
+            field="bike_speed_kph"
+            component={controls.BikeSpeed}
+            label="Bike speed"
+            onSetValue={set('bike_speed_kph', Number)}
+          />
+        ) : null}
       </div>
     );
   }
