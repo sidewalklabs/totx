@@ -1,10 +1,8 @@
 import * as React from 'react';
-import * as _ from 'underscore';
 
 import {TransitModes} from '../common/r5-types';
 import {SummaryStep, TransitSummaryStep} from '../server/route';
 import {Route} from './datastore';
-import routes from './toronto-routes';
 
 interface RouteDisplayProps {
   route: Route;
@@ -31,19 +29,6 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
     if (!route) {
       return <span className={className}>Not accessible with current settings</span>;
     }
-    const steps = route.summary.map(
-      (step, i) =>
-        isTransitStep(step) ? (
-          <RouteSymbol key={'r' + i} id={step.shortName} />
-        ) : (
-          <span key={'r' + i} className={'walk'} />
-        ),
-    );
-    const arrowSteps = [] as Array<JSX.Element | string>;
-    steps.forEach((step, i) => {
-      if (i) arrowSteps.push(<span key={'a' + i} className="transit-connector" />);
-      arrowSteps.push(step);
-    });
 
     const minutes = Math.floor(route.travelTimeSecs / 60);
     const distanceKm = route.distanceKm.toFixed(2);
@@ -58,9 +43,7 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
           <span className="route-length-distance">{distanceKm} km</span>
         </div>
 
-        {arrowSteps.length > 0 ? <div className="route-summary">{arrowSteps}</div> : null}
         {route ? <RouteDetails route={route} /> : null}
-        <div>TODO: AP-208</div>
       </div>
     );
   }
@@ -68,30 +51,6 @@ export default class RouteDisplay extends React.Component<RouteDisplayProps, {}>
   handleClear() {
     this.props.onClearDestination();
   }
-}
-
-const TORONTO_ROUTES = _.indexBy(routes, 'route_id');
-
-// Component for the name of a subway/bus route, e.g. "L", "4" or "B52".
-// If we know enough about the route to render a nice symbol for it, we do.
-// Otherwise we fall back to plain text.
-function RouteSymbol(props: {id: string}) {
-  const route = TORONTO_ROUTES[props.id];
-  if (!route) {
-    // Might be a bus route.
-    return <span className="route-name">{props.id}</span>;
-  }
-
-  const style: React.CSSProperties = {
-    backgroundColor: '#' + (route.route_color || '444'),
-  };
-  const alt = route.route_long_name + '\n' + route.route_desc;
-
-  return (
-    <span className="route-symbol" title={alt} style={style}>
-      {route.route_short_name}
-    </span>
-  );
 }
 
 function zeropad(num: number) {
@@ -110,7 +69,7 @@ function formatTime(secs: number) {
 
 function describeStep(step: SummaryStep): string {
   if (isTransitStep(step)) {
-    return `Take ${step.mode} ${step.shortName} at ${formatTime(step.startTimeSecs)}`;
+    return `${formatTime(step.startTimeSecs)} Take ${step.mode} ${step.shortName}`;
   } else {
     const distanceKm = (step.distance / 1e6).toFixed(1);
     const minutes = Math.round(step.duration / 60);
