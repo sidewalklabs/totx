@@ -762,7 +762,10 @@ button.slick-disabled {
   .hide-on-mobile {
     display: none;
   }
-  .route-details, .origin-destination, .routing-settings, .nav-bottom hr {
+  .route-details,
+  .origin-destination,
+  .routing-settings,
+  .nav-bottom hr {
     display: none;
   }
   .left-nav {
@@ -773,6 +776,6 @@ button.slick-disabled {
     min-height: 0;
   }
   .label-bottom br {
-    display: none;  /* make the legend a bit shorter */
+    display: none; /* make the legend a bit shorter */
   }
 }
