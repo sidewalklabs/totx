@@ -115,6 +115,10 @@ class Root extends React.Component<{}, State> {
             For a better experience, use a tablet or desktop device.
           </div>
         ) : null}
+
+        <a href="https://sidewalklabs.com/" className="sidewalk-logo">
+          <img src="sidewalklabs_logo_primary_grey.png" height="22" />
+        </a>
       </div>
     );
   }

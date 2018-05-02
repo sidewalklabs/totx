@@ -746,3 +746,11 @@ button.slick-disabled {
 .route-secondary .route-length-title.label {
   display: none;
 }
+
+
+.sidewalk-logo {
+  position: absolute;
+  bottom: 7px;
+  left: 105px;
+  text-align: center;
+}
