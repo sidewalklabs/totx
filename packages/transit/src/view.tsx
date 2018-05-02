@@ -32,6 +32,7 @@ class Root extends React.Component<{}, State> {
     const {state} = this;
     const {mode, routes} = state;
     const clearDestination = () => store.dispatch({type: 'clear-destination'});
+    const isRouteComparison = !!(routes[0] && routes[1]);
 
     return (
       <div className="view-map">
@@ -67,9 +68,17 @@ class Root extends React.Component<{}, State> {
 
           {routes[0] ? (
             <RouteDisplay
-              className="route"
+              className="route route-primary"
+              isComparison={isRouteComparison}
               route={routes[0]}
               onClearDestination={clearDestination}
+            />
+          ) : null}
+          {routes[1] ? (
+            <RouteDisplay
+              className="route route-secondary"
+              isComparison={isRouteComparison}
+              route={routes[1]}
             />
           ) : null}
 
@@ -106,6 +115,10 @@ class Root extends React.Component<{}, State> {
             For a better experience, use a tablet or desktop device.
           </div>
         ) : null}
+
+        <a href="https://sidewalklabs.com/" className="sidewalk-logo">
+          <img src="sidewalklabs_logo_primary_grey.png" height="22" />
+        </a>
       </div>
     );
   }
