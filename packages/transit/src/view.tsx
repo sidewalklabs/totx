@@ -30,7 +30,7 @@ class Root extends React.Component<{}, State> {
     const handleAction = store.dispatch.bind(store);
 
     const {state} = this;
-    const {mode, routes} = state;
+    const {routes} = state;
     const clearDestination = () => store.dispatch({type: 'clear-destination'});
     const isRouteComparison = !!(routes[0] && routes[1]);
 
@@ -42,7 +42,7 @@ class Root extends React.Component<{}, State> {
           clearError={this.clearError}
         />
         <MapPanel handleAction={handleAction} {...this.state} />
-        <div className="feedback-about">
+        <div className="feedback-about hide-on-mobile">
           <a className="mdl-shadow--4dp" href={ABOUT_URL}>
             About
           </a>
@@ -51,20 +51,11 @@ class Root extends React.Component<{}, State> {
           </a>
         </div>
         <div className="left-nav mdl-card mdl-shadow--8dp">
-          <div className="mdl-card__title">
+          <div className="mdl-card__title hide-on-mobile">
             <div className="TitleLogo-Super">Toronto Transit</div>
             <div className="TitleLogo">Explorer</div>
             <div className="Title-Subhead">Discovering ways to travel the city</div>
           </div>
-
-          {mode === 'single' ? (
-            <div className="compare-button-wrapper">
-              <div
-                className="compare-button"
-                onClick={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
-              />
-            </div>
-          ) : null}
 
           {routes[0] ? (
             <RouteDisplay
@@ -88,6 +79,7 @@ class Root extends React.Component<{}, State> {
             travelMode2={state.options2.travel_mode}
             onChange={this.setTravelMode}
             onClear={() => store.dispatch({type: 'set-mode', mode: 'single'})}
+            onCompare={() => store.dispatch({type: 'set-mode', mode: 'compare-settings'})}
           />
 
           <div className="nav-bottom">
