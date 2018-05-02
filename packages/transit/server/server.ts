@@ -43,6 +43,9 @@ app.get(
   wrapPromise(async (expressRequest, response) => {
     const params = parseRequestURL(expressRequest.url);
     const route = await r5Router.getRoute(params.origin, params.destination, params.options);
+    if (isProd) {
+      response.setHeader('Cache-Control', 'public, max-age=86400');
+    }
     response.send(route);
   }),
 );
@@ -54,6 +57,9 @@ app.get(
   wrapPromise(async (expressRequest, response) => {
     const params = parseRequestURL(expressRequest.url);
     const travelTimes = await r5Router.getTravelTimes(params.origin, params.options);
+    if (isProd) {
+      response.setHeader('Cache-Control', 'public, max-age=86400');
+    }
     response.send(travelTimes);
   }),
 );
