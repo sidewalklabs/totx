@@ -9,7 +9,8 @@ The Toronto Transit Explorer app visualizes transit, biking and walking accessib
 
 ## Start the backend (see sidewalklabs/model-r5 repo)
 ```
-cp ttx_transit_data/toronto/* transit_data/toronto/
+mkdir transit_data
+cp -r ../model-r5/ttx_transit_data/toronto transit_data/toronto
 mvn package
 java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --build ./transit_data/toronto one-to-many toronto-das.locations.txt
 java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --graphs ./transit_data/toronto one-to-many toronto-das.locations.txt
