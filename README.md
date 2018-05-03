@@ -7,7 +7,7 @@ The Toronto Transit Explorer app visualizes transit, biking and walking accessib
 1. If not, install Java 8:
 `brew tap caskroom/versions && brew cask install java8`
 
-## Start the backend (see sidewalklabs/model-r5 repo).
+## Start the backend (see sidewalklabs/totx-r5 repo - this isn't publicly available yet, but will be soon).
 ```
 mvn package
 java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --build ./ttx_transit_data/toronto one-to-many toronto-das.locations.txt
