@@ -14,7 +14,7 @@ import {Route, Step, SummaryStep} from '../route';
 import {Feature} from '../../../utils';
 
 export const SECONDS_PER_HOUR = 3600;
-const SECONDS_PER_MINUTE = 60;
+export const SECONDS_PER_MINUTE = 60;
 
 /** High-level summary of the route, e.g. Walk -> Bus -> Walk */
 interface SummarizedRoute {
@@ -80,8 +80,8 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
         features.push(featureFromTransitEdgeInfo(e, s.mode));
         steps.push(stepFromTransitEdgeInfo(e, s.mode));
       }
-      const {shortName, agencyName} = s.routes[0];
-      summary.push({mode: s.mode, shortName, agencyName, startTimeSecs});
+      const {shortName, longName, agencyName} = s.routes[0];
+      summary.push({mode: s.mode, shortName, longName, agencyName, startTimeSecs});
 
       const {middle} = s;
       if (middle) {
