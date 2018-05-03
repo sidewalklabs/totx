@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {TransitModes} from '../common/r5-types';
+import {LegMode, TransitModes} from '../common/r5-types';
 import {SummaryStep, TransitSummaryStep} from '../server/route';
 import {Route} from './datastore';
 
@@ -70,13 +70,62 @@ function formatTime(secs: number) {
   return `${hours}:${strMins}`;
 }
 
+/**
+ * Display the transit type in commonly used parlance.
+ */
+function formatMode(mode: LegMode | TransitModes) {
+  switch (mode) {
+    case 'TRAM':
+      return 'Streetcar';
+    case 'SUBWAY':
+      return 'Subway';
+    case 'RAIL':
+      return 'Train';
+    case 'BUS':
+      return 'Bus';
+    case 'FERRY':
+      return 'Ferry';
+    case 'CABLE_CAR':
+      return 'Cable car';
+    case 'GONDOLA':
+      return 'Gondola';
+    case 'FUNICULAR':
+      return 'Funicular';
+    case 'WALK':
+      return 'Walk';
+    case 'BICYCLE':
+      return 'Cycle';
+    case 'BICYCLE_RENT':
+      return 'Bikeshare';
+    default:
+      return '';
+  }
+}
+
+/**
+ * Display the transit line name according to most commonly used name.
+ */
+function formatLineName(step: TransitSummaryStep) {
+  switch (step.mode) {
+    case 'SUBWAY':
+      return step.longName;
+    case 'TRAM':
+    case 'BUS':
+      return `${step.shortName} - ${step.longName}`;
+    default:
+      return step.shortName;
+  }
+}
+
 function describeStep(step: SummaryStep): string {
   if (isTransitStep(step)) {
-    return `${formatTime(step.startTimeSecs)} Take ${step.mode} ${step.shortName}`;
+    return `${formatTime(step.startTimeSecs)} Take ${formatMode(step.mode)} ${formatLineName(
+      step,
+    )}`;
   } else {
     const distanceKm = (step.distance / 1e6).toFixed(1);
     const minutes = Math.round(step.duration / 60);
-    return `${step.mode} ${distanceKm} km (${minutes} min)`;
+    return `${formatMode(step.mode)} ${distanceKm} km (${minutes} min)`;
   }
 }
 

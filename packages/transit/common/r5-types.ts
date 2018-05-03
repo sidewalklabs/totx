@@ -91,6 +91,7 @@ interface Route {
   mode: TransitModes;
   routeIdx: number;
   shortName: string;
+  longName: string;
 }
 
 interface TransitSegment {
