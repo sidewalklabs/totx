@@ -820,3 +820,7 @@ button.slick-disabled {
     display: none; /* make the legend a bit shorter */
   }
 }
+
+.mdl-tooltip {
+  min-width: 120px;
+}

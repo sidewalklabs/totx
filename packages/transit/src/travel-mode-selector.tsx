@@ -85,6 +85,14 @@ function TravelModeCarousel(props: SingleProps): JSX.Element {
   );
 }
 
+declare module 'react' {
+  interface HTMLAttributes<T> extends DOMAttributes<T> {
+    block?: string;
+    element?: string;
+    for?: string; // <-- custom interface
+  }
+}
+
 export default class TravelModeSelector extends React.Component<Props, {}> {
   render() {
     const {mode, travelMode, travelMode2, onClear, onChange, onCompare} = this.props;
@@ -106,7 +114,10 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
           </>
         ) : (
           <div className="compare-button-wrapper">
-            <div className="compare-button" onClick={onCompare} />
+            <div className="compare-button" id="compare-button" onClick={onCompare} />
+            <div for="compare-button" className="mdl-tooltip mdl-tooltip--right hide-on-mobile">
+              Compare
+            </div>
           </div>
         )}
       </>
