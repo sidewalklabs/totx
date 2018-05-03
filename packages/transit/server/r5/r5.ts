@@ -76,7 +76,7 @@ function paramsToProfileRequest(
     transitModes: transitModes.join(),
     directModes: directModes.join(),
     verbose: true,
-    transferTimeCost: 120, // Default to 2 minutes cost per transfer, on average.
+    transferTimeCost: 300, // Default to 5 minutes cost per transfer, on average.
     wheelchair,
   };
   // Handle optional parameters.
