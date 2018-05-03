@@ -18,6 +18,7 @@ export interface ProfileRequest {
   directModes?: string; // comma-separated list of LegModes
   transitModes?: string; // comma-separated list of TransitModes
   bikeSpeed?: number; // speed of biking in meters per second
+  transferPenaltySecs?: number; // seconds to add to transfer time for confusion, delay, imperfection
   verbose?: boolean;
 }
 

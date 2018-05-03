@@ -76,6 +76,7 @@ function paramsToProfileRequest(
     transitModes: transitModes.join(),
     directModes: directModes.join(),
     verbose: true,
+    transferPenaltySecs: 300, // Default to 5 minutes cost per transfer.
     wheelchair,
   };
   // Handle optional parameters.
