@@ -121,7 +121,9 @@ function formatLineName(step: TransitSummaryStep) {
 
 function describeStep(step: SummaryStep): string {
   if (isTransitStep(step)) {
-    return `${formatTime(step.startTimeSecs)} Take ${formatMode(step.mode)} ${formatLineName(step)}`;
+    return `${formatTime(step.startTimeSecs)} Take ${formatMode(step.mode)} ${formatLineName(
+      step,
+    )}`;
   } else {
     const distanceKm = (step.distance / 1e6).toFixed(1);
     const minutes = Math.round(step.duration / 60);
