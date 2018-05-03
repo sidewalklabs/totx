@@ -75,12 +75,12 @@ function TravelModeCarousel(props: SingleProps): JSX.Element {
       swipeToSlide={true}
       variableWidth={true}
       infinite={false}>
-      <ModeTile mode="WALK" {...props} />
       <ModeTile mode="TRANSIT" {...props} />
-      <ModeTile mode="BICYCLE_RENT" {...props} />
       <ModeTile mode="BICYCLE" {...props} />
+      <ModeTile mode="BICYCLE_RENT" {...props} />
       <ModeTile mode="BICYCLE_RENT+TRANSIT" {...props} />
       <ModeTile mode="WHEELCHAIR" {...props} />
+      <ModeTile mode="WALK" {...props} />
     </Slider>
   );
 }
