@@ -1,0 +1,100 @@
+/* Styles for the About page */
+
+@font-face {
+  font-family: 'Montserrat';
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 500;
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 600;
+}
+
+body {
+  background: #F5F5F5;
+}
+
+div#content-area {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.image-holder {
+  display: flex;
+  max-width: 600px;
+}
+
+.image {
+  flex: 1 1 50%;
+}
+
+img {
+  max-width: 240px;
+}
+
+.body {
+  background: white;
+  display: flex;
+}
+
+.main-text, .q-and-a {
+  flex: 1;
+  padding: 45px;
+  min-width: 400px;
+}
+
+p.h8, p.h9 {
+  line-height: 20px;
+}
+
+.heading {
+  margin: 24px auto;
+  position: relative;
+}
+
+span.TitleLogo2 {
+  text-transform: uppercase;
+}
+
+.heading > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.mapleleaf {
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.feedback-about {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 21px;
+  margin-top: 6px;
+}
+
+.feedback-about a {
+  background: #000000aa;  /* TODO(danvk): this should be a multiply blend */
+  color: white;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 6px 11px;
+  margin-right: 5px;
+  box-shadow: 0 4px 5px 0 rgba(0,0,0,.14),
+              0 1px 10px 0 rgba(0,0,0,.12),
+              0 2px 4px -1px rgba(0,0,0,.2)
+}
+
+/* Responsive UI for mobile */
+@media only screen and (max-width: 1000px) {
+  .body {
+    display: block;  /* one column */
+  }
+}
