@@ -12,7 +12,7 @@ import {
   TransitModes,
 } from '../../common/r5-types';
 import {parseTime, requestPromise} from '../utils';
-import {profileOptionToRoute, SECONDS_PER_HOUR} from './route-converter';
+import {profileOptionToRoute, SECONDS_PER_MINUTE} from './route-converter';
 
 import {QueryOptions} from '../../src/datastore';
 import {Route} from '../route';
@@ -87,7 +87,7 @@ function paramsToProfileRequest(
     if (options.departure_time) {
       const departTime = parseTime(options.departure_time);
       req.fromTime = departTime;
-      req.toTime = departTime + 2 * SECONDS_PER_HOUR;
+      req.toTime = departTime + 30 * SECONDS_PER_MINUTE;
     }
     if (options.bike_speed_kph) {
       req.bikeSpeed = options.bike_speed_kph * 1000 / 60 / 60; // convert km/h to m/s
