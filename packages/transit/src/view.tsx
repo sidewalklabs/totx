@@ -10,7 +10,7 @@ import RouteDisplay from './route-display';
 import RoutingParameters from './routing-parameters';
 import TravelModeSelector from './travel-mode-selector';
 
-const ABOUT_URL = 'https://docs.google.com/document/d/1tQUYEtrrOhEOEUsS_1z7Wq3CtaxDILSHa6SfbaMS2hY';
+const ABOUT_URL = '/about.pdf';
 const FEEDBACK_LINK = 'mailto:totx-feedback@sidewalklabs.com';
 
 const rootEl = document.getElementById('root');
