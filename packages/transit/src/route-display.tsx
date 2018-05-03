@@ -72,7 +72,6 @@ function formatTime(secs: number) {
 
 /**
  * Display the transit type in commonly used parlance.
- * @param mode The travel mode to display.
  */
 function formatMode(mode: LegMode | TransitModes) {
   switch (mode) {
@@ -105,7 +104,6 @@ function formatMode(mode: LegMode | TransitModes) {
 
 /**
  * Display the transit line name according to most commonly used name.
- * @param step the full transit step
  */
 function formatLineName(step: TransitSummaryStep) {
   switch (step.mode) {
@@ -113,7 +111,7 @@ function formatLineName(step: TransitSummaryStep) {
       return step.longName;
     case 'TRAM':
     case 'BUS':
-      return step.shortName + ' - ' + step.longName;
+      return `${step.shortName} - ${step.longName}`;
     default:
       return step.shortName;
   }
