@@ -106,7 +106,12 @@ export default class TravelModeSelector extends React.Component<Props, {}> {
           </>
         ) : (
           <div className="compare-button-wrapper">
-            <div className="compare-button" onClick={onCompare} />
+            <div className="compare-button" id="compare-button" onClick={onCompare} />
+            <div
+              data-for="compare-button"
+              className="mdl-tooltip mdl-tooltip--right hide-on-mobile">
+              Compare
+            </div>
           </div>
         )}
       </>
