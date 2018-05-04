@@ -16,4 +16,4 @@ java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --graph
 
 ## Start the frontend
 1. `yarn develop -- transit --router-url http://localhost:8080`
-1. Go to http://localhost:1337 in your browser.
+1. Go to http://localhost:8080 in your browser.
