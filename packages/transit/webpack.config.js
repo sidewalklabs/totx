@@ -1,3 +1,5 @@
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -8,6 +10,15 @@ const plugins = [
     'process.env': {
       NODE_ENV: JSON.stringify(process.env.NODE_ENV), // needs to be '"production"', quoted.
     },
+  }),
+  new CopyWebpackPlugin([
+    { from: __dirname + '/assets/' },
+    { from: __dirname + '/style/', to: 'style/' }
+  ]),
+  new HtmlWebpackPlugin({
+    chunks: ['view'],
+    hash: true,
+    template: __dirname + '/index.html'
   }),
 ];
 if (isProd) {
