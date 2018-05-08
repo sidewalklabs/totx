@@ -129,7 +129,7 @@ export const DEFAULT_OPTIONS: QueryOptions = {
   transfer_penalty_secs: 300, // 5 minutes
   max_number_of_transfers: 1,
   travel_mode: 'TRANSIT',
-  bus_multiplier: -1, // no buses by default (performance optimization)
+  bus_multiplier: 1,
   rail_multiplier: 1,
   exclude_routes: [],
   exclude_stops: [],
