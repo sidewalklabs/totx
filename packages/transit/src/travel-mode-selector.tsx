@@ -85,12 +85,6 @@ function TravelModeCarousel(props: SingleProps): JSX.Element {
   );
 }
 
-declare module 'react' {
-  interface HTMLAttributes<T> extends DOMAttributes<T> {
-    htmlFor?: string;
-  }
-}
-
 export default class TravelModeSelector extends React.Component<Props, {}> {
   render() {
     const {mode, travelMode, travelMode2, onClear, onChange, onCompare} = this.props;
