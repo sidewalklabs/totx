@@ -57,9 +57,8 @@ export default class RoutingParameters extends React.Component<Props, {}> {
   }
 
   setModePref(which: number, value: string) {
-    const [rail, bus] = value.split(',').map(Number);
+    const [rail] = value.split(',').map(Number);
     this.props.onChange(which, {
-      bus_multiplier: bus,
       rail_multiplier: rail,
     });
   }

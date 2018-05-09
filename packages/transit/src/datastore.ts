@@ -80,7 +80,6 @@ export interface QueryOptions {
   transfer_penalty_secs: number;
   max_number_of_transfers: number;
   travel_mode: string;
-  bus_multiplier: number;
   rail_multiplier: number;
   exclude_routes: string[];
   exclude_stops: string[];
@@ -129,7 +128,6 @@ export const DEFAULT_OPTIONS: QueryOptions = {
   transfer_penalty_secs: 300, // 5 minutes
   max_number_of_transfers: 1,
   travel_mode: 'TRANSIT',
-  bus_multiplier: -1, // no buses by default (performance optimization)
   rail_multiplier: 1,
   exclude_routes: [],
   exclude_stops: [],

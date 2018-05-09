@@ -5,8 +5,8 @@
 
 import {UrlParams} from './datastore';
 
-const ONLY_SUBWAY = {bus_multiplier: -1, rail_multiplier: 1};
-const NO_PREFERENCE = {bus_multiplier: 1, rail_multiplier: 1};
+const ONLY_SUBWAY = {rail_multiplier: 1};
+const NO_PREFERENCE = {rail_multiplier: 1};
 
 // The downtown point is 307 Lakeshore Blvd.
 const DOWNTOWN_POINT = {lat: 43.64630322966252, lng: -79.36180530094046};
