@@ -18,6 +18,7 @@ fi
 
 PATH=$PWD/node_modules/.bin:$PATH
 
+webpack --config $webpack_config
 webpack --config $webpack_config --progress --colors --watch &
 nodemon --watch 'server/*.ts' --exec 'ts-node' packages/$package/server/server.ts $@
 

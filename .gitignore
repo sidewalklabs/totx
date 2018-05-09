@@ -8,8 +8,8 @@ node_modules
 package-lock.json
 
 # Generated static files
-*.bundle.js
-*.bundle.js.map
+packages/transit/static/
+
 index.licenses.txt
 
 .DS_Store
