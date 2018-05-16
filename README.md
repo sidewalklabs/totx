@@ -18,8 +18,8 @@ git checkout totx-r5
 Then run:
 ```
 mvn package
-java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --build ./ttx_transit_data/toronto one-to-many toronto-das.locations.txt
-java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --graphs ./ttx_transit_data/toronto one-to-many toronto-das.locations.txt
+java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --build ./ttx_transit_data one-to-many toronto-das.locations.txt
+java -Xmx8g -classpath ./target/r5build.jar com.conveyal.r5.R5Main point --graphs ./ttx_transit_data one-to-many toronto-das.locations.txt
 ```
 You should see something like:
 ```
