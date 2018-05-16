@@ -28,6 +28,8 @@ You should see something like:
 Congrats! Your router is up!
 
 ## Start the frontend
+1. `yarn`
+This will install all required dependencies.
 1. `yarn develop -- transit --router-url http://localhost:8080`
 1. Go to http://localhost:1337 in your browser.
 
