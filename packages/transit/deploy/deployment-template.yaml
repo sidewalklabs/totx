@@ -17,6 +17,7 @@ spec:
         # to actually tie the new replicaset with the older one, and eventually
         # scale down the old replicaset.
         version: "1"
+        contacts: "danvk_samaratrilling"
     spec:
       # Any changes in this section will cause a new replicaset to perform a
       # rolling update of the transit server.
