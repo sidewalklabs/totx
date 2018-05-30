@@ -34,7 +34,10 @@ export function profileOptionToRoute(
 ): Route {
   const {features, steps, summary} = summarizeOption(option);
 
-  const itinerary = option.itinerary[0];
+  // Pick shortest itinerary.
+  // For direct routes this is necessary because all non-transit routes are stored as separate
+  // itineraries within the same option.
+  const itinerary = option.itinerary.reduce(function(a, b) { return a.duration <= b.duration ? a : b });
   const departureSecs = dateTimeToSeconds(itinerary.startTime);
   const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
   const travelTimeSecs = itinerary.duration;
@@ -66,12 +69,16 @@ export function profileOptionToRoute(
 
 function summarizeOption(option: ProfileOption): SummarizedRoute {
   const makeLegSummary = (leg: any) => _.pick(leg, 'mode', 'distance', 'duration');
-  const {streetEdges} = option.access[0];
+  // Pick shortest access option.
+  // For direct routes this is necessary because all non-transit routes are stored as separate
+  // itineraries within the same option.
+  const shortestAccess = option.access.reduce(function(a, b) { return a.duration <= b.duration ? a : b });
+  const {streetEdges} = shortestAccess;
   const features = streetEdges.map(featureFromStreetEdgeInfo);
   const steps = streetEdges.map(stepFromStreetEdgeInfo);
 
   const summary: SummaryStep[] = [];
-  summary.push(makeLegSummary(option.access[0]));
+  summary.push(makeLegSummary(shortestAccess));
 
   if (option.transit) {
     for (const s of option.transit) {
@@ -92,11 +99,12 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
         }
       }
     }
-    for (const e of option.egress[0].streetEdges) {
+    const shortestEgress = option.egress.reduce(function(a, b) { return a.duration <= b.duration ? a : b });
+    for (const e of shortestEgress.streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
       steps.push(stepFromStreetEdgeInfo(e));
     }
-    summary.push(makeLegSummary(option.egress[0]));
+    summary.push(makeLegSummary(shortestEgress));
   }
   return {features, steps, summary};
 }

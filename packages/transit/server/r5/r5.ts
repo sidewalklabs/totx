@@ -107,13 +107,13 @@ interface R5ModeData {
 }
 
 function interpretTravelMode(mode: string): R5ModeData {
-  const legModes = (m: LegMode) => ({accessModes: [m], egressModes: [m], directModes: [m]});
+  const legModes = (...m: LegMode[]) => ({accessModes: m, egressModes: m, directModes: m});
 
   switch (mode) {
     case 'BICYCLE_RENT':
       return {
         transitModes: [],
-        ...legModes(LegMode.BICYCLE_RENT),
+        ...legModes(LegMode.WALK, LegMode.BICYCLE_RENT),
         wheelchair: false,
       };
     case 'WHEELCHAIR':
@@ -125,9 +125,7 @@ function interpretTravelMode(mode: string): R5ModeData {
     case 'BICYCLE_RENT+TRANSIT':
       return {
         transitModes: _.values(TransitModes),
-        accessModes: [LegMode.BICYCLE_RENT],
-        egressModes: [LegMode.BICYCLE_RENT],
-        directModes: [LegMode.BICYCLE_RENT],
+        ...legModes(LegMode.WALK, LegMode.BICYCLE_RENT),
         wheelchair: false,
       };
     case 'BICYCLE':
