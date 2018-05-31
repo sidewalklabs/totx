@@ -91,7 +91,7 @@ function paramsToProfileRequest(
       req.toTime = departTime + 30 * SECONDS_PER_MINUTE;
     }
     if (options.bike_speed_kph) {
-      req.bikeSpeed = options.bike_speed_kph * 1000 / 60 / 60; // convert km/h to m/s
+      req.bikeSpeed = (options.bike_speed_kph * 1000) / 60 / 60; // convert km/h to m/s
     }
   }
 
