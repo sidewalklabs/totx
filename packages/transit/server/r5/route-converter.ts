@@ -34,9 +34,7 @@ export function profileOptionToRoute(
 ): Route {
   const {features, steps, summary} = summarizeOption(option);
 
-  // Pick shortest itinerary.
-  // For direct routes this is necessary because all non-transit routes are stored as separate
-  // itineraries within the same option.
+  // Pick fastest itinerary.
   const itinerary = option.itinerary.reduce((a, b) => (a.duration <= b.duration ? a : b));
   const departureSecs = dateTimeToSeconds(itinerary.startTime);
   const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
@@ -69,16 +67,13 @@ export function profileOptionToRoute(
 
 function summarizeOption(option: ProfileOption): SummarizedRoute {
   const makeLegSummary = (leg: any) => _.pick(leg, 'mode', 'distance', 'duration');
-  // Pick shortest access option.
-  // For direct routes this is necessary because all non-transit routes are stored as separate
-  // itineraries within the same option.
-  const shortestAccess = option.access.reduce((a, b) => (a.duration <= b.duration ? a : b));
-  const {streetEdges} = shortestAccess;
+  const fastestAccess = option.access.reduce((a, b) => (a.duration <= b.duration ? a : b));
+  const {streetEdges} = fastestAccess;
   const features = streetEdges.map(featureFromStreetEdgeInfo);
   const steps = streetEdges.map(stepFromStreetEdgeInfo);
 
   const summary: SummaryStep[] = [];
-  summary.push(makeLegSummary(shortestAccess));
+  summary.push(makeLegSummary(fastestAccess));
 
   if (option.transit) {
     for (const s of option.transit) {
@@ -99,12 +94,12 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
         }
       }
     }
-    const shortestEgress = option.egress.reduce((a, b) => (a.duration <= b.duration ? a : b));
-    for (const e of shortestEgress.streetEdges) {
+    const fastestEgress = option.egress.reduce((a, b) => (a.duration <= b.duration ? a : b));
+    for (const e of fastestEgress.streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
       steps.push(stepFromStreetEdgeInfo(e));
     }
-    summary.push(makeLegSummary(shortestEgress));
+    summary.push(makeLegSummary(fastestEgress));
   }
   return {features, steps, summary};
 }
