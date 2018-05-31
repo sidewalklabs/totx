@@ -2,12 +2,12 @@
 The Toronto Transit Explorer app visualizes transit, biking and walking accessibility across the city of Toronto.
 
 ## Setup (Instructions for Mac)
+1. Install Homebrew (https://brew.sh/) if you don't have it.
 1. Make sure you have Java 8 installed:
 `java -version`
-1. If not, install Java 8:
+If not, install it:
 `brew tap caskroom/versions && brew cask install java8`
-1. Install Homebrew (https://brew.sh/) if you don't have it.
-1. Then install yarn and Node (4<= version <=9). You can use [NVM](https://github.com/creationix/nvm) to manage your Node versions.
+1. Install yarn and Node (4<= version <=9). You can use [NVM](https://github.com/creationix/nvm) to manage your Node versions.
 `brew install yarn`
 `nvm install --lts`
 
