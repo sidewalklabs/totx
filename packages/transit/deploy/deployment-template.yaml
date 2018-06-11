@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: ttx-web
+  name: totx-web
 spec:
   strategy:
     type: RollingUpdate
@@ -10,9 +10,9 @@ spec:
   replicas: 3
   template:
     metadata:
-      name: ttx-web
+      name: totx-web
       labels:
-        app: ttx-web
+        app: totx-web
         # Note that version must stay stable so that the replace command knows
         # to actually tie the new replicaset with the older one, and eventually
         # scale down the old replicaset.
@@ -22,9 +22,9 @@ spec:
       # Any changes in this section will cause a new replicaset to perform a
       # rolling update of the transit server.
       containers:
-      - name: ttx-web
-        image: us.gcr.io/nyc-tlc-1225/ttx-web
-        command: [ "yarn", "serve", "--router-url", "http://ttx-router" ]
+      - name: totx-web
+        image: us.gcr.io/nyc-tlc-1225/totx-web
+        command: [ "yarn", "serve", "--router-url", "http://totx-router" ]
         ports:
         - containerPort: 1337
         livenessProbe:
