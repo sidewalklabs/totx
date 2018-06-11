@@ -119,7 +119,7 @@ workflows:
             - publish-docker
           filters:
             branches:
-              only: master
+              only: bikesharetimes
       - hold:
           type: approval
           requires:
