@@ -113,13 +113,13 @@ workflows:
             - build
           filters:
             branches:
-              only: master
+              only: bikesharetimes
       - deploy-staging:
           requires:
             - publish-docker
           filters:
             branches:
-              only: master
+              only: bikesharetimes
       - hold:
           type: approval
           requires:
