@@ -34,10 +34,7 @@ function makeStyleExpression(
   expr.push(defaultColor);
   return {
     'fill-color': expr,
-    // This would be nice... but it triggers a mapbox error
-    // TODO(danvk): turn this on when Mapbox GL JS 0.45 is released.
-    // See https://stackoverflow.com/a/49679216/388951
-    // 'fill-outline-color': 'rgba(0, 0, 0, 0.0)',
+    'fill-outline-color': 'rgba(0, 0, 0, 0.0)',
   };
 }
 
