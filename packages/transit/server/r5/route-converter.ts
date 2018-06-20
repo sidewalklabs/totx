@@ -34,7 +34,8 @@ export function profileOptionToRoute(
 ): Route {
   const {features, steps, summary} = summarizeOption(option);
 
-  const itinerary = option.itinerary[0];
+  // Pick fastest itinerary.
+  const itinerary = _.min(option.itinerary, it => it.duration);
   const departureSecs = dateTimeToSeconds(itinerary.startTime);
   const arriveTimeSecs = dateTimeToSeconds(itinerary.endTime);
   const travelTimeSecs = itinerary.duration;
@@ -66,12 +67,13 @@ export function profileOptionToRoute(
 
 function summarizeOption(option: ProfileOption): SummarizedRoute {
   const makeLegSummary = (leg: any) => _.pick(leg, 'mode', 'distance', 'duration');
-  const {streetEdges} = option.access[0];
+  const fastestAccess = _.min(option.access, acc => acc.duration);
+  const {streetEdges} = fastestAccess;
   const features = streetEdges.map(featureFromStreetEdgeInfo);
   const steps = streetEdges.map(stepFromStreetEdgeInfo);
 
   const summary: SummaryStep[] = [];
-  summary.push(makeLegSummary(option.access[0]));
+  summary.push(makeLegSummary(fastestAccess));
 
   if (option.transit) {
     for (const s of option.transit) {
@@ -92,11 +94,12 @@ function summarizeOption(option: ProfileOption): SummarizedRoute {
         }
       }
     }
-    for (const e of option.egress[0].streetEdges) {
+    const fastestEgress = _.min(option.egress, eg => eg.duration);
+    for (const e of fastestEgress.streetEdges) {
       features.push(featureFromStreetEdgeInfo(e));
       steps.push(stepFromStreetEdgeInfo(e));
     }
-    summary.push(makeLegSummary(option.egress[0]));
+    summary.push(makeLegSummary(fastestEgress));
   }
   return {features, steps, summary};
 }

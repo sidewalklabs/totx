@@ -10,7 +10,7 @@ program
   .version('1.0.0')
   .description('Serve geographical data from a PostGIS database.')
   .option('-p, --port <port>', 'Port on which to serve traffic (default: 1337)', Number, 1337)
-  .option('--router-url <url>', 'URL for the router server.', String, 'http://router-ttx')
+  .option('--router-url <url>', 'URL for the router server.', String, 'http://router-totx')
   .option(
     '--timeout <timeout>',
     'The maximum amount of time we will wait for a request to finish, in seconds',
