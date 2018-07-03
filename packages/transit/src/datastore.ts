@@ -290,7 +290,7 @@ function createStore() {
   function handleAction(action: Action) {
     // Note: to ensure that gaEnabled works as intended, action handlers shouldn't make asynchronous
     // recursive calls to handleAction.
-    if (gaEnabled && action.type !== 'map-ready') {
+    if (typeof ga !== 'undefined' && gaEnabled && action.type !== 'map-ready') {
       ga('send', 'event', 'UI', action.type);
     }
 
