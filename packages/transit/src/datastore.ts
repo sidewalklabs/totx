@@ -533,6 +533,10 @@ function createStore() {
       options = _.extend({}, options, action.options);
     }
 
+    if (action.options.departure_time && mode === 'compare-settings') {
+      options2.departure_time = options.departure_time;
+    }
+
     getCommuteTimePromises()
       .then(stateChanged)
       .catch(stateChanged);
