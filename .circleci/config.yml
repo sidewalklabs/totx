@@ -113,13 +113,13 @@ workflows:
             - build
           filters:
             branches:
-              only: https
+              only: master
       - deploy-staging:
           requires:
             - publish-docker
           filters:
             branches:
-              only: https
+              only: master
       - hold:
           type: approval
           requires:
