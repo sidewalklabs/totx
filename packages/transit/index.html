@@ -29,4 +29,11 @@
   gtag('config', 'UA-79490400-4');
 </script>
 
+<script>
+  // Force https
+  if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+    window.location.protocol = 'https:'
+  }
+</script>
+
 </body>
