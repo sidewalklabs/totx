@@ -28,9 +28,9 @@ export class MapboxMarker extends React.Component<MarkerProps, {}> {
 
   render() {
     const {draggable, id, position} = this.props;
-    const layout = {
+    const layout: mapboxgl.SymbolLayout = {
       'icon-image': this.props.icon,
-      'icon-anchor': this.props.iconAnchor || 'bottom',
+      'icon-anchor': (this.props.iconAnchor || 'bottom') as mapboxgl.Anchor,
     };
     return (
       <Layer type="symbol" layout={layout} id={id}>
