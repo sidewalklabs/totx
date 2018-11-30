@@ -5,8 +5,8 @@
 import {scaleThreshold} from 'd3-scale';
 
 export const SINGLE_COLORS = [
-  'rgba(  0, 137, 248, 1.0)', // dark blue
-  'rgba(  9, 145, 255, 0.8333)',
+  'rgba(  0, 123, 214, 0.8)', // dark blue
+  'rgba(  9, 145, 255, 0.7667)',
   'rgba(  9, 145, 255, 0.6667)',
   'rgba(  9, 145, 255, 0.5)',
   'rgba(  9, 145, 255, 0.3333)',
