@@ -93,5 +93,8 @@
     "test": "mocha --compilers ts:ts-node/register **/*_test.ts",
     "circleci": "yarn prettier-test && yarn lint && yarn tsc && yarn test && yarn webpack"
   },
-  "author": "Sidewalk Engineers <eng@sidewalklabs.com>"
+  "author": "Sidewalk Engineers <eng@sidewalklabs.com>",
+  "resolutions":{
+    "mapbox-gl/gray-matter/js-yaml": "3.13.1"
+  }
 }
