@@ -52,7 +52,7 @@
     "json-loader": "^0.5.7",
     "json-stable-stringify": "^1.0.1",
     "license-webpack-plugin": "^1.1.1",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.13",
     "mapbox-gl": "^0.47.0",
     "morgan": "^1.8.0",
     "net": "^1.0.2",
@@ -94,7 +94,7 @@
     "circleci": "yarn prettier-test && yarn lint && yarn tsc && yarn test && yarn webpack"
   },
   "author": "Sidewalk Engineers <eng@sidewalklabs.com>",
-  "resolutions":{
+  "resolutions": {
     "mapbox-gl/gray-matter/js-yaml": "3.13.1"
   }
 }
