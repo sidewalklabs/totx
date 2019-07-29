@@ -77,9 +77,6 @@
     "webpack": "^1.13.3",
     "webpack-sources": "^1.1.0"
   },
-  "engines": {
-    "node": ">= 6.0.0"
-  },
   "devDependencies": {
     "mocha": "6.2.0",
     "prettier": "^1.4.4",
