@@ -1,4 +1,4 @@
-FROM node:9.8.0 as builder
+FROM node:12.1.0 as builder
 
 # Create app directory
 RUN mkdir -p /usr/src/app
