@@ -78,7 +78,7 @@
     "webpack-sources": "^1.1.0"
   },
   "devDependencies": {
-    "mocha": "6.2.0",
+    "mocha": "^2.5.3",
     "prettier": "^1.4.4",
     "tslint": "^5.9.1"
   },
