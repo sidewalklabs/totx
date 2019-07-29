@@ -90,7 +90,7 @@
     "serve": "ts-node packages/transit/server/server.ts",
     "tsc": "tsc",
     "webpack": "webpack --config packages/transit/webpack.config.js",
-    "test": "mocha --compilers ts:ts-node/register **/*_test.ts",
+    "test": "mocha --require ts-node/register \"**/*_test.ts\"",
     "circleci": "yarn prettier-test && yarn lint && yarn tsc && yarn test && yarn webpack"
   },
   "author": "Sidewalk Engineers <eng@sidewalklabs.com>",
