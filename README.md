@@ -1,6 +1,10 @@
 # TOTX
 The Toronto Transit Explorer app visualizes transit, biking and walking accessibility across the city of Toronto.
 
+[Screen recording][youtube] (YouTube):
+
+[![Screen recording of the Toronto Transit Explorer](https://img.youtube.com/vi/VveSoRjVW8I/0.jpg)][youtube]
+
 ## Setup (Instructions for Mac)
 1. Install Homebrew (https://brew.sh/) if you don't have it.
 1. Make sure you have Java 8 installed:
@@ -38,3 +42,5 @@ This will install all required dependencies.
 1. Go to http://localhost:1337 in your browser.
 
 Congrats! You're running your very own TOTX.
+
+[youtube]: https://www.youtube.com/watch?v=VveSoRjVW8I
