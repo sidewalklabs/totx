@@ -73,7 +73,7 @@
     "topojson-client": "^2.1.0",
     "ts-node": "^5.0.1",
     "typescript": "^2.6.2",
-    "underscore": "^1.8.3",
+    "underscore": "^1.12.1",
     "webpack": "^1.13.3",
     "webpack-sources": "^1.1.0"
   },
